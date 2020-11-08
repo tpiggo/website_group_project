@@ -1,0 +1,19 @@
+{
+  "name": "cs307-group16",
+  "version": "1.0.0",
+  "description": "School of comuter Science web app and server by CS307 group 16 project.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tpiggo/website_group_project.git"
+  },
+  "author": "Timothy Piggott, Louise Oyarzabal, Ian Grenville",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tpiggo/website_group_project/issues"
+  },
+  "homepage": "https://github.com/tpiggo/website_group_project#readme"
+}
