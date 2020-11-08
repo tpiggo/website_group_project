@@ -4,7 +4,8 @@
   "description": "School of comuter Science web app and server by CS307 group 16 project.",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server.js",
+    "dev": "nodemon server.js"
   },
   "repository": {
     "type": "git",
