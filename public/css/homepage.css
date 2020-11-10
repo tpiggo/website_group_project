@@ -1,0 +1,80 @@
+.content {
+    border: 1px solid rgba(134, 47, 6, 0.582);
+    background-color: white;
+    min-height: 25rem;
+}
+
+body,
+#header,
+footer {
+    background-color: var(--mcgill-red);
+}
+
+#navbar {
+    background-color: black;
+}
+
+#header {
+    text-align: center;
+    padding: 0.5em 0;
+    top: var(--top-header);
+    transition: top 0.5s;
+}
+
+
+/* .is_hidden{
+    top: -67px;
+    transition: top 2s;
+} */
+
+#background-video {
+    position: relative;
+    text-align: center;
+}
+
+#centered-quote {
+    position: absolute;
+    top: 10%;
+    left: 65%;
+}
+
+#footer-logo img {
+    width: 20em;
+    float: right;
+}
+
+#background-video img {
+    width: 100%;
+}
+
+#background-video {
+    padding: 0;
+}
+
+.nav-link {
+    color: white;
+}
+
+.to-drop {
+    background-color: var(--mcgill-grey);
+    text-align: center;
+    padding: 2em;
+}
+
+.col,
+#logos {
+    text-align: center;
+}
+
+.item {
+    font-size: large;
+    color: white;
+    margin: 1em;
+}
+
+
+/* Footer */
+
+footer span {
+    margin-top: 2.4rem;
+}
