@@ -1,13 +1,19 @@
-window.onscroll = function() {
-    var navbar = document.getElementById("navbar");
+window.onscroll = function () {
+    
+    var navbar = document.querySelector("nav");
     var video = document.getElementById("background-video");
-    if (window.pageYOffset + navbar.offsetHeight > video.offsetHeight) {
-        document.documentElement.style.setProperty('--top-header', '-67px');
+    
+    //make the header disappear once it encounters the navbar
+    if (window.pageYOffset> video.offsetHeight) {
+        document.documentElement.style.setProperty('--top-header', '-80px');
         navbar.classList.add("fixed-top");
-        navbar.classList.add("scrolled");
     } else {
         document.documentElement.style.setProperty('--top-header', '0');
         navbar.classList.remove("fixed-top");
-        navbar.classList.remove("scrolled");
     }
+
+    //animation that makes the header log move horizontally when scrolling
+    var headLogo = document.getElementById("logo-header");
+    headLogo.setAttribute("style", "transform: translate(-" + (window.pageYOffset>365?365:window.pageYOffset) + "px);" );
+
 }
