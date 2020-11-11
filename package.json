@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/tpiggo/website_group_project#readme",
   "dependencies": {
+    "ejs": "^3.1.5",
     "express": "^4.17.1",
     "mongoose": "^5.10.13",
     "nodemon": "^2.0.6"
