@@ -1,16 +1,33 @@
 // Packages
 const express = require('express');
+const mongoose = require('mongoose');
+const expressLayouts = require('express-ejs-layouts');
 const app = express();
+
+// DB config
+const db = require('./config/keys').MongoURI;
+
+// Connect to Mongo
+mongoose.connect(db, { useNewUrlParser: true, useUnifiedTopology: true })
+    .then(() => { console.log('MongoDB Connected!')})
+    .catch(err => { console.log(err) });
+
+// Body Parser
+app.use(express.urlencoded({ extended: false }));
 
 app.use(express.static('public'));
 
+// EJS startup
+app.use(expressLayouts);
+app.set('view engine', 'ejs');
+
 app.get('/', (req, res) => {
-    res.render(__dirname + "/views/homepage.ejs");
+    res.render('homepage');
 });
 
 app.get('/:pagename', (req, res) => {
     // console.log('Request received for /' + req.params.pagename + ' - sending file /views/' + req.params.pagename);
-    res.render(__dirname + '/views/' + req.params.pagename + '.ejs');
+    res.render(req.params.pagename);
 });
 
 //If the route isn't recognized
