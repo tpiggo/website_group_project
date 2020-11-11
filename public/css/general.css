@@ -6,3 +6,65 @@
     --mcgill-burgundy: #9E0918;
     --mcgill-grey: #5D6770;
 }
+
+body {
+    background-color: var(--mcgill-red);
+}
+
+/* Navbar */
+
+nav {
+    background-color: black;
+}
+
+nav ul {
+    padding: 1rem;
+}
+
+nav img {
+    margin-left: 4rem;
+    left: 0;
+    cursor: pointer;
+}
+
+.nav {
+    right:1em;
+}
+#navbar.fixed-top{
+    z-index: 0 !important;
+}
+.nav-link {
+    color: white;
+}
+div.collapse {
+    position:relative;
+    z-index:0 !important;
+}
+
+#prospective {
+    background-color: var(--mcgill-grey);
+    text-align: center;
+    padding: 2em;
+}
+
+/* Footer */
+
+footer {
+    background-color: var(--mcgill-red);
+    position: relative;
+    bottom: 0;
+}
+
+.col,
+#logos {
+    text-align: center;
+}
+
+#footer-logo img {
+    width: 20em;
+    float: right;
+}
+
+footer span {
+    margin-top: 2.4rem;
+}
