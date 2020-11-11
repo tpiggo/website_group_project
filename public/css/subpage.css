@@ -1,0 +1,48 @@
+#content {
+    background-color: white;
+    border: 2px black;
+    height: 100vh;
+    text-align: center;
+    transition: all 1s;
+}
+#content.collapsed2 {
+    transform: translateX(10%);
+}
+
+#icon {
+    position: fixed;
+    width:1.4em;
+    top: 0.7em;
+    left: 1em;
+    z-index: 1030;
+}
+
+#icon:hover {
+    cursor: pointer;
+}
+
+/* Side nav */
+#menu {
+    color: white;
+    transition: all 1s;
+    width: 15rem;
+    height: 100%;
+    position: fixed;
+    z-index: 1000;
+    background-color: black;
+}
+
+#menu ul:hover {
+    cursor: pointer;
+    background-color: darkblue;
+}
+
+#menu ul {
+    padding: 2rem;
+    text-align: center;
+    margin: 0;
+}
+
+.collapsed {
+    transform: translateX(-100%);
+}
