@@ -4,6 +4,10 @@ const mongoose = require('mongoose');
 const expressLayouts = require('express-ejs-layouts');
 const app = express();
 
+//Normally you get data from the database, but
+//for now we use a local JSON file
+const data = require('./data.json');
+
 // DB config
 const db = require('./config/keys').MongoURI;
 
@@ -25,9 +29,16 @@ app.get('/', (req, res) => {
     res.render('homepage');
 });
 
-app.get('/:pagename', (req, res) => {
+//Request for the Prospective page
+app.get('/prospective/:pagename', (req, res) => {
     // console.log('Request received for /' + req.params.pagename + ' - sending file /views/' + req.params.pagename);
-    res.render(req.params.pagename);
+    
+    //Here we take data from the JSON file and send it to subpage.ejs
+    const prospData = data.prospective[req.params.pagename];
+    const title = data.prospective.title;
+    
+    res.render('subpage', {title, ...prospData});
+    // console.log({title, ...prospData});
 });
 
 //If the route isn't recognized
