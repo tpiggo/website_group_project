@@ -5,14 +5,14 @@
     text-align: center;
     transition: all 1s;
 }
-#content.collapsed2 {
+#content.hidden2 {
     transform: translateX(10%);
 }
 
 #icon {
     position: fixed;
     width:1.4em;
-    top: 0.7em;
+    top: 2.3em;
     left: 1em;
     z-index: 1030;
 }
@@ -43,6 +43,6 @@
     margin: 0;
 }
 
-.collapsed {
+.hidden {
     transform: translateX(-100%);
 }

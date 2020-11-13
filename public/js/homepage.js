@@ -14,6 +14,7 @@ window.onscroll = function () {
 
     //animation that makes the header log move horizontally when scrolling
     var headLogo = document.getElementById("logo-header");
-    headLogo.setAttribute("style", "transform: translate(-" + (window.pageYOffset>365?365:window.pageYOffset) + "px);" );
+    var limit = window.innerWidth/2 - 223;
+    headLogo.setAttribute("style", "transform: translate(-" + (window.pageYOffset>limit ? limit : window.pageYOffset) + "px);" );
 
 }
