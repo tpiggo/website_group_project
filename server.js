@@ -25,10 +25,12 @@ app.use(express.static('public'));
 app.use(expressLayouts);
 app.set('view engine', 'ejs');
 
-app.get('/', (req, res) => {
-    res.render('homepage');
-});
+app.use('/', require("./routes/index"));
+app.use('/:page', require('./routes/subpages'));
 
+/***
+ * Kept for use potentially.  However, using the subpages route is more professional and allows for more modularity.
+ * Code below: 
 //Request for the Prospective page
 app.get('/prospective/:pagename', (req, res) => {
     // console.log('Request received for /' + req.params.pagename + ' - sending file /views/' + req.params.pagename);
@@ -40,6 +42,7 @@ app.get('/prospective/:pagename', (req, res) => {
     res.render('subpage', {title, ...prospData});
     // console.log({title, ...prospData});
 });
+*/
 
 //If the route isn't recognized
 app.get('*', (req, res) => {
@@ -47,5 +50,5 @@ app.get('*', (req, res) => {
     res.send(`404 REQUEST NOT RECOGNIZED [${req.url}]`);
 });
 
-const PORT = process.env.POsRT || 3000;
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, console.log(`Server started on port ${PORT}`));
