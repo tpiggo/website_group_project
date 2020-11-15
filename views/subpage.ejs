@@ -7,26 +7,36 @@
     <link rel="stylesheet" href="/css/general.css">
     <link rel="stylesheet" href="/css/subpage.css">
 
-    <title> Subpage</title>
+    <title>McGill School of Computer Science</title>
 </head>
 
 <body>
-    <%- include('partials/navbar'); %>
-    <img id="icon" src="/images/hamburger.png" alt="icon">
 
+    <!-- Saves the variable 'title' so it can be accessed by the script subpage.js -->
+    <span id="title" style="display:none"><%=title%></span>
+    
+    <!-- Top fixed menu -->
+    <%- include('partials/navbar'); %>
+
+    <img id="icon" src="/images/hamburger.png" alt="icon" onclick="openMenu()">
     <!-- left side menu-->
-    <nav id="menu" class="collapsed">
-        <ul>option 1</ul>
-        <ul>option 2</ul>
-        <ul>option 3</ul>
-        <ul>option 4</ul>
-        <ul>option 5</ul>
-        <ul>option 6</ul>
-    </nav>
+    <div id="menu" class="hidden">
+        <!-- menu list specifically for the Prospective page -->
+        <ul onclick="window.location='./general-info'">General Information</ul>
+        <ul onclick="window.location='./whyCS'">Why CS ?</ul>
+        <ul>CEGEP</ul>
+        <ul>Freshman</ul>
+        <ul>Choosing a Major</ul>
+        <ul>Transfer</ul>
+        <ul>Internship</ul>
+        <ul>Undergraduate</ul>
+        <ul>Graduate</ul>
+    </div>
 
     <!-- <span id="icon">icon</span> -->
-    <div id="content">Content
-        <!-- Request to the database to load content -->
+    <div id="content">
+        <!--Get the content from the database and render it here -->
+        <%-content.join(" ")%>
     </div>
     <%- include('partials/footer'); %>
 
