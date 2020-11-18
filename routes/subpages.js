@@ -1,18 +1,29 @@
 const express = require('express');
 const router = express.Router();
-const data = require('../data.json');
+const Page = require('../models/Page.js');
+const Subpage = require('../models/Subpage.js');
 
 router.get('/:pagename', (req, res) => {
     // console.log('Request received for /' + req.params.pagename + ' - sending file /views/' + req.params.pagename);
     
-    //Here we take data from the JSON file and send it to subpage.ejs
-    const entryOuter = req.baseUrl.replace("/", '');
-    console.log(data[entryOuter]);
-    const prospData = data[entryOuter][req.params.pagename];
-    const title = data.prospective.title;
-    
-    res.render('subpage', {title, ...prospData});
-    // console.log({title, ...prospData});
+    const entry = req.baseUrl.replace("/", '');
+    Page
+    .findOne({path: entry})
+    .populate('subpages')
+    .exec((err, data) => {
+        if (err) console.error(err);
+        else {
+            var content = data.subpages.find(e =>e.path == req.params.pagename);
+            var menu = []
+            data.subpages.forEach(element => {
+                menu.push([element.path, element.name]);
+            });
+            var title = data.title;
+            // console.log({title, menu, content });
+            res.render('subpage.ejs', {title, menu, content });
+        }
+    });
 });
+
 
 module.exports = router;

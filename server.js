@@ -4,10 +4,6 @@ const mongoose = require('mongoose');
 const expressLayouts = require('express-ejs-layouts');
 const app = express();
 
-//Normally you get data from the database, but
-//for now we use a local JSON file
-const data = require('./data.json');
-
 // DB config
 const db = require('./config/keys').MongoURI;
 
