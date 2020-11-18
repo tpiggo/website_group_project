@@ -13,6 +13,7 @@ router.get('/:pagename', (req, res) => {
     .exec((err, data) => {
         if (err) console.error(err);
         else {
+            if(data==null) res.send("404 : this page doesn't exist");
             var content = data.subpages.find(e =>e.path == req.params.pagename);
             var menu = []
             data.subpages.forEach(element => {
