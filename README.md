@@ -6,8 +6,8 @@ Rebuilding CS Mcgill Website using Node.js
 A 307 Group project developed using Node.js and MongoDB which was routed by Apache (not seen here).
 
 # Contributors
-Timothy Piggott
-Louise Oyarzabal
+Timothy Piggott  
+Louise Oyarzabal  
 Ian Grenville
 
 # Contribs
