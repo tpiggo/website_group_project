@@ -6,12 +6,14 @@ const Subpage = require('../models/Subpage.js');
 
 router.get('/login', (req, res)=>{
     const title = "Login";
-    var content = {"html": 'login.ejs', "read": true};
+    var content = {"html": 'login.ejs'};
     const menu = [];
-    res.render('subpage.ejs', {title, menu, content});
+    res.render('lr-layout.ejs', {title, menu, content, "logged": false});
 });
 router.get('/register', (req, res)=>{
-
+    const title = "Register";
+    var content = {"html": 'register.ejs'};
+    res.render('lr-layout.ejs', {title, content, "logged": false});
 });
 
 module.exports = router;

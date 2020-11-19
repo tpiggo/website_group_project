@@ -28,9 +28,8 @@ router.get('/:pagename', (req, res) => {
                         menu.push([element.path, element.name]);
                     });
                     var title = data.title;
-                    content['read']=false;
-                    // console.log({title, menu, content });
-                    res.render('subpage.ejs', { title, menu, content });
+                    const logged = false;
+                    res.render('subpage.ejs', { title, menu, content, logged });
                 }
 
             }

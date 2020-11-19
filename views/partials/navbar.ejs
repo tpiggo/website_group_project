@@ -1,9 +1,11 @@
 <nav>
-    <ul id="user-bar">
-        <li>You are not signed in!</li>
-        <li><a href="/users/login">Login</a></li>
-        <li><a href="/users/register">Register</a></li>
-    </ul>
+    <div id="user-bar">
+        <% if (logged) {%>
+            <%- include('user-logged.ejs'); %>
+        <% } else { %>
+            <%- include('user-box.ejs'); %>
+        <% } %>
+    </div>
     <ul class="nav">
         <li class="nav-item">
             <img src="../images/coat-of-arms.png" alt="Coat of arms" onclick="window.location='/'">

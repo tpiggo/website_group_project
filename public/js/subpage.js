@@ -21,7 +21,7 @@ function openMenu() {
 }
 
 
-function onLoader(){
+function onLoad(){
     console.log("Running onload");
     const titleSpan = document.getElementById('title');
     if (titleSpan.innerHTML == 'Login' || titleSpan.innerHTML == 'Register'){
