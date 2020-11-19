@@ -19,3 +19,12 @@ function openMenu() {
     document.getElementById('menu').classList.toggle('hidden');
     document.getElementById('content').classList.toggle('hidden');
 }
+
+
+function onLoader(){
+    console.log("Running onload");
+    const titleSpan = document.getElementById('title');
+    if (titleSpan.innerHTML == 'Login' || titleSpan.innerHTML == 'Register'){
+        document.getElementById('icon').hidden = true;
+    }
+};

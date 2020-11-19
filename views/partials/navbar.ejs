@@ -1,4 +1,9 @@
 <nav>
+    <ul id="user-bar">
+        <li>You are not signed in!</li>
+        <li><a href="/users/login">Login</a></li>
+        <li><a href="/users/register">Register</a></li>
+    </ul>
     <ul class="nav">
         <li class="nav-item">
             <img src="../images/coat-of-arms.png" alt="Coat of arms" onclick="window.location='/'">
@@ -27,20 +32,23 @@
             <a class="nav-link">Donate</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link">About</a>
+            <a class="nav-link" data-toggle="collapse" href="#about">About</a>
         </li>
     </ul>
-
+    <!-- We have all this information stored in the database, why not redner it from there?-->
     <div id="prospective" class="collapse container-fluid">
-        <a href="prospective/general-info" class="unit">General Info</a>
-        <a href="prospective/why-cs" class="unit">Why CS?</a>
-        <a href="prospective/cegep" class="unit">CEGEP</a>
-        <a href="prospective/freshman" class="unit">Freshman</a>
-        <a href="prospective/choosing-major" class="unit">Choosing a Major</a>
-        <a href="prospective/transfer" class="unit">Transfer</a>
-        <a href="prospective/internship" class="unit">Internship</a>
+        <a href="/prospective/general-info" class="unit">General Info</a>
+        <a href="/prospective/why-cs" class="unit">Why CS?</a>
+        <a href="/prospective/cegep" class="unit">CEGEP</a>
+        <a href="/prospective/freshman" class="unit">Freshman</a>
+        <a href="/prospective/choosing-major" class="unit">Choosing a Major</a>
+        <a href="/prospective/transfer" class="unit">Transfer</a>
+        <a href="/prospective/internship" class="unit">Internship</a>
         <hr>
         <a href="prospective/undergraduate" class="unit">Undergraduate</a>
         <a href="prospective/graduate" class="unit">Graduate</a>
+    </div>
+    <div id="about" class="collapse container-fluid">
+        <a href="/about/login" class="unit">Login</a>
     </div>
 </nav>

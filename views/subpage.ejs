@@ -10,7 +10,7 @@
     <title>McGill School of Computer Science</title>
 </head>
 
-<body>
+<body onload="onLoader()">
 
     <!-- Saves the variable 'title' so it can be accessed by the script subpage.js -->
     <span id="title" style="display:none"><%=title%></span>
@@ -31,7 +31,11 @@
     <!-- <span id="icon">icon</span> -->
     <div id="content">
         <!--Get the content from the database and render it here -->
-        <%-content.html%>
+        <% if(content.read) { %>
+            <%- include(content.html)%>
+        <%} else { %>
+        <%- content.html %>
+        <% } %>
     </div>
     <%- include('partials/footer'); %>
 
