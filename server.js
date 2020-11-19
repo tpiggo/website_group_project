@@ -8,12 +8,19 @@ const app = express();
 const db = require('./config/keys').MongoURI;
 
 // Connect to Mongo
-mongoose.connect(db, { useNewUrlParser: true, useUnifiedTopology: true })
+// Setting the proper instances for the mongoose engine 
+mongoose.set('useNewUrlParser', true);
+mongoose.set('useFindAndModify', false);
+mongoose.set('useCreateIndex', true);
+mongoose.set('useUnifiedTopology', true);
+
+mongoose.connect(db)
     .then(() => { console.log('MongoDB Connected!')})
     .catch(err => { console.log(err) });
 
 // Body Parser
 app.use(express.urlencoded({ extended: false }));
+
 
 app.use(express.static('public'));
 
@@ -23,22 +30,6 @@ app.set('view engine', 'ejs');
 
 app.use('/', require("./routes/index"));
 app.use('/:page', require('./routes/subpages'));
-
-/***
- * Kept for use potentially.  However, using the subpages route is more professional and allows for more modularity.
- * Code below: 
-//Request for the Prospective page
-app.get('/prospective/:pagename', (req, res) => {
-    // console.log('Request received for /' + req.params.pagename + ' - sending file /views/' + req.params.pagename);
-    
-    //Here we take data from the JSON file and send it to subpage.ejs
-    const prospData = data.prospective[req.params.pagename];
-    const title = data.prospective.title;
-    
-    res.render('subpage', {title, ...prospData});
-    // console.log({title, ...prospData});
-});
-*/
 
 //If the route isn't recognized
 app.get('*', (req, res) => {
