@@ -34,6 +34,10 @@ nav img {
 /* user-bar CSS */
 #user-bar{
     display: flex;
+    margin: 0 4rem;
+}
+#login, #logout, #register{
+    padding-left: 1rem;
 }
 
 .nav {
