@@ -3,7 +3,18 @@ const express = require('express');
 const mongoose = require('mongoose');
 const expressLayouts = require('express-ejs-layouts');
 const app = express();
+const session = require('express-session');
 
+//Session Config
+app.use(session({
+    secret: require('./config/keys').session_secret,
+    resave: true,
+    saveUninitialized: true,
+    cookie: { 
+        maxAge: 3600000,
+        secure: false
+    }
+}));
 // DB config
 const db = require('./config/keys').MongoURI;
 

@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const session = require('express-session');
 const Page = require('../models/Page.js');
 const Subpage = require('../models/Subpage.js');
 
@@ -28,7 +29,7 @@ router.get('/:pagename', (req, res) => {
                         menu.push([element.path, element.name]);
                     });
                     var title = data.title;
-                    const logged = false;
+                    const logged = req.session.authenticated;
                     res.render('subpage.ejs', { title, menu, content, logged });
                 }
 
