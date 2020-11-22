@@ -18,7 +18,7 @@ router.get('/login', (req, res)=>{
 });
 router.get('/register', (req, res)=>{
     const title = "Register";
-    var content = {"html": 'register.ejs'};
+    var content = {"html": 'register.ejs', "script": "<script src='/js/register.js'></script>"};
     res.render('lr-layout.ejs', {title, content, logged: req.session.authenticated});
 });
 
@@ -46,9 +46,21 @@ router.post('/login', (req, res)=> {
 router.post('/register', (req, res)=> {
     var password = bcrypt.hashSync(req.body.password,10);
     var username = req.body.username;
+    User.findOne({name: username})
+        .then(user=>{
+            if (user){
+                console.log(username + " is a user.")
+            } else {
+                console.log(username + " is not a user");
+            }
+        })
+        .catch(err=>console.log(err));
     if(User.exists({name: username})){
         console.log("A user with username:" + username + " already exists.");
-        return;
+        return res.redirect('/users/register');
+    }else if(User.exists({email: email})){
+        console.log("A user with email:" + email + " already exists.");
+        return res.redirect('/users/register');
     }
     var user = new User({
         name: username,

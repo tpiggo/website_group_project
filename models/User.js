@@ -16,12 +16,7 @@ const UserSchema = new mongoose.Schema({
     userType: {
         type: Number,
         required: true
-    },
-    dateOfBirth: {
-        type: Date,
-        required: true
     }
-
 });
 
 const User = mongoose.model('User', UserSchema);

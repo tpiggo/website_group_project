@@ -14,3 +14,8 @@
 #submit-btn{
     margin: 0.5em 1em;
 }
+
+.error{
+    grid-column: span 2;
+    background-color: lightcoral;
+}
