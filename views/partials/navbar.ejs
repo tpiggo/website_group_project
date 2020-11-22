@@ -1,7 +1,7 @@
 <nav>
     <div id="user-bar">
         <% if (logged) {%>
-            <%- include('user-logged.ejs'); %>
+            <%- include('user-logged.ejs', {user}); %>
         <% } else { %>
             <%- include('user-box.ejs'); %>
         <% } %>

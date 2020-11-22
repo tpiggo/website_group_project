@@ -30,7 +30,6 @@ function initErrorBoxes(){
         else errorMsg = 'Must be a McGill email!';
         errorBox.push(new UserError(l, errorMsg));
     });
-    console.log(errorBox);
 }  
 
 window.onload = initErrorBoxes();
@@ -92,7 +91,7 @@ function checkPass(isPass, form_entry){
             // Bad pass even though it does technically match
             errors[2] = true;
         } else {
-            errorBox[2].getELement().innerHTML = errorBox[2].getErrorMsg();
+            errorBox[2].getElement().innerHTML = errorBox[2].getErrorMsg();
             errors[2] = true;
         }
         
@@ -164,9 +163,6 @@ function onSubmitErrors(form){
 function onSubmit(event, value){
     if (areErrors()){
         onSubmitErrors(value);
-        event.preventDefault();
-    } else{
-        console.log("Preventing good sub");
         event.preventDefault();
     }
 }

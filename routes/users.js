@@ -3,23 +3,23 @@ const router = express.Router();
 const app = express();
 const bcrypt = require('bcrypt');
 const session = require('express-session');
-const Page = require('../models/Page.js');
-const Subpage = require('../models/Subpage.js');
 const User = require('../models/User.js');
+const { request } = require('express');
+const { route } = require('./subpages.js');
 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
 router.get('/login', (req, res)=>{
     const title = "Login";
-    var content = {"html": 'login.ejs'};
+    var content = {"html": 'login.ejs', "script":""};
     const menu = [];
-    res.render('lr-layout.ejs', {title, menu, content, logged: req.session.authenticated});
+    res.render('lr-layout.ejs', {title, menu, content, logged: req.session.authenticated, user: req.session.username});
 });
 router.get('/register', (req, res)=>{
     const title = "Register";
     var content = {"html": 'register.ejs', "script": "<script src='/js/register.js'></script>"};
-    res.render('lr-layout.ejs', {title, content, logged: req.session.authenticated});
+    return res.render('lr-layout.ejs', {title, content, logged: req.session.authenticated, user: req.session.username});
 });
 
 router.post('/login', (req, res)=> {
@@ -31,48 +31,88 @@ router.post('/login', (req, res)=> {
         }else if(user){
             var authenticated = bcrypt.compareSync(password,user.password);
             if(authenticated){
-                console.log("User "+username + " succesfully logged in.");
+                console.log("User "+ username + " succesfully logged in.");
+                // Saving the username into the session, potentially not the greatest solution, but works for now
                 req.session.username = username;
                 req.session.authenticated = true;
+                res.redirect("/");
             }else {
                 console.log("User "+username + " failed to log in.");
+                /**
+                 * TODO: Log the error
+                 */
             }
         }else{
             console.log("No user with Username: " + username + " found.");
+            /**
+             * TODO: Log the error
+             */
         }
     });
 });
 
+/**
+ * Registration Route
+ */
 router.post('/register', (req, res)=> {
+    // Is there  a reason for doing it this way?
     var password = bcrypt.hashSync(req.body.password,10);
     var username = req.body.username;
-    User.findOne({name: username})
-        .then(user=>{
-            if (user){
-                console.log(username + " is a user.")
-            } else {
-                console.log(username + " is not a user");
-            }
-        })
-        .catch(err=>console.log(err));
-    if(User.exists({name: username})){
-        console.log("A user with username:" + username + " already exists.");
+    var email = req.body.email;
+    const title = "Register";
+    var content = {
+            "html": 'register.ejs', 
+            "script": "<script src='/js/register.js'></script>"
+        };
+    var errors = [];
+    // User query from database
+    User.find({$or: [{name: username},{email: email}]}, (err, result)=>{
+        if (err) console.log(err);
+    }).then(user=>{
+        //console.log(user);
+        if (user.length > 0){
+            user.forEach(item=>{
+                if (item.email == email){
+                    errors.push({msg: "Email already registered!"});
+                } 
+                if (item.username == username){
+                    errors.push({msg: "Username already registered!"});
+                }
+            });
+            console.log("user found!");
+            console.log(errors);
+            return res.render('lr-layout.ejs', {title, content, logged: req.session.authenticated, errors});
+        } else{
+            // The data has passed the data verification system. Enter it into the database
+            var user = new User({
+                name: username,
+                email: req.body.email,
+                password: password,
+                userType: 0
+            });
+            user.save((err) => {
+                if(err) {console.log(err);}
+            });
+            console.log("User was added to the database!!")
+        }
         return res.redirect('/users/register');
-    }else if(User.exists({email: email})){
-        console.log("A user with email:" + email + " already exists.");
-        return res.redirect('/users/register');
-    }
-    var user = new User({
-        name: username,
-        email: req.body.email,
-        password: password,
-        userType: 0,
-        dateOfBirth: req.body.date_of_birth
-    });
-    user.save((err) => {
-        if(err) {console.log(err);}
-    });
-    
+    }).catch(err=>console.log(err));
 });
+
+/** 
+ * Logout Route
+ * Can be accessed by the user if they know the route, but nothing will happen if they do not have an active session
+*/
+router.get("/logout", (req, res)=>{
+    // Check if authenticated session exists. 
+    if (req.session.authenticated){
+        req.session.destroy();
+    } else {
+        console.log("Session not authenticated");
+    }
+    console.log("Successfully logged out. Redirecting");
+    res.redirect("/");
+});
+
 
 module.exports = router;
