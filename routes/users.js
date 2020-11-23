@@ -3,6 +3,9 @@ const router = express.Router();
 const app = express();
 const bcrypt = require('bcrypt');
 const session = require('express-session');
+/**
+ * TODO: Add Session store to avoid memory leaks
+ */
 const User = require('../models/User.js');
 const { request } = require('express');
 const { route } = require('./subpages.js');
@@ -12,20 +15,23 @@ app.use(express.urlencoded({extended: true}));
 
 router.get('/login', (req, res)=>{
     const title = "Login";
-    var content = {"html": 'login.ejs', "script":""};
+    const content = {"html": 'login.ejs', "script":""};
     const menu = [];
     res.render('lr-layout.ejs', {title, menu, content, logged: req.session.authenticated, user: req.session.username});
 });
 router.get('/register', (req, res)=>{
     const title = "Register";
-    var content = {"html": 'register.ejs', "script": "<script src='/js/register.js'></script>"};
+    const content = {"html": 'register.ejs', "script": "<script src='/js/register.js'></script>"};
     return res.render('lr-layout.ejs', {title, content, logged: req.session.authenticated, user: req.session.username});
 });
 
 router.post('/login', (req, res)=> {
     var username = req.body.username;
     var password = req.body.password;
-    var userModel = User.findOne({name: username}, (err,user) => {
+    var errors = [];
+    const title = "Login";
+    const content = {"html": 'login.ejs', "script":""};
+    var userModel = User.findOne({username: username}, (err,user) => {
         if(err){ 
             console.log(err);
         }else if(user){
@@ -35,20 +41,24 @@ router.post('/login', (req, res)=> {
                 // Saving the username into the session, potentially not the greatest solution, but works for now
                 req.session.username = username;
                 req.session.authenticated = true;
-                res.redirect("/");
-            }else {
+                return res.redirect("/dashboard");
+            } else {
                 console.log("User "+username + " failed to log in.");
-                /**
-                 * TODO: Log the error
-                 */
+                errors.push({msg: "Wrong username or password!"});
             }
-        }else{
+        } else {
             console.log("No user with Username: " + username + " found.");
-            /**
-             * TODO: Log the error
-             */
+            errors.push({msg: "Wrong username or password!"});
         }
-    });
+        return res.render('lr-layout.ejs', {
+            title, 
+            menu: [],
+            content,
+            logged: req.session.authenticated,
+            user: req.session.username,
+            errors
+        });
+    }).catch(err=>console.log(err));
 });
 
 /**
@@ -57,8 +67,8 @@ router.post('/login', (req, res)=> {
 router.post('/register', (req, res)=> {
     // Is there  a reason for doing it this way?
     var password = bcrypt.hashSync(req.body.password,10);
-    var username = req.body.username;
-    var email = req.body.email;
+    const username = req.body.username;
+    const email = req.body.email;
     const title = "Register";
     var content = {
             "html": 'register.ejs', 
@@ -68,24 +78,33 @@ router.post('/register', (req, res)=> {
     // User query from database
     User.find({$or: [{name: username},{email: email}]}, (err, result)=>{
         if (err) console.log(err);
+        else console.log(result)
     }).then(user=>{
         //console.log(user);
         if (user.length > 0){
             user.forEach(item=>{
                 if (item.email == email){
                     errors.push({msg: "Email already registered!"});
-                } 
+                }
                 if (item.username == username){
                     errors.push({msg: "Username already registered!"});
                 }
+                console.log(item, email, username);
             });
             console.log("user found!");
             console.log(errors);
-            return res.render('lr-layout.ejs', {title, content, logged: req.session.authenticated, errors});
+            console.log(user);
+            return res.render('lr-layout.ejs', {
+                title, 
+                content,
+                logged: req.session.authenticated,
+                user: req.session.user,
+                errors
+            });
         } else{
             // The data has passed the data verification system. Enter it into the database
             var user = new User({
-                name: username,
+                username: username,
                 email: req.body.email,
                 password: password,
                 userType: 0
