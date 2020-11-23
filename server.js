@@ -4,17 +4,7 @@ const mongoose = require('mongoose');
 const expressLayouts = require('express-ejs-layouts');
 const app = express();
 const session = require('express-session');
-
-//Session Config
-app.use(session({
-    secret: require('./config/keys').session_secret,
-    resave: true,
-    saveUninitialized: true,
-    cookie: { 
-        maxAge: 3600000,
-        secure: false
-    }
-}));
+const MongoStore = require('connect-mongo')(session);
 // DB config
 const db = require('./config/keys').MongoURI;
 
@@ -29,6 +19,19 @@ mongoose.connect(db)
     .then(() => { console.log('MongoDB Connected!')})
     .catch(err => { console.log(err) });
 
+//Session Config
+app.use(session({
+    secret: require('./config/keys').session_secret,
+    resave: true,
+    saveUninitialized: true,
+    cookie: { 
+        maxAge: 3600000,
+        secure: false
+    },
+    store: new MongoStore({
+        mongooseConnection: mongoose.connection
+    })
+}));
 // Body Parser
 app.use(express.urlencoded({ extended: false }));
 
