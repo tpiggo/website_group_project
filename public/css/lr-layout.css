@@ -1,0 +1,21 @@
+#lr-form{
+    display: grid;
+    margin: 1em 5em;
+    border: solid 2px black;
+    border-radius: 1em;
+}
+
+.form-item{
+    display:grid;
+    padding: 1em;
+    grid-template-columns: 25% 75%;
+}
+
+#submit-btn{
+    margin: 0.5em 1em;
+}
+
+.error{
+    grid-column: span 2;
+    background-color: lightcoral;
+}
