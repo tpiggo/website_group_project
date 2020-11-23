@@ -31,6 +31,17 @@ nav img {
     cursor: pointer;
 }
 
+/* user-bar CSS */
+#user-bar{
+    display: flex;
+    margin: 0 4rem;
+    color: white;
+}
+
+#login, #logout, #register{
+    padding-left: 1rem;
+}
+
 .nav {
     right:1em;
 }
