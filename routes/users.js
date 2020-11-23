@@ -7,8 +7,6 @@ const session = require('express-session');
  * TODO: Add Session store to avoid memory leaks
  */
 const User = require('../models/User.js');
-const { request } = require('express');
-const { route } = require('./subpages.js');
 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
