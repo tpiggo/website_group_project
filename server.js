@@ -37,5 +37,5 @@ app.get('*', (req, res) => {
     res.send(`404 REQUEST NOT RECOGNIZED [${req.url}]`);
 });
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8016;
 app.listen(PORT, console.log(`Server started on port ${PORT}`));
