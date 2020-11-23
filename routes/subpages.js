@@ -3,9 +3,6 @@ const router = express.Router();
 const session = require('express-session');
 const Page = require('../models/Page.js');
 const Subpage = require('../models/Subpage.js');
-/**
- * TODO: Add Session store to avoid memory leaks
- */
 
 router.get('/:pagename', (req, res) => {
     console.log('Request received for /' + req.params.pagename + ' - sending file /views/' + req.params.pagename);

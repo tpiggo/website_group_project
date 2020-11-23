@@ -2,9 +2,6 @@ const { render } = require('ejs');
 const express = require('express');
 const router = express.Router();
 const session = require('express-session');
-/**
- * TODO: Add Session store to avoid memory leaks
- */
 
 router.get('/', (req, res) => {
     res.render('homepage', {logged: req.session.authenticated, user: req.session.username });

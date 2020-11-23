@@ -3,9 +3,6 @@ const router = express.Router();
 const app = express();
 const bcrypt = require('bcrypt');
 const session = require('express-session');
-/**
- * TODO: Add Session store to avoid memory leaks
- */
 const User = require('../models/User.js');
 
 app.use(express.json());
