@@ -1,10 +1,6 @@
 const mongoose = require('mongoose');
 
 const TAPostingSchema = new mongoose.Schema({
-    faculty: {
-        type: String,
-        required: true
-    },
     course: {
         type: String,
         required: true
