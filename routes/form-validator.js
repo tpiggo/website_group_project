@@ -2,6 +2,7 @@ const { response } = require('express');
 const express = require('express');
 const router = express.Router();
 const bodyParser = require('body-parser');
+const TAPosting = require('../models/TAPosting'); 
 
 // Body parser for these routes. Needed since sending JSONs to and from the frontend.
 router.use(bodyParser.json());
@@ -13,10 +14,10 @@ router.use(bodyParser.json());
 router.post('/addTA', (req, res)=>{
     // Auth the session
     if (req.session.authenticated){
-        console.log(req.body);
+        const aReq = req.body;
+        console.log("Handling request TA posting");
         const response = {request: 'AddTa request'};
         res.json(response);
-        console.log("Sent response");
     }
 });
 

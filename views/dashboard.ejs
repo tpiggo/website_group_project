@@ -109,10 +109,10 @@
             </select>
 
             <label for="contact" class="p-3">Contact:</label>
-            <input type="text" id="ta-contact" name="date" placeholder="Person to contact for more information"> <br>
+            <input type="text" id="taContact" name="date" placeholder="Person to contact for more information"> <br>
 
             <label for="description">Description:</label>
-            <input type="text" id="ta-description" name="description" placeholder="Short description of the posting"> <br>
+            <input type="text" id="taDescription" name="description" placeholder="Short description of the posting"> <br>
             
             <button type="submit">Add TA Posting</button>
         </form>
@@ -123,7 +123,7 @@
             <h2> Add Award recipient</h2>
 
             <label for="title">Title:</label>
-            <input type="text" id="award-title" name="title" placeholder="New Award for XX "> <br>
+            <input type="text" id="awardTitle" name="title" placeholder="New Award for XX "> <br>
             
             <label for="date" class="pt-3">Date:</label>
             <input type="date" id="date" name="date" placeholder="YYYY-MM-DD" min="2020-12-01">
@@ -132,7 +132,7 @@
             <input type="text" id="recipient" name="recipient" placeholder="Recipient"> <br>
 
             <label for="description">Description:</label>
-            <input type="text" id="award-description" name="description" placeholder="Short description"> <br>
+            <input type="text" id="awardDescription" name="description" placeholder="Short description"> <br>
             
             <button type="submit">Add Award</button>
         </form>
@@ -142,7 +142,7 @@
             <span id="closeIcon" onclick="toggleForm('addNews')">&times;</span>
             <h2> Add News</h2>
             <label for="type">News about:</label>
-            <select id="news-type" name="type">
+            <select id="newsType" name="type">
                 <option value='faculty'>Faculty</option>
                 <option value='lecturer'> Course Lecturer</option>
                 <option value='research'> Research</option>
@@ -150,19 +150,19 @@
             </select>
 
             <label for="title">Title:</label>
-            <input type="text" id="news-title" name="title" placeholder="Posting Available"> <br>
+            <input type="text" id="newsTitle" name="title" placeholder="Posting Available"> <br>
 
             <label for="date" class="pt-3">Start date:</label>
-            <input type="date" id="news-startdate" name="startdate" placeholder="YYYY-MM-DD" min="2020-12-01">
+            <input type="date" id="newsStartdate" name="startdate" placeholder="YYYY-MM-DD" min="2020-12-01">
 
             <label for="date" class="pt-3">End date:</label>
-            <input type="date" id="news-enddate" name="enddate" placeholder="YYYY-MM-DD" min="2020-12-01"> <br>
+            <input type="date" id="newsEnddate" name="enddate" placeholder="YYYY-MM-DD" min="2020-12-01"> <br>
 
             <label for="contact" class="p-3">Contact:</label>
-            <input type="text" id="news-contact" name="contact" placeholder="Person to contact for more information"> <br>
+            <input type="text" id="newsContact" name="contact" placeholder="Person to contact for more information"> <br>
 
             <label for="description">Description:</label>
-            <input type="text" id="news-description" name="description" placeholder="Short description"> <br>
+            <input type="text" id="newsDescription" name="description" placeholder="Short description"> <br>
             
             <button type="submit">Add News</button>
         </form>
@@ -172,7 +172,7 @@
             <span id="closeIcon" onclick="toggleForm('addEvent')">&times;</span>
             <h2> Add Event</h2>
             <label for="type">Event:</label>
-            <select id="event-type" name="type">
+            <select id="eventType" name="type">
                 <option value='colloquium'>Colloquium</option>
                 <option value='seminar'> Seminar</option>
                 <option value='info-session'> Info Session</option>
@@ -180,19 +180,19 @@
             </select>
 
             <label for="title">Title:</label>
-            <input type="text" id="event-title" name="title" placeholder="Posting Available"> <br>
+            <input type="text" id="eventTitle" name="title" placeholder="Posting Available"> <br>
 
             <label for="startdate" class="pt-3">Start Date:</label>
-            <input type="datetime-local" id="event-startdate" name="startdate" min="2020-10-07T09:00"><br>
+            <input type="datetime-local" id="eventStartdate" name="startdate" min="2020-10-07T09:00"><br>
 
             <label for="enddate" class="pt-3">End date:</label>
-            <input type="datetime-local" id="event-enddate" name="enddate" min="2020-10-07T09:00"> <br>
+            <input type="datetime-local" id="eventEnddate" name="enddate" min="2020-10-07T09:00"> <br>
 
             <label for="host" class="p-3">Hosted By:</label>
             <input type="text" id="host" name="host" placeholder="Host"> <br>
 
             <label for="description">Description:</label>
-            <input type="text" id="event-description" name="description" placeholder="Short description of the Event"> <br>
+            <input type="text" id="eventDescription" name="description" placeholder="Short description of the Event"> <br>
             
             <button type="submit">Add Event</button>
         </form>
@@ -203,10 +203,10 @@
             <h2> Add Technical Support</h2>
     
             <label for="title" class="p-3">Title:</label>
-            <input type="text" id="title" name="title" placeholder="Title"> <br>
+            <input type="text" id="techTitle" name="title" placeholder="Title"> <br>
 
             <label for="description">Description:</label>
-            <input type="text" id="tech-description" name="description" placeholder="Short description"> <br>
+            <input type="text" id="techDescription" name="description" placeholder="Short description"> <br>
             
             <button type="submit">Add Technical Support</button>
         </form>
@@ -224,19 +224,19 @@
             </select>
 
             <label for="title">Title:</label>
-            <input type="text" id="posting-title" name="title" placeholder="Posting Available"> <br>
+            <input type="text" id="postingTitle" name="title" placeholder="Posting Available"> <br>
 
             <label for="date" class="pt-3">Start date:</label>
-            <input type="date" id="posting-startdate" name="startdate" placeholder="YYYY-MM-DD" min="2020-12-01">
+            <input type="date" id="postingStartdate" name="startdate" placeholder="YYYY-MM-DD" min="2020-12-01">
 
             <label for="date" class="pt-3">End date:</label>
-            <input type="date" id="posting-enddate" name="enddate" placeholder="YYYY-MM-DD" min="2020-12-01"> <br>
+            <input type="date" id="postingEnddate" name="enddate" placeholder="YYYY-MM-DD" min="2020-12-01"> <br>
 
             <label for="contact" class="p-3">Contact:</label>
-            <input type="text" id="posting-contact" name="contact" placeholder="Person to contact for more information"> <br>
+            <input type="text" id="postingContact" name="contact" placeholder="Person to contact for more information"> <br>
 
             <label for="description">Description:</label>
-            <input type="text" id="posting-description" name="description" placeholder="Short description of the posting"> <br>
+            <input type="text" id="postingDescription" name="description" placeholder="Short description of the posting"> <br>
             
             <button type="submit">Add Posting</button>
         </form>
