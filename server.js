@@ -46,6 +46,7 @@ app.use('/', require("./routes/index"));
 app.use('/users', require("./routes/users"));
 app.use('/:page', require('./routes/subpages'));
 
+
 //If the route isn't recognized
 app.get('*', (req, res) => {
     console.log(`404 REQUEST NOT RECOGNIZED [${req.url}]`);

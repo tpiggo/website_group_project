@@ -6,7 +6,8 @@ const SubpageSchema = new mongoose.Schema({
         unique: true
     },  
     path: String,
-    html: String
+    html: String,
+    markdown: String
 });
 
 module.exports = mongoose.model('Subpage', SubpageSchema);
