@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const app = express();
 const bcrypt = require('bcrypt');
-const session = require('express-session');
 const User = require('../models/User.js');
 
 app.use(express.json());
@@ -26,7 +25,7 @@ router.post('/login', (req, res)=> {
     var errors = [];
     const title = "Login";
     const content = {"html": 'login.ejs', "script":""};
-    var userModel = User.findOne({username: username}, (err,user) => {
+    User.findOne({username: username}, (err,user) => {
         if(err){ 
             console.log(err);
         }else if(user){
@@ -121,10 +120,10 @@ router.get("/logout", (req, res)=>{
     // Check if authenticated session exists. 
     if (req.session.authenticated){
         req.session.destroy();
+        console.log("Successfully logged out. Redirecting");
     } else {
         console.log("Session not authenticated");
     }
-    console.log("Successfully logged out. Redirecting");
     res.redirect("/");
 });
 

@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const session = require('express-session');
 const Page = require('../models/Page.js');
 const Subpage = require('../models/Subpage.js');
 

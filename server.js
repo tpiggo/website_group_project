@@ -6,7 +6,7 @@ const app = express();
 const session = require('express-session');
 const MongoStore = require('connect-mongo')(session);
 // DB config
-const db = require('./config/keys').MongoURI;
+const db = require('./config/keys.js').MongoURI;
 
 // Connect to Mongo
 // Setting the proper instances for the mongoose engine 
@@ -21,7 +21,7 @@ mongoose.connect(db)
 
 //Session Config
 app.use(session({
-    secret: require('./config/keys').session_secret,
+    secret: require('./config/keys.js').session_secret,
     resave: true,
     saveUninitialized: true,
     cookie: { 

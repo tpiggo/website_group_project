@@ -1,7 +1,5 @@
-const { render } = require('ejs');
 const express = require('express');
 const router = express.Router();
-const session = require('express-session');
 const User = require('../models/User.js');
 
 router.get('/', (req, res) => {
@@ -16,14 +14,16 @@ router.get('/dashboard', (req, res)=>{
             if(err) {
                 console.log(err);
             }else {
-                content = {"html": "<h1>Welcome "+ req.session.username +" </h1>"}
-                res.render('dashboard', {logged: req.session.authenticated, user: req.session.username, type: user.userType})
+                const content = {'scripts': "<script src='/js/dashboard.js'></script>"};
+                res.render('dashboard', {content, logged: req.session.authenticated, user: req.session.username, type: user.userType})
             }
         });
     } else {
         // Set error page
-        // content = {"html": "<h1>You do not have access to this page! Please <a href='/users/login'>Login</a></h1>"}
-        res.send("Error : You do not have access to this page! Please <a href='/users/login'>Login</a></h1>")
+        const title = "Error!";
+        content = {"html": "<h1>You do not have access to this page! Please <a href='/users/login'>Login</a> to view this content</h1>"}
+        // Render a subpage with the error
+        res.render('subpage', {title, content, menu: [], logged: req.session.authenticated, user: req.session.username,})
     }
    
 });
