@@ -107,13 +107,14 @@
                 <option value='f2021'>Fall 2021</option>
                 <option value='w2022'>Winter 2022</option>
             </select>
-
+            
             <label for="contact" class="p-3">Contact:</label>
-            <input type="text" id="taContact" name="date" placeholder="Person to contact for more information"> <br>
+            <input type="text" id="taContact" name="date" placeholder="Person to contact for more information">
+            <label for="availableSpots">Number of Vacancies:</label>
+            <input name= "availableSpots" id="spaces" type="number" min="1" max="100"> <br>
 
             <label for="description">Description:</label>
             <input type="text" id="taDescription" name="description" placeholder="Short description of the posting"> <br>
-            
             <button type="submit">Add TA Posting</button>
         </form>
 

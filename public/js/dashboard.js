@@ -76,8 +76,8 @@ function handleRequest(event, element){
     if (!errorCheck(mForm)){
         // clear each one!
         // Create the async promise
-        const opts = {type: "POST", url: '/parse/'+element[0].id, request: mForm};
-        const aPromise = callBackEnd(opts);
+        var opts = {type: "POST", url: '/parse/'+element[0].id, request: mForm};
+        var aPromise = callBackEnd(opts);
         // Handle
         aPromise
             .then(function(response){

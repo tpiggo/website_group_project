@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const TAPostingSchema = new mongoose.Schema({
-    course: {
+    courseTitle: {
         type: String,
         required: true
     },
@@ -15,6 +15,10 @@ const TAPostingSchema = new mongoose.Schema({
     },
     description: {
         type: String,
+        required: true
+    },
+    spaces: {
+        type: Number,
         required: true
     }
 });
