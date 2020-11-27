@@ -121,7 +121,7 @@
          <!-- Add Award -->
          <form id="addAward" class="hidden" method="POST" onsubmit="handleRequest(event, $(this))">
             <span id="closeIcon" onclick="toggleForm('addAward')">&times;</span>
-            <h2> Add Award recipient</h2>
+            <h2 id="addAwardHeader"> Add Award recipient</h2>
             
             <label for="title">Title:</label>
             <input type="text" id="awardTitle" name="title" placeholder="New Award for XX "> <br>
@@ -141,7 +141,7 @@
         <!-- Add News -->
         <form id="addNews" class="hidden" method="POST" onsubmit="handleRequest(event, $(this))">
             <span id="closeIcon" onclick="toggleForm('addNews')">&times;</span>
-            <h2> Add News</h2>
+            <h2 id="addNewsHeader"> Add News</h2>
             <label for="type">News about:</label>
             <select id="newsType" name="type">
                 <option value='faculty'>Faculty</option>
@@ -171,7 +171,7 @@
         <!-- Add Event -->
         <form id="addEvent" class="hidden" method="POST" onsubmit="handleRequest(event, $(this))">
             <span id="closeIcon" onclick="toggleForm('addEvent')">&times;</span>
-            <h2> Add Event</h2>
+            <h2 id="addEventHeader"> Add Event</h2>
             <label for="type">Event:</label>
             <select id="eventType" name="type">
                 <option value='colloquium'>Colloquium</option>
@@ -201,7 +201,7 @@
         <!-- Need to fix this and add a route! -->
         <form id="addCourse" class="hidden" method="POST" onsubmit="handleRequest(event, $(this))">
             <span id="closeIcon" onclick="toggleForm('addCourse')">&times;</span>
-            <h2> Add Award recipient</h2>
+            <h2 id="addCourseHeader"> Add Award recipient</h2>
 
             <label for="title">Course:</label>
             <input type="text" id="courseID" name="title" placeholder="COMP XX "> <br>
@@ -216,7 +216,7 @@
         <!-- Add Technical Support -->
         <form id="addTech" class="hidden" method="POST"  onsubmit="handleRequest(event, $(this))">
             <span id="closeIcon" onclick="toggleForm('addTech')">&times;</span>
-            <h2> Add Technical Report</h2>
+            <h2 id="addTechHeader"> Add Technical Report</h2>
     
             <label for="title" class="p-3">Title:</label>
             <input type="text" id="techTitle" name="title" placeholder="Title"> <br>
@@ -234,7 +234,7 @@
         <!-- Add Posting -->
         <form id="addPosting" class="hidden" method="POST"  onsubmit="handleRequest(event, $(this))">
             <span id="closeIcon" onclick="toggleForm('addPosting')">&times;</span>
-            <h2> Add Posting</h2>
+            <h2 id="addPostingHeader"> Add Posting</h2>
             <label for="type">Posting for:</label>
             <select id="postingType" name="type">
                 <option value='faculty'>Faculty</option>

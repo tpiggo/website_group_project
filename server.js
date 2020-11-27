@@ -24,6 +24,7 @@ app.use(session({
     secret: require('./config/keys.js').session_secret,
     resave: true,
     saveUninitialized: true,
+    rolling: true,
     cookie: { 
         maxAge: 3600000,
         secure: false

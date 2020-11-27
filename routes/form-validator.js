@@ -13,12 +13,6 @@ router.use(bodyParser.json());
 /**
  * Dashboard forms 
  */
-
-
- /**
-  * TODO: Check the sessions current expiry, be sure it >= 50 minutes.
-  *  FOR ALL ROUTES
-  */
 // Add TA form
 router.post('/addTA', (req, res)=>{
     // Auth the session

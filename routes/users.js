@@ -8,15 +8,24 @@ app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
 router.get('/login', (req, res)=>{
-    const title = "Login";
-    const content = {"html": 'login.ejs', "script":""};
-    const menu = [];
-    res.render('lr-layout.ejs', {title, menu, content, logged: req.session.authenticated, user: req.session.username});
+    if (!req.session.authenticated){
+        const title = "Login";
+        const content = {"html": 'login.ejs', "script":""};
+        const menu = [];
+        return res.render('lr-layout.ejs', {title, menu, content, logged: req.session.authenticated, user: req.session.username});
+    } else {
+        return res.redirect('/');
+    }
+    
 });
 router.get('/register', (req, res)=>{
-    const title = "Register";
-    const content = {"html": 'register.ejs', "script": "<script src='/js/register.js'></script>"};
-    return res.render('lr-layout.ejs', {title, content, logged: req.session.authenticated, user: req.session.username});
+    if (!req.session.authenticated){
+        const title = "Register";
+        const content = {"html": 'register.ejs', "script": "<script src='/js/register.js'></script>"};
+        return res.render('lr-layout.ejs', {title, content, logged: req.session.authenticated, user: req.session.username});
+    } else {
+        return res.redirect('/');
+    }
 });
 
 router.post('/login', (req, res)=> {
@@ -107,6 +116,46 @@ router.post('/register', (req, res)=> {
         }
         return res.redirect('/users/register');
     }).catch(err=>console.log(err));
+});
+
+
+// Adding the settings route
+router.get('/settings', (req, res)=>{
+    console.log(req.session);
+
+    if (req.session.authenticated){
+        User.findOne({username: req.session.username})
+            .then(user=>{
+                if (user){
+                    // Evidently if the user is logged in, this path should be the only one to be executed
+                    const {username, email} = user;
+                    console.log(username, email);
+                    const title = "Error!";
+                    content = {"html": "<h1>Oops! We did a oopsie</h1> <a href='/'>Home</a>"}
+                    // Render a subpage with the error
+                    res.render('subpage', {title, content, menu: [], logged: req.session.authenticated, user: req.session.username})
+                } else {
+                    // This shouldn't occur if the user is logged in, but protecting against errors
+                    const title = "Error!";
+                    content = {"html": "<h1>Oops! We did a oopsie<a href='/'>Home</a></h1>"}
+                    // Render a subpage with the error
+                    res.render('subpage', {title, content, menu: [], logged: req.session.authenticated, user: req.session.username})
+                }
+            })
+            .catch(err=>{
+                console.log(err);
+                const title = "Error!";
+                content = {"html": "<h1>Oops! We did a oopsie<a href='/'>Home</a></h1>"}
+                // Render a subpage with the error
+                res.render('subpage', {title, content, menu: [], logged: req.session.authenticated, user: req.session.username})
+            });
+    } else {
+        // Set error page
+        const title = "Error!";
+        content = {"html": "<h1>You do not have access to this page! Please <a href='/users/login'>Login</a> to view this content</h1>"}
+        // Render a subpage with the error
+        res.render('subpage', {title, content, menu: [], logged: req.session.authenticated, user: req.session.username,})
+    }
 });
 
 /** 
