@@ -262,28 +262,61 @@
                             <textarea id="description" name="description" cols="60"
                                 placeholder="Description of the Course"></textarea> <br>
 
+                <label for="syllabus">Syllabus:</label>
+                <input type="text" id="syllabus" name="syllabus" placeholder="holder"> <br>
 
-                            <label for="syllabus">Syllabus:</label>
-                            <input type="text" id="syllabus" name="syllabus" placeholder="holder"> <br>
+                <button type="submit">Add Course</button>
+            </form>
 
-                            <button type="submit">Add Course</button>
-                        </form>
+            <!-- Add Technical Support -->
+            <form id="addTech" class="hidden" method="POST" onsubmit="handleRequest(event, $(this))">
+                <span id="closeIcon" onclick="toggleForm('addTech')">&times;</span>
+                <h2 id='addTechHeader'> Add Technical Report</h2>
 
-                        <!-- Add Technical Support -->
-                        <form id="addTech" class="hidden" method="POST" onsubmit="handleRequest(event, $(this))">
-                            <span id="closeIcon" onclick="toggleForm('addTech')">&times;</span>
-                            <h2> Add Technical Report</h2>
+                <label for="title" class="p-3">Title:</label>
+                <input type="text" id="techTitle" name="title" placeholder="Title"> <br>
 
-                            <label for="title" class="p-3">Title:</label>
-                            <input type="text" id="techTitle" name="title" placeholder="Title"> <br>
+                <label for="contact">Contact:</label>
+                <input type="text" id="techContact" name="contact" placeholder="Enter an email"> <br>
 
-                            <label for="contact">Contact:</label>
-                            <input type="text" id="techContact" name="contact" placeholder="Enter an email"> <br>
+                <label for="description">Description:</label>
+                <input type="text" id="techDescription" name="description" placeholder="Short description">
+                <br>
 
-                            <label for="description">Description:</label>
-                            <input type="text" id="techDescription" name="description" placeholder="Short description">
-                            <br>
 
+                <button type="submit">Add Technical Report</button>
+            </form>
+
+            <!-- Add Posting -->
+            <form id="addPosting" class="hidden" method="POST" onsubmit="handleRequest(event, $(this))">
+                <span id="closeIcon" onclick="toggleForm('addPosting')">&times;</span>
+                <h2 id='addPostingHeader'> Add Posting</h2>
+                <label for="type">Posting for:</label>
+                <select id="postingType" name="type">
+                    <option value='faculty'>Faculty</option>
+                    <option value='lecturer'> Course Lecturer</option>
+                    <option value='research'> Research</option>
+                    <option value='student'> Student</option>
+                </select>
+
+                <label for="title">Title:</label>
+                <input type="text" id="postingTitle" name="title" placeholder="Posting Available"> <br>
+
+                <label for="date" class="pt-3">Start date:</label>
+                <input type="date" id="postingStartdate" name="startdate" placeholder="YYYY-MM-DD"
+                    min="2020-12-01">
+
+                <label for="date" class="pt-3">End date:</label>
+                <input type="date" id="postingEnddate" name="enddate" placeholder="YYYY-MM-DD"
+                    min="2020-12-01"> <br>
+
+                <label for="contact" class="p-3">Contact:</label>
+                <input type="text" id="postingContact" name="contact"
+                    placeholder="Person to contact for more information"> <br>
+
+                <label for="description">Description:</label>
+                <input type="text" id="postingDescription" name="description"
+                    placeholder="Short description of the posting"> <br>
 
                             <button type="submit">Add Technical Report</button>
                         </form>

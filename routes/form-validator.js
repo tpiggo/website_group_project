@@ -390,10 +390,11 @@ router.post('/addCourse', (req, res) => {
         Course.create(req.body, (err, content) => {
             if (err) {
                 console.log(err);
-                res.json({ response: 'Error during creation the course!' });
-            } else {
+                res.json({ status: 2, response: 'Error during creation the course!' });
+            } else{
                 console.log(content);
                 res.json({
+                    status: 0,
                     response: 'Course created!',
                     posting: { title: content.title, id: content._id }
                 });
