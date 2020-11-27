@@ -44,7 +44,7 @@
                     </select>
 
                     <h3>Course</h3>
-                    <button>Add</button> <br>
+                    <button  onclick="toggleForm('addCourse')">Add</button> <br>
                     <select class="form-control" id="modCourse" name="modCourse">
                         <option>Course</option> 
                         <option value='XXX'>XXX - Name of course</option>
@@ -75,7 +75,7 @@
                         <option value='title'>title</option>
                     </select> <br>
 
-                    <h3 class="mt-3"> Technical Support</h3>
+                    <h3 class="mt-3"> Technical Report</h3>
                     <button onclick="toggleForm('addTech')">Add</button> <br>
 
                     <select class="form-control" id="modTech" name="modTech">
@@ -122,7 +122,7 @@
          <form id="addAward" class="hidden" method="POST" onsubmit="handleRequest(event, $(this))">
             <span id="closeIcon" onclick="toggleForm('addAward')">&times;</span>
             <h2> Add Award recipient</h2>
-
+            
             <label for="title">Title:</label>
             <input type="text" id="awardTitle" name="title" placeholder="New Award for XX "> <br>
             
@@ -197,19 +197,38 @@
             
             <button type="submit">Add Event</button>
         </form>
+        <!-- Add Course -->
+        <!-- Need to fix this and add a route! -->
+        <form id="addCourse" class="hidden" method="POST" onsubmit="handleRequest(event, $(this))">
+            <span id="closeIcon" onclick="toggleForm('addCourse')">&times;</span>
+            <h2> Add Award recipient</h2>
+
+            <label for="title">Course:</label>
+            <input type="text" id="courseID" name="title" placeholder="COMP XX "> <br>
+            
+
+            <label for="description">Description:</label>
+            <input type="text" id="courseDesc" name="description" placeholder="Short description"> <br>
+            
+            <button type="submit">Add Course</button>
+        </form>
 
         <!-- Add Technical Support -->
         <form id="addTech" class="hidden" method="POST"  onsubmit="handleRequest(event, $(this))">
             <span id="closeIcon" onclick="toggleForm('addTech')">&times;</span>
-            <h2> Add Technical Support</h2>
+            <h2> Add Technical Report</h2>
     
             <label for="title" class="p-3">Title:</label>
             <input type="text" id="techTitle" name="title" placeholder="Title"> <br>
 
+            <label for="contact">Contact:</label>
+            <input type="text" id="techContact" name="contact" placeholder="Enter an email"> <br>
+
             <label for="description">Description:</label>
             <input type="text" id="techDescription" name="description" placeholder="Short description"> <br>
             
-            <button type="submit">Add Technical Support</button>
+            
+            <button type="submit">Add Technical Report</button>
         </form>
 
         <!-- Add Posting -->
@@ -217,7 +236,7 @@
             <span id="closeIcon" onclick="toggleForm('addPosting')">&times;</span>
             <h2> Add Posting</h2>
             <label for="type">Posting for:</label>
-            <select id="posting-type" name="type">
+            <select id="postingType" name="type">
                 <option value='faculty'>Faculty</option>
                 <option value='lecturer'> Course Lecturer</option>
                 <option value='research'> Research</option>
@@ -241,6 +260,7 @@
             
             <button type="submit">Add Posting</button>
         </form>
+        <script src='/js/dashboard.js'></script>
     <% }  %> 
     </div>
     <%- include('partials/footer'); %>
@@ -256,4 +276,3 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js"
     integrity="sha384-w1Q4orYjBQndcko6MimVbzY0tgp4pWB4lZ7lr30WKz0vr/aWKhXdBNmNb5D92v7s"
     crossorigin="anonymous"></script>
-<%- content.scripts %>

@@ -20,8 +20,12 @@ const TAPostingSchema = new mongoose.Schema({
     spaces: {
         type: Number,
         required: true
+    },
+    creator: {
+        type: String,
+        required: true
     }
 });
 
-const TAPosting = mongoose.model('Posting', TAPostingSchema);
+const TAPosting = mongoose.model('TAPosting', TAPostingSchema);
 module.exports = TAPosting;

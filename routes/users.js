@@ -85,9 +85,6 @@ router.post('/register', (req, res)=> {
                 }
                 console.log(item, email, username);
             });
-            console.log("user found!");
-            console.log(errors);
-            console.log(user);
             return res.render('lr-layout.ejs', {
                 title, 
                 content,

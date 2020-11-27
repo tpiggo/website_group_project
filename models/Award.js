@@ -1,20 +1,15 @@
 const mongoose = require('mongoose');
 
-const PostingSchema = new mongoose.Schema({
-    faculty: {
-        type: String,
-        required: true
-    },
+const AwardSchema = new mongoose.Schema({
     title: {
         type: String,
         required: true
     },
-    start: Date,
-    end: Date,
-    contact: {
+    recipient: {
         type: String,
         required: true
     },
+    date: Date,
     description: {
         type: String,
         required: true
@@ -25,5 +20,5 @@ const PostingSchema = new mongoose.Schema({
     }
 });
 
-const Posting = mongoose.model('Posting', PostingSchema);
-module.exports = Posting;
+const Award = mongoose.model('Award', AwardSchema);
+module.exports = Award;

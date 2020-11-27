@@ -71,7 +71,7 @@ function errorCheck(aJson){
 function handleRequest(event, element){
     // Do not allow default.
     event.preventDefault();
-    // Buidling the request JSON
+    // Building the request JSON
     var mForm = makeJson(element[0]);
     if (!errorCheck(mForm)){
         // clear each one!

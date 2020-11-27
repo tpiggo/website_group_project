@@ -14,8 +14,7 @@ router.get('/dashboard', (req, res)=>{
             if(err) {
                 console.log(err);
             }else {
-                const content = {'scripts': "<script src='/js/dashboard.js'></script>"};
-                res.render('dashboard', {content, logged: req.session.authenticated, user: req.session.username, type: user.userType})
+                res.render('dashboard', {logged: req.session.authenticated, user: req.session.username, type: user.userType})
             }
         });
     } else {
