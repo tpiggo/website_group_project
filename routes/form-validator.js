@@ -368,7 +368,27 @@ router.post('/addPosting', (req, res)=>{
  * TODO: Fix the Courses "Add" button in order to create a new Course.
  * Maybe we could use a scraper in order to scrape the courses for CS off the McGill website? 
  */
-
+router.post('/addCourse', (req, res)=>{ 
+    if (req.session.authenticated){
+        Course.create(req.body, (err, content) => {
+            if(err){
+                console.log(err);
+                res.json({ status: 2, response: 'Error during creation the course!' });
+            } else{
+                console.log(content);
+                res.json({
+                    status: 0,
+                    response: 'Course created!',
+                    posting: {title: content.title, id: content._id}
+                });
+            }
+        });
+    }else{
+        // On err, render 403 err and redirect
+        res.status(403).render();
+        res.redirect('/dashboard');
+    }
+});
 
 module.exports = router;
 

@@ -1,3 +1,4 @@
+//Display forms
 function toggleForm(name) {
     var form = document.getElementById(name);
     form.classList.toggle("hidden");
@@ -9,6 +10,45 @@ function toggleForm(name) {
     for(var i = 0; i < buttons.length; i++){
         buttons[i].disabled = !buttons[i].disabled;
     }
+}
+
+//Add a new input field
+var pointer = 0;
+var total = 0;
+function addField() {
+    console.log(pointer);
+    var previousField = document.getElementById('divInstr' + pointer);
+    pointer++;
+    total++;
+    var newField = previousField.cloneNode(true);
+    newField.id = 'divInstr' + pointer;
+    newField.getElementsByTagName('input')[0].id = 'instructor' + pointer;
+    newField.getElementsByTagName('input')[0].name = 'instructor' + pointer;
+    newField.getElementsByTagName('input')[0].value = '';
+
+    if(pointer==1) {
+        var minus = document.createElement('img');
+        minus.src = '../images/minus.png'
+        newField.getElementsByTagName('br')[0].parentNode.insertBefore(minus, newField.getElementsByTagName('input')[0].nextSibling);
+   
+    } else var minus = newField.getElementsByTagName('img')[0];
+    
+    minus.id = 'minus' + pointer;
+    minus.alt = 'minus' + pointer;
+    minus.setAttribute('onclick', 'removeField(' + pointer + ')');
+
+    previousField.parentNode.insertBefore(newField, previousField.nextSibling);
+
+}
+
+function removeField(index) {
+    var field = document.getElementById('divInstr' + index);
+    var minus = document.getElementById('minus' + index);
+    field.remove();
+    minus.remove();
+    if (index == pointer) pointer--;
+    total--;
+    if(total == 0) pointer =0;
 }
 
 function callBackEnd(pOpts){
@@ -53,13 +93,26 @@ function collectionToArray(pCol){
 
 /**
  * @description Takes an Array of objects and returns a JSON
- * @param {Array} aObject 
+ * @param {Array} pObject 
  */
 function makeJson(pObject){
     var aJson = {};
+    var terms = [];
+    var instructors = []
     for (var i = 0; i< pObject.length; i++){
-        if (pObject[i].id != '' && pObject[i].type != 'submit') aJson[pObject[i].id] = pObject[i].value;
+        if (pObject[i].id != '' && pObject[i].type != 'submit') {
+            var currId = pObject[i].id;
+            
+            if(currId.includes('instruct')) {
+                instructors.push(pObject[i].value);
+            } else if (currId == "w2021c" || currId == "s2021c" || currId == "f2021c") {
+                if(document.getElementById(currId).checked) terms.push(pObject[i].value);
+            }
+            else aJson[pObject[i].id] = pObject[i].value;
+        }
     }
+    if(instructors.length >0) aJson['instructors'] = instructors;
+    if(terms.length > 0) aJson['termsOffered'] = terms;
     return aJson;
 }
 
@@ -71,8 +124,8 @@ function errorCheck(pObject){
     var areErrors = false;
     Object.keys(pObject).forEach(keys=>{
         // checking for blank entries,
-        if (pObject[keys] == '') {
-            areErrors = true
+        if (pObject[keys] == '' && document.getElementById(keys) != null) {
+            areErrors = true;
             document.getElementById(keys).style.border = "solid 1px red";
         }
     });
@@ -124,6 +177,8 @@ function handleRequest(event, element){
     event.preventDefault();
     // Building the request JSON
     var mForm = makeJson(element[0]);
+    console.log(mForm);
+    console.log(element[0]);
     if (!errorCheck(mForm)){
         // clear each one!
         // Create the async promise
@@ -137,9 +192,10 @@ function handleRequest(event, element){
                 response = JSON.parse(response);
                 console.log(response);
                 if (response.status == 0){
-                    Object.keys(mForm).forEach(key=>{
-                        document.getElementById(key).value = '';
-                    });
+                    document.getElementById(element[0].id).reset();
+                    // Object.keys(mForm).forEach(key=>{
+                    //     document.getElementById(key).value = '';
+                    // });
                     createPopupMsg('success', response.response, aId+"Header");
                 } else if (response.status >= 1) {
                     console.log("Error on submission");
@@ -149,7 +205,7 @@ function handleRequest(event, element){
             })
             .catch(function(err){console.log("error", err)});
     } else {
-        console.log("there are errors");
+        console.log("Please fill in all fields");
     }
 }
 

@@ -34,6 +34,11 @@ form.hidden{
     width:70%;
     display: inline-block;
 }
+
+form img {
+    width: 1em;
+}
+
 #closeIcon {
     position: absolute;
     right:1.2em;
