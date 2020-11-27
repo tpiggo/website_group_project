@@ -124,7 +124,7 @@ function errorCheck(pObject){
     var areErrors = false;
     Object.keys(pObject).forEach(keys=>{
         // checking for blank entries,
-        if (aJson[keys] == '' && document.getElementById(keys) != null) {
+        if (pObject[keys] == '' && document.getElementById(keys) != null) {
             areErrors = true;
             document.getElementById(keys).style.border = "solid 1px red";
         }
