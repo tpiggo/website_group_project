@@ -5,7 +5,7 @@ const TechReportSchema = new mongoose.Schema({
         required: true
     },
     creator : {
-        type: mongoose.Types.ObjectId,
+        type: String,
         required: true
     },
     contact :{

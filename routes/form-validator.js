@@ -66,7 +66,7 @@ router.post('/addTA', (req, res)=>{
                                     .then((result)=>{
                                         res.json({
                                             response: 'Creating a posting!', 
-                                            posting: {
+                                            taPosting: {
                                                 course: course,
                                                 semester: semester,
                                                 id: result._id
@@ -129,7 +129,8 @@ router.post('/addAward', (req, res)=>{
                         title: awardTitle,
                         date: date,
                         recipient: recipient,
-                        description: awardDescription
+                        description: awardDescription,
+                        creator: req.session.username
                     });
                     pAward.save()
                         .then((result)=>res.json({
@@ -283,7 +284,7 @@ router.post('/addTech', (req, res)=>{
                     console.log("New report to be submited!");
                     const pReport = new TechnicalReport({
                         title: techTitle,
-                        createdBy: user,
+                        creator: user,
                         contact: techContact,
                         description: techDescription,
                         reportDate: Date.now(),
@@ -348,7 +349,7 @@ router.post('/addPosting', (req, res)=>{
                 console.log("New Posting created!");
                 res.json({
                     response: 'Posting created!',
-                    report: {title: postingTitle, id: result._id}
+                    posting: {title: postingTitle, id: result._id}
                 });
             })
             .catch(err=>{
