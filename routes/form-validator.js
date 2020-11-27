@@ -65,6 +65,7 @@ router.post('/addTA', (req, res)=>{
                                 pPosting.save()
                                     .then((result)=>{
                                         res.json({
+                                            status: 0, 
                                             response: 'Creating a posting!', 
                                             taPosting: {
                                                 course: course,
@@ -75,26 +76,26 @@ router.post('/addTA', (req, res)=>{
                                     })
                                     .catch(err=>{
                                         console.log(err);
-                                        res.json({ response: 'Error creating the course!' });
+                                        res.json({status: 2, response: 'Error creating the course!' });
                                     });
         
                             } else {
                                 console.log("found a course posting!")
-                                res.json({ response: 'Course Posting exists already! Please update it'});
+                                res.json({ status: 1, response: 'Course Posting exists already! Please update it'});
                             }
                         })
                         .catch(err=>{
                             console.log(err)
-                            res.json({ response: 'Error accessing TAP database! Try again later!' });
+                            res.json({ status: 2, response: 'Error accessing TAP database! Try again later!' });
                         });
                 } else {
                     console.log('No match! :(');
-                    res.json({ response: "Invalid course or semester!"});
+                    res.json({ status: 1, response: "Invalid course or semester!"});
                 }
             })
             .catch(err=>{
                 console.log(err);
-                res.json({ response: 'Error accessing Course database! Try again later!' });
+                res.json({ status: 2, response: 'Error accessing Course database! Try again later!' });
             });
     } else {
         // On err, render 403 err and redirect
@@ -122,7 +123,7 @@ router.post('/addAward', (req, res)=>{
             .then(award => {
                 if (award){
                     console.log("Award exists!");
-                    res.json({ response: 'Award exists! Please modify the existing award!' });
+                    res.json({ status: 1, response: 'Award exists! Please modify the existing award!' });
                 } else {
                     console.log("Creating award");
                     const pAward = new Award({
@@ -134,6 +135,7 @@ router.post('/addAward', (req, res)=>{
                     });
                     pAward.save()
                         .then((result)=>res.json({
+                            status: 0, 
                             response: 'Award created!',
                             eventTitle: {
                                 title: awardTitle,
@@ -143,13 +145,13 @@ router.post('/addAward', (req, res)=>{
                         }))
                         .catch(err=>{
                             console.log(err);
-                            res.json({ response: 'Error creating award!' });
+                            res.json({ status: 2, response: 'Error creating award!' });
                         });
                 } 
             })
             .catch(err => {
                 console.log(err);
-                res.json({ response: 'Error accessing database! Try again later!' });
+                res.json({ status: 2, response: 'Error accessing database! Try again later!' });
             })
 
         console.log("Sent response");
@@ -190,13 +192,14 @@ router.post('/addNews', (req, res)=>{
         pArticle.save()
             .then((result)=>{
                 res.json({
+                    status: 0, 
                     response:'News article created!',
                     article:  {title: newsTitle, id:  result._id}
                 });
             })
             .catch(err=>{
                 console.log(err);
-                res.json({ response: 'Error accessing database! Try again later!' });
+                res.json({ status: 2, response: 'Error accessing database! Try again later!' });
             })
         console.log("Sent response");
     } else {
@@ -224,7 +227,7 @@ router.post('/addEvent', (req, res)=>{
                 // Check the existance of the event
                 if (event){
                     console.log("Event already Exists!");
-                    res.json({ response:  'Event exists. Please update it!'});
+                    res.json({ status: 1, response:  'Event exists. Please update it!'});
                 } else {
                     console.log("No event found!");
                     // Create the event 
@@ -240,18 +243,19 @@ router.post('/addEvent', (req, res)=>{
                     // Save event and handle events
                     pEvent.save()
                         .then((result)=>res.json({
+                            status: 0, 
                             response: 'Event created!',
                             event: { eventTitle: eventTitle, id: result._id }
                         }))
                         .catch(err=>{
                             console.log(err);
-                            res.json({ response: 'Error creating event!' });
+                            res.json({status: 2, response: 'Error creating event!' });
                         });
                 }
             })
             .catch(err=>{
                 console.log(err);
-                res.json({response: 'Error accessing database! Try again later!'});
+                res.json({status: 2, response: 'Error accessing database! Try again later!'});
             });
         console.log("Sent response");
     } else {
@@ -279,7 +283,7 @@ router.post('/addTech', (req, res)=>{
             .then(report => {
                 if (report){
                     console.log("Found report of same name by same user!");
-                    res.json({response: 'This report has already been submitted!'});
+                    res.json({status: 1, response: 'This report has already been submitted!'});
                 } else {
                     console.log("New report to be submited!");
                     const pReport = new TechnicalReport({
@@ -295,19 +299,20 @@ router.post('/addTech', (req, res)=>{
                         .then(result=>{
                             console.log("Successfully created new report!");
                             res.json({
+                                status: 0, 
                                 response: 'New technical report created!',
                                 report: {title: techTitle, id: result._id}
                             });
                         })
                         .catch(err=>{
                             console.log(err);
-                            res.json({response: 'Error during creation! Please try again!'});
+                            res.json({status: 2, response: 'Error during creation! Please try again!'});
                         })
                 }
             })
             .catch(err => {
                 console.log(err);
-                res.json({response: 'Error accessing database! Try again later!'});
+                res.json({status: 2, response: 'Error accessing database! Try again later!'});
             })
         console.log("Sent response");
     } else{
@@ -348,13 +353,14 @@ router.post('/addPosting', (req, res)=>{
             .then(result => {
                 console.log("New Posting created!");
                 res.json({
+                    status: 0, 
                     response: 'Posting created!',
                     posting: {title: postingTitle, id: result._id}
                 });
             })
             .catch(err=>{
                 console.log(err);
-                res.json({ response: 'Error during creation the posting!' });
+                res.json({status: 2, response: 'Error during creation the posting!' });
             })
         console.log("Sent response");
     } else{
