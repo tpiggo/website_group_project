@@ -1,8 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const bodyParser = require('body-parser');
-const TAPosting = require('../models/TAPosting'); 
-const Course = require('../models/Courses'); 
+const middleware = require("../middleware");
+
+const TAPosting = require('../models/TAPosting');
+const Course = require('../models/Courses');
 const Event = require('../models/Events');
 const News = require('../models/News');
 const TechnicalReport = require('../models/TechnicalReport');
@@ -15,99 +17,107 @@ router.use(bodyParser.json());
  */
 
 
- /**
-  * TODO: Check the sessions current expiry, be sure it >= 50 minutes.
-  *  FOR ALL ROUTES
-  */
-// Add TA form
-router.post('/addTA', (req, res)=>{
-    // Auth the session
-    if (req.session.authenticated){
-        var {
-            course,
-            semester,
-            taContact,
-            taDescription,
-            spaces
-        } = req.body;
-        course = course.toUpperCase();
-        if (semester.includes('f')) semester = semester.replace('f', "Fall ");
-        else if (semester.includes('w')) semester = semester.replace('w', "Winter ");
-        else if (semester.includes('s')) semester = semester.replace('s', "Summer "); 
-        // Last logical is up for changing depending on how we maintain summer semester (since there are 2)
-        // Query to find a course which contains the same name during the same semester
-        Course.find({"$and": [
-            {title: {'$regex': course, '$options': 'ix'}}, 
-            {termsOffered: semester}
-        ]})
-            .then(result => {
-                console.log(result);
-                if (result.length > 0){
-                    console.log("Found a match!")
-                    
-                    // Given there is a course in the courses database, we can move on to checking if
-                    // There exists a TAPosting for this course for that semester. If not we can go ahead and post one!
-                    TAPosting.findOne({'$and': [
-                        { courseTitle : course }, 
-                        { semester: semester }
-                    ]})
-                        .then(coursePosting=>{
-                            // Checks if there was a posting found
-                            if (!coursePosting){
-                                const pPosting = new TAPosting({
-                                    courseTitle: course,
-                                    semester: semester,
-                                    contact: taContact,
-                                    description: taDescription,
-                                    spaces: spaces,
-                                    creator: req.session.username
-                                });
-                                pPosting.save()
-                                    .then((result)=>{
-                                        res.json({
-                                            status: 0, 
-                                            response: 'Creating a posting!', 
-                                            taPosting: {
-                                                course: course,
-                                                semester: semester,
-                                                id: result._id
-                                            }
-                                        });
-                                    })
-                                    .catch(err=>{
-                                        console.log(err);
-                                        res.json({status: 2, response: 'Error creating the course!' });
-                                    });
-        
-                            } else {
-                                console.log("found a course posting!")
-                                res.json({ status: 1, response: 'Course Posting exists already! Please update it'});
-                            }
-                        })
-                        .catch(err=>{
-                            console.log(err)
-                            res.json({ status: 2, response: 'Error accessing TAP database! Try again later!' });
-                        });
+/**
+ * TODO: Check the sessions current expiry, be sure it >= 50 minutes.
+ *  FOR ALL ROUTES
+ */
+// Add TA form API
+router.post('/addTA', middleware.isAuthenticated, (req, res) => {
+    // Last logical is up for changing depending on how we maintain summer semester (since there are 2)
+    // Query to find a course which contains the same name during the same semester
+
+    /**
+     * Finds course based on title and semester
+     * 
+     * @param {string} title Title of course
+     * @param {string} semester Title of semester
+     * @returns {Promise}
+     */
+    function findCourse(title, semester) {
+        return new Promise((resolve, reject) => {
+            Course.find({ title: title, termsOffered: semester}, (err, match) => {
+                if (err) {
+                    console.error(err);
+                    reject({ status: 2, response: 'Error accessing Course database! Try again later!' });
                 } else {
-                    console.log('No match! :(');
-                    res.json({ status: 1, response: "Invalid course or semester!"});
+                    resolve(match);
                 }
-            })
-            .catch(err=>{
-                console.log(err);
-                res.json({ status: 2, response: 'Error accessing Course database! Try again later!' });
             });
-    } else {
-        // On err, render 403 err and redirect
-        res.status(403).render();
-        res.redirect('/dashboard');
+        });
     }
+
+    /**
+     * Finds one TA post from a course
+     * @param {object} course Course object
+     * @returns {Promise}
+     */
+    function findTAPosting(course) {
+        return new Promise((resolve, reject) => {
+            if (course.length > 0) {
+                TAPosting.findOne({ courseTitle: req.body.courseTitle.toUpperCase(), semester: req.body.semester }, (err, coursePost) => {
+                    if (err) {
+                        console.error(err);
+                        reject({ status: 2, response: 'Error accessing TAP database! Try again later!' });
+                    } else {
+                        resolve(coursePost)
+                    }
+                });
+            } else {
+                console.warn('No match! for : [' + req.body.courseTitle + '] and [' + req.body.semester + "]");
+                reject({ status: 1, response: "Invalid course or semester!" });
+            }
+        });
+    }
+
+    /**
+     * Creates a post if it doesn't already exist
+     * 
+     * @param {object} post Post
+     * @returns {Promise}
+     */
+    function createPost(post) {
+        return new Promise((resolve, reject) => {
+            if (!post) {
+                const content = req.body;
+                TAPosting.create({ ...content, creator: req.session.username }, (err, createdPost) => {
+                    if (err) {
+                        console.error(err);
+                        reject({ status: 2, response: 'Error creating the course!' });
+                    } else {
+                        resolve({
+                            status: 0,
+                            response: 'Creating a posting for TA!',
+                            taPosting: {
+                                course: req.body.courseTitle,
+                                semester: req.body.semester,
+                                id: createdPost._id
+                            }
+                        });
+                    }
+                })
+            } else {
+                console.log("found a course posting!")
+                res.json({ status: 1, response: 'Course Posting exists already! Please update it' });
+            }
+        });
+    }
+
+    findCourse(req.body.courseTitle, req.body.semester ).then(found => {
+        return findTAPosting(found);
+    }).then(post => {
+        return createPost(post);
+    }).then(response => {
+        res.json(response);
+    }).catch(msg => {
+        res.json(msg);
+    });
+
 });
 
 // TODO: Implement this route
-router.post('/addAward', (req, res)=>{
+router.post('/addAward', (req, res) => {
     // Auth the session
-    if (req.session.authenticated){
+    if (req.session.authenticated) {
         console.log(req.body);
         const {
             awardTitle,
@@ -117,11 +127,12 @@ router.post('/addAward', (req, res)=>{
         } = req.body;
         Award.findOne({
             "$and": [
-                {title: awardTitle},
-                {recipient: recipient}
-            ]})
+                { title: awardTitle },
+                { recipient: recipient }
+            ]
+        })
             .then(award => {
-                if (award){
+                if (award) {
                     console.log("Award exists!");
                     res.json({ status: 1, response: 'Award exists! Please modify the existing award!' });
                 } else {
@@ -134,8 +145,8 @@ router.post('/addAward', (req, res)=>{
                         creator: req.session.username
                     });
                     pAward.save()
-                        .then((result)=>res.json({
-                            status: 0, 
+                        .then((result) => res.json({
+                            status: 0,
                             response: 'Award created!',
                             eventTitle: {
                                 title: awardTitle,
@@ -143,11 +154,11 @@ router.post('/addAward', (req, res)=>{
                                 id: result._id
                             }
                         }))
-                        .catch(err=>{
+                        .catch(err => {
                             console.log(err);
                             res.json({ status: 2, response: 'Error creating award!' });
                         });
-                } 
+                }
             })
             .catch(err => {
                 console.log(err);
@@ -163,9 +174,9 @@ router.post('/addAward', (req, res)=>{
 });
 
 // TODO: Implement this route
-router.post('/addNews', (req, res)=>{
+router.post('/addNews', (req, res) => {
     // Auth the session
-    if (req.session.authenticated){
+    if (req.session.authenticated) {
         /** 
          * Not enforcing unique names for the articles.
          * Return object Id for rendering of article
@@ -175,10 +186,10 @@ router.post('/addNews', (req, res)=>{
             newsTitle,
             newsStartdate,
             newsEnddate,
-            newsContact, 
-            newsDescription 
+            newsContact,
+            newsDescription
         } = req.body;
-        
+
         const pArticle = new News({
             faculty: newsType,
             title: newsTitle,
@@ -190,14 +201,14 @@ router.post('/addNews', (req, res)=>{
         });
         // save the article, return the proper response
         pArticle.save()
-            .then((result)=>{
+            .then((result) => {
                 res.json({
-                    status: 0, 
-                    response:'News article created!',
-                    article:  {title: newsTitle, id:  result._id}
+                    status: 0,
+                    response: 'News article created!',
+                    article: { title: newsTitle, id: result._id }
                 });
             })
-            .catch(err=>{
+            .catch(err => {
                 console.log(err);
                 res.json({ status: 2, response: 'Error accessing database! Try again later!' });
             })
@@ -210,24 +221,24 @@ router.post('/addNews', (req, res)=>{
 });
 
 // TODO: Implement this route
-router.post('/addEvent', (req, res)=>{
+router.post('/addEvent', (req, res) => {
     // Auth the session
-    if (req.session.authenticated){
+    if (req.session.authenticated) {
         console.log(req.body);
         // Search for an event which already exists
-        const {eventType, eventTitle, eventStartdate, eventEnddate, host, eventDescription} = req.body;
+        const { eventType, eventTitle, eventStartdate, eventEnddate, host, eventDescription } = req.body;
         Event.findOne({
             "$and": [
-                {title: eventTitle},
-                {start: eventStartdate},
-                {eventType: eventType}
+                { title: eventTitle },
+                { start: eventStartdate },
+                { eventType: eventType }
             ]
         })
             .then(event => {
                 // Check the existance of the event
-                if (event){
+                if (event) {
                     console.log("Event already Exists!");
-                    res.json({ status: 1, response:  'Event exists. Please update it!'});
+                    res.json({ status: 1, response: 'Event exists. Please update it!' });
                 } else {
                     console.log("No event found!");
                     // Create the event 
@@ -242,20 +253,20 @@ router.post('/addEvent', (req, res)=>{
                     });
                     // Save event and handle events
                     pEvent.save()
-                        .then((result)=>res.json({
-                            status: 0, 
+                        .then((result) => res.json({
+                            status: 0,
                             response: 'Event created!',
                             event: { eventTitle: eventTitle, id: result._id }
                         }))
-                        .catch(err=>{
+                        .catch(err => {
                             console.log(err);
-                            res.json({status: 2, response: 'Error creating event!' });
+                            res.json({ status: 2, response: 'Error creating event!' });
                         });
                 }
             })
-            .catch(err=>{
+            .catch(err => {
                 console.log(err);
-                res.json({status: 2, response: 'Error accessing database! Try again later!'});
+                res.json({ status: 2, response: 'Error accessing database! Try again later!' });
             });
         console.log("Sent response");
     } else {
@@ -266,24 +277,24 @@ router.post('/addEvent', (req, res)=>{
 });
 
 // TODO: Implement this route
-router.post('/addTech', (req, res)=>{
+router.post('/addTech', (req, res) => {
     // Auth the session
-    if (req.session.authenticated){
+    if (req.session.authenticated) {
         console.log(req.body);
         const user = req.session.username;
         const { techTitle, techContact, techDescription } = req.body
         // Can have two tech report postings which are essentially identical. Simply checking if 
         // Someone is trying to readd the same technical report (ie same everything by same creator.) 
         TechnicalReport.findOne({
-            "$and" : [
-                {title : techTitle},
-                {createdBy: user},
+            "$and": [
+                { title: techTitle },
+                { createdBy: user },
             ]
         })
             .then(report => {
-                if (report){
+                if (report) {
                     console.log("Found report of same name by same user!");
-                    res.json({status: 1, response: 'This report has already been submitted!'});
+                    res.json({ status: 1, response: 'This report has already been submitted!' });
                 } else {
                     console.log("New report to be submited!");
                     const pReport = new TechnicalReport({
@@ -296,51 +307,51 @@ router.post('/addTech', (req, res)=>{
                         lastEdited: Date.now()
                     });
                     pReport.save()
-                        .then(result=>{
+                        .then(result => {
                             console.log("Successfully created new report!");
                             res.json({
-                                status: 0, 
+                                status: 0,
                                 response: 'New technical report created!',
-                                report: {title: techTitle, id: result._id}
+                                report: { title: techTitle, id: result._id }
                             });
                         })
-                        .catch(err=>{
+                        .catch(err => {
                             console.log(err);
-                            res.json({status: 2, response: 'Error during creation! Please try again!'});
+                            res.json({ status: 2, response: 'Error during creation! Please try again!' });
                         })
                 }
             })
             .catch(err => {
                 console.log(err);
-                res.json({status: 2, response: 'Error accessing database! Try again later!'});
+                res.json({ status: 2, response: 'Error accessing database! Try again later!' });
             })
         console.log("Sent response");
-    } else{
+    } else {
         // On err, render 403 err and redirect
         res.status(403).render();
         res.redirect('/dashboard');
     }
 });
 // TODO: Implement this route
-router.post('/addPosting', (req, res)=>{
+router.post('/addPosting', (req, res) => {
     // Auth the session
-    if (req.session.authenticated){
+    if (req.session.authenticated) {
         console.log(req.body);
         // setting params
-        const { 
+        const {
             postingType,
             postingTitle,
             postingStartdate,
             postingEnddate,
             postingContact,
             postingDescription
-        }  = req.body; 
+        } = req.body;
         // Just saving a posting.
         // Should we have database checking? Not sure. Two jobs of the same nature could be created!
         // __      __
         //   \(ツ)/
         const pPosting = new Posting({
-            faculty:postingType,
+            faculty: postingType,
             title: postingTitle,
             start: postingStartdate,
             end: postingEnddate,
@@ -353,17 +364,17 @@ router.post('/addPosting', (req, res)=>{
             .then(result => {
                 console.log("New Posting created!");
                 res.json({
-                    status: 0, 
+                    status: 0,
                     response: 'Posting created!',
-                    posting: {title: postingTitle, id: result._id}
+                    posting: { title: postingTitle, id: result._id }
                 });
             })
-            .catch(err=>{
+            .catch(err => {
                 console.log(err);
-                res.json({status: 2, response: 'Error during creation the posting!' });
+                res.json({ status: 2, response: 'Error during creation the posting!' });
             })
         console.log("Sent response");
-    } else{
+    } else {
         // On err, render 403 err and redirect
         res.status(403).render();
         res.redirect('/dashboard');
@@ -374,21 +385,21 @@ router.post('/addPosting', (req, res)=>{
  * TODO: Fix the Courses "Add" button in order to create a new Course.
  * Maybe we could use a scraper in order to scrape the courses for CS off the McGill website? 
  */
-router.post('/addCourse', (req, res)=>{ 
-    if (req.session.authenticated){
+router.post('/addCourse', (req, res) => {
+    if (req.session.authenticated) {
         Course.create(req.body, (err, content) => {
-            if(err){
+            if (err) {
                 console.log(err);
                 res.json({ response: 'Error during creation the course!' });
-            } else{
+            } else {
                 console.log(content);
                 res.json({
                     response: 'Course created!',
-                    posting: {title: content.title, id: content._id}
+                    posting: { title: content.title, id: content._id }
                 });
             }
         });
-    }else{
+    } else {
         // On err, render 403 err and redirect
         res.status(403).render();
         res.redirect('/dashboard');
