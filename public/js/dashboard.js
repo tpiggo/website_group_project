@@ -108,7 +108,7 @@ function makeJson(pObject){
             } else if (currId == "w2021c" || currId == "s2021c" || currId == "f2021c") {
                 if(document.getElementById(currId).checked) terms.push(pObject[i].value);
             }
-            else aJson[pObject[i].id] = pObject[i].value;
+            else aJson[pObject[i].name] = pObject[i].value;
         }
     }
     if(instructors.length >0) aJson['instructors'] = instructors;

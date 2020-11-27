@@ -8,13 +8,13 @@
     <link rel="stylesheet" href="/css/subpage.css">
     <link rel="stylesheet" href="/css/dashboard.css">
 
-    <title> CS Dasboard</title>
+    <title>CS Dasboard</title>
 
     <!-- the user 'admin' with password 'admin123' has a userType 1 and can access the full Dashboard -->
 </head>
 
 <body>
-    <%- include('partials/navbar', {logged, user}); %>
+    <%- include('partials/navbar', {logged, username : user.username}); %>
 
     <div id="content">
         <div id="center">
@@ -35,52 +35,64 @@
             <div class="row">
                 <div class="col ">
                     <h3>TA</h3>
-                    <button <% if(type>0) {%> onclick="toggleForm('addTA')" <%}%> >Add Posting</button>
-                    <button  <% if(type>0) {%> onclick="toggleForm('addAward')" <%}%>>Add Award Recipient</button><br>
+                    <button <% if(user.userType>0) {%> onclick="toggleForm('addTA')" <%}%> >Add Posting</button>
+                    <button  <% if(user.userType>0) {%> onclick="toggleForm('addAward')" <%}%>>Add Award Recipient</button><br>
                     
                     <select id="modAward" class="form-control" name="modAward">
                         <option>Modify Award Recipient</option>
-                        <option value='Ta'>Ta name for COMP XX (Winter/Fall XXX)</option>
+                        <% for(let award of pages.awards) { %>
+                            <option value='<%= award._id %>'><%= award.title + " for " + award.recipient %></option>
+                            <% } %>
                     </select>
 
                     <h3>Course</h3>
-                    <button <% if(type>0) {%> onclick="toggleForm('addCourse')" <%}%> > Add</button> <br>
+                    <button <% if(user.userType>0) {%> onclick="toggleForm('addCourse')" <%}%> > Add</button> <br>
                     <select class="form-control" id="modCourse" name="modCourse">
-                        <option>Modify Course</option> 
-                        <option value='XXX'>XXX - Name of course</option>
+                        <option>Modify Course</option>  
+                        <% for(let course of pages.courses) { %>
+                            <option value='<%= course._id %>'><%= course.title %></option>
+                            <% } %>
                     </select>
 
                     <h3> Posting</h3>
-                    <button <% if(type>0) {%> onclick="toggleForm('addPosting')" <%}%> >Add</button><br>
+                    <button <% if(user.userType>0) {%> onclick="toggleForm('addPosting')" <%}%> >Add</button><br>
 
                     <select class="form-control" id="modPosting" name="modPosting">
                         <option>Modify Posting</option> 
-                        <option value='title'>title</option>
+                        <% for(let post of pages.postings) { %>
+                            <option value='<%= post._id %>'><%= post.title + " " + post.start %></option>
+                            <% } %>
                     </select> <br>
 
                 </div>
                 <div class="col">
                     <h3> News & Events</h3>
-                    <button <% if(type>0) {%> onclick="toggleForm('addNews')" <%}%> >Add News</button> <br>
+                    <button <% if(user.userType>0) {%> onclick="toggleForm('addNews')" <%}%> >Add News</button> <br>
 
                     <select class="form-control" id="modnews" name="modNews">
                         <option>Modify News Story</option> 
-                        <option value='title'>title</option>
+                        <% for(let n of pages.news) { %>
+                            <option value='<%= n._id %>'><%= n.title + ' - ' + n.contact%></option>
+                            <% } %>
                     </select> <br>
 
-                    <button <% if(type>0) {%> onclick="toggleForm('addEvent')" <%}%> >Add Events</button> <br>
+                    <button <% if(user.userType>0) {%> onclick="toggleForm('addEvent')" <%}%> >Add Events</button> <br>
 
                     <select class="form-control" id="modEvent" name="modEvent">
                         <option>Modify Events</option> 
-                        <option value='title'>title</option>
+                        <% for(let event of pages.events) { %>
+                            <option value='<%= event._id %>'><%= event.title + " - " + event.start %></option>
+                            <% } %>
                     </select> <br>
 
                     <h3 class="mt-3"> Technical Report</h3>
-                    <button <% if(type>0) {%> onclick="toggleForm('addTech')" <%}%> >Add</button> <br>
+                    <button <% if(user.userType>0) {%> onclick="toggleForm('addTech')" <%}%> >Add</button> <br>
 
                     <select class="form-control" id="modTech" name="modTech">
                         <option>Modify Technical Support</option> 
-                        <option value='title'>title</option>
+                        <% for(let tech of pages.techs) { %>
+                            <option value='<%= tech._id %>'><%= tech.title + " on " + tech.reportDate %></option>
+                            <% } %>
                     </select> <br>
                 </div>
 
@@ -93,30 +105,32 @@
         <!-- The forms will only be renderer if the user is of type 1 or above -->
         <!-- Make these async? Sends down a path and returns an answer which renders a message? Seem like the best idea! -->
         <!-- Make all the required fields required, e.prevent default the form -->
-        <% if(type>0) {  %> <!-- Add TA Posting -->
+        <% if(user.userType>0) {  %> <!-- Add TA Posting -->
                         <form id="addTA" class="hidden" method="POST" onsubmit="handleRequest(event, $(this))">
                             <span id="closeIcon" onclick="toggleForm('addTA')">&times;</span>
                             <h2> Add TA Posting</h2>
-                            <label for="course">Course:</label>
-                            <input type="text" id="course" name="course" placeholder="COMP XXX"> <br>
+                            <label for="courseTitle">Course:</label>
+                            <input type="text" id="courseTitle" name="courseTitle" placeholder="COMP XXX"> <br>
 
                             <label for="semester">Semester:</label>
                             <select id="semester" name="semester">
-                                <option value='w2021'>Winter 2021</option>
-                                <option value='f2021'>Fall 2021</option>
-                                <option value='w2022'>Winter 2022</option>
-                            </select>
+                                <option value='Winter 2021'>Winter 2021</option>
+                                <option value='Fall 2021'>Fall 2021</option>
+                                <option value='Winter 2022'>Winter 2022</option>
+                            </select> &emsp;
 
-                            <label for="availableSpots">Number of Vacancies:</label>
-                            <input name="availableSpots" id="spaces" type="number" min="1" max="100"> <br>
+                            <label for="spaces">Number of Vacancies:</label>
+                            <input name="spaces" id="spaces" type="number" min="1" max="100"> <br>
 
                             <label for="contact" class="p-3">Contact:</label>
-                            <input type="text" id="taContact" name="date"
+                            <input type="text" id="taContact" name="contact"
                                 placeholder="Person to contact for more information"> <br>
 
                             <label for="description">Description:</label> <br>
-                            <input type="text" id="taDescription" name="description"
-                                placeholder="Short description of the posting"> <br>
+                            
+                            <textarea id="taDescription" name="description" cols="60"
+                            placeholder="Short description of the posting"></textarea> <br>
+                            
                             <button type="submit">Add TA Posting</button>
                         </form>
 
@@ -201,8 +215,8 @@
                             <input type="text" id="host" name="host" placeholder="Host"> <br>
 
                             <label for="description">Description:</label>
-                            <input type="text" id="eventDescription" name="description"
-                                placeholder="Short description of the Event"> <br>
+                            <textarea id="eventDescription" name="description" cols="60"
+                            placeholder="Description of the Event"></textarea> <br>
 
                             <button type="submit">Add Event</button>
                         </form>
@@ -231,8 +245,6 @@
                             <span id="divInstr0">
                                 <input type="text" id="instructor0" name="instructor0" placeholder="Name (optional : Semester)"> <br>
                             </span>
-
-
 
                             <label for="calendar">McGill Ecalendar Link:</label>
                             <input type="text" id="calendar" name="calendar"
@@ -309,13 +321,15 @@
 
                             <button type="submit">Add Posting</button>
                         </form>
-                        <script src='/js/dashboard.js'></script>
                         <% }  %>
                 </div>
                 <%- include('partials/footer'); %>
 
 </body>
 
+<% if(user.userType>0) {  %>
+    <script src='/js/dashboard.js'></script>
+<% }  %>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
     integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
     crossorigin="anonymous"></script>
