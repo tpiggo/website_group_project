@@ -1,3 +1,4 @@
+//Display forms
 function toggleForm(name) {
     var form = document.getElementById(name);
     form.classList.toggle("hidden");
@@ -9,6 +10,45 @@ function toggleForm(name) {
     for(var i = 0; i < buttons.length; i++){
         buttons[i].disabled = !buttons[i].disabled;
     }
+}
+
+//Add a new input field
+var pointer = 0;
+var total = 0;
+function addField() {
+    console.log(pointer);
+    var previousField = document.getElementById('divInstr' + pointer);
+    pointer++;
+    total++;
+    var newField = previousField.cloneNode(true);
+    newField.id = 'divInstr' + pointer;
+    newField.getElementsByTagName('input')[0].id = 'instructor' + pointer;
+    newField.getElementsByTagName('input')[0].name = 'instructor' + pointer;
+    newField.getElementsByTagName('input')[0].value = '';
+
+    if(pointer==1) {
+        var minus = document.createElement('img');
+        minus.src = '../images/minus.png'
+        newField.getElementsByTagName('br')[0].parentNode.insertBefore(minus, newField.getElementsByTagName('input')[0].nextSibling);
+   
+    } else var minus = newField.getElementsByTagName('img')[0];
+    
+    minus.id = 'minus' + pointer;
+    minus.alt = 'minus' + pointer;
+    minus.setAttribute('onclick', 'removeField(' + pointer + ')');
+
+    previousField.parentNode.insertBefore(newField, previousField.nextSibling);
+
+}
+
+function removeField(index) {
+    var field = document.getElementById('divInstr' + index);
+    var minus = document.getElementById('minus' + index);
+    field.remove();
+    minus.remove();
+    if (index == pointer) pointer--;
+    total--;
+    if(total == 0) pointer =0;
 }
 
 function callBackEnd(opts){
@@ -49,9 +89,23 @@ function collectionToArray(pColl){
 
 function makeJson(aObject){
     var aJson = {};
+    var terms = [];
+    var instructors = []
     for (var i = 0; i< aObject.length; i++){
-        if (aObject[i].id != '' && aObject[i].type != 'submit') aJson[aObject[i].id] = aObject[i].value;
+        if (aObject[i].id != '' && aObject[i].type != 'submit') {
+            var currId = aObject[i].id;
+            
+            if(currId.includes('instruct')) {
+                instructors.push(aObject[i].value);
+            } else if (currId == "w2021c" || currId == "s2021c" || currId == "f2021c") {
+                if(document.getElementById(currId).checked) terms.push(aObject[i].value);
+            }
+            
+            else aJson[aObject[i].id] = aObject[i].value;
+        }
     }
+    if(instructors.length >0) aJson['instructors'] = instructors;
+    if(terms.length > 0) aJson['termsOffered'] = terms;
     return aJson;
 }
 
@@ -59,8 +113,8 @@ function errorCheck(aJson){
     var areErrors = false;
     Object.keys(aJson).forEach(keys=>{
         // checking for blank entries,
-        if (aJson[keys] == '') {
-            areErrors = true
+        if (aJson[keys] == '' && document.getElementById(keys) != null) {
+            areErrors = true;
             document.getElementById(keys).style.border = "solid 1px red";
         }
     });
@@ -73,6 +127,8 @@ function handleRequest(event, element){
     event.preventDefault();
     // Building the request JSON
     var mForm = makeJson(element[0]);
+    console.log(mForm);
+    console.log(element[0]);
     if (!errorCheck(mForm)){
         // clear each one!
         // Create the async promise
@@ -82,13 +138,14 @@ function handleRequest(event, element){
         aPromise
             .then(function(response){
                 console.log(response)
-                Object.keys(mForm).forEach(key=>{
-                    document.getElementById(key).value = '';
-                });
+                document.getElementById(element[0].id).reset();
+                // Object.keys(mForm).forEach(key=>{
+                //     document.getElementById(key).value = '';
+                // });
             })
             .catch(function(err){console.log("error", err)});
     } else {
-        console.log("there are errors");
+        console.log("Please fill in all fields");
     }
 }
 
