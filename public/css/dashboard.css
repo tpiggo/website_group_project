@@ -1,12 +1,26 @@
 h3 {
     margin : 0.5em 0 0 0;
 }
+
+#form-wrap,
 #content{
     display: grid;
     place-items: center;
-    background-color:rgba(0, 0, 0, 0.5);
-    
+    text-align: center; 
 }
+
+#content{
+    background-color:var(--mcgill-burgundy);
+    padding: 3em;
+}
+
+#form-wrap {
+    text-align: center; 
+    position: absolute;
+    top: 50%;
+    left: 14.5%;
+}
+
 #center, form {
     border-radius: 10px;
     padding: 10px;
@@ -20,9 +34,9 @@ h3 {
 }
 
 form{
-    position: absolute;
-    top: 50%;
-    left:20%;
+    /* position: absolute; */
+    /* top: 50%; */
+    /* left:20%; */
     transition: all 0.5s;
 }
 
@@ -61,4 +75,12 @@ button:hover {
     background-color:var(--mcgill-burgundy);
     color: white;
     transition-duration: 0.5s;
+}
+
+footer {
+    color: white;
+    background-color: black;
+}
+body {
+    background-color: black;
 }

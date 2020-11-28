@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const NewsSchema = new mongoose.Schema({
-    faculty: {
+    type: {
         type: String,
         required: true
     },

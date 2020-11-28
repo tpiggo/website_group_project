@@ -29,8 +29,8 @@ router.get('/:pagename', (req, res) => {
                     });
                     var title = data.title;
                     const logged = req.session.authenticated;
-                    const user = req.session.username;
-                    res.render('subpage.ejs', { title, menu, content, logged, user });
+                    const username = req.session.username;
+                    res.render('subpage.ejs', { title, menu, content, logged, username });
                 }
 
             }

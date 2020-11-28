@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const PostingSchema = new mongoose.Schema({
-    faculty: {
+    type: {
         type: String,
         required: true
     },
