@@ -31,7 +31,10 @@
     <!-- <span id="icon">icon</span> -->
     <div id="content">
         <!--Get the content from the database and render it here -->
-        <%- rendered_html %>
+        <%-rendered_html %>
+        <% if(logged) { %>
+            <a href="<%=content.path%>/edit">Edit Source</a>
+        <% } %>
     </div>
     <%- include('partials/footer'); %>
 

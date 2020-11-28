@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const app = express();
 const session = require('express-session');
-const markdown = require('markdown-it')();
+const markdown = require('markdown-it')('commonmark');
 const Page = require('../models/Page.js');
 const Subpage = require('../models/Subpage.js');
 
@@ -55,12 +55,14 @@ router.get('/:pagename/edit', (req, res) => {
             var logged=req.session.authenticated;
             var user=req.session.username;
             var content=pagedata.markdown;
-            res.render('editor.ejs',{
-                title,
-                content,
-                logged,
-                user
-            });
+            if(logged){ //TODO: Integrate proper permissions here
+                res.render('editor.ejs',{
+                    title,
+                    content,
+                    logged,
+                    user
+                });
+             }
         }else {
             console.log("User " + req.session.username + "tried to edit non-existent subpage "+ pagename);
         }
