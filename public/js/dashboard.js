@@ -158,6 +158,7 @@ function createPopupMsg(pType, pMsgText, pHeaderId){
     } else {
         aDiv.className = "alert alert-success alert-dismissible fade show";
     }
+    aDiv.setAttribute('type', 'popup-msg')
     aDiv.setAttribute('role', 'alert');
     aButton.className = "close";
     aButton.style.margin = 0;
@@ -169,6 +170,10 @@ function createPopupMsg(pType, pMsgText, pHeaderId){
     aDiv.appendChild(aTextNode);
     aDiv.appendChild(aButton);
     const aHeader = document.getElementById(pHeaderId);
+    // Remove an old popup
+    if (aHeader.nextElementSibling.getAttribute('type') == 'popup-msg'){
+        aHeader.parentNode.removeChild(aHeader.nextSibling);
+    }
     aHeader.parentNode.insertBefore(aDiv, aHeader.nextSibling);
 }
 

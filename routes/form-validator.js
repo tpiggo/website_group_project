@@ -8,8 +8,21 @@ const News = require('../models/News');
 const TechnicalReport = require('../models/TechnicalReport');
 const Posting = require('../models/Posting');
 const Award = require('../models/Award');
+const mongoose = require('mongoose');
 // Body parser for these routes. Needed since sending JSONs to and from the frontend.
 router.use(bodyParser.json());
+
+function handleError(err, type){
+    console.log(err);
+    if( err && err.code == 11000 ){
+        type = type.charAt(0).toUpperCase() + type.slice(1);
+        return { status: 1, response: type + ' already exists!' };
+    } else if ( err )  {
+        return { status: 2, response: 'Error during creation of '+ type };
+    }
+}
+
+
 /**
  * Dashboard forms 
  */
@@ -48,16 +61,16 @@ router.post('/addTA', (req, res)=>{
                         .then(coursePosting=>{
                             // Checks if there was a posting found
                             if (!coursePosting){
-                                const pPosting = new TAPosting({
+                                TAPosting.create({
                                     courseTitle: course,
                                     semester: semester,
                                     contact: taContact,
                                     description: taDescription,
                                     spaces: spaces,
                                     creator: req.session.username
-                                });
-                                pPosting.save()
-                                    .then((result)=>{
+                                }, function(err, result) {
+                                    if (err) res.json(handleError(err, "TA posting"));
+                                    else {
                                         res.json({
                                             status: 0, 
                                             response: 'Creating a posting!', 
@@ -67,15 +80,11 @@ router.post('/addTA', (req, res)=>{
                                                 id: result._id
                                             }
                                         });
-                                    })
-                                    .catch(err=>{
-                                        console.log(err);
-                                        res.json({status: 2, response: 'Error creating the course!' });
-                                    });
-        
+                                    }
+                                });
                             } else {
                                 console.log("found a course posting!")
-                                res.json({ status: 1, response: 'Course Posting exists already! Please update it'});
+                                res.json({ status: 1, response: 'TA posting exists already! Please update it'});
                             }
                         })
                         .catch(err=>{
@@ -120,27 +129,26 @@ router.post('/addAward', (req, res)=>{
                     res.json({ status: 1, response: 'Award exists! Please modify the existing award!' });
                 } else {
                     console.log("Creating award");
-                    const pAward = new Award({
+                    Award.create({
                         title: awardTitle,
                         date: date,
                         recipient: recipient,
                         description: awardDescription,
                         creator: req.session.username
-                    });
-                    pAward.save()
-                        .then((result)=>res.json({
-                            status: 0, 
-                            response: 'Award created!',
-                            eventTitle: {
-                                title: awardTitle,
-                                recipient: recipient,
-                                id: result._id
-                            }
-                        }))
-                        .catch(err=>{
-                            console.log(err);
-                            res.json({ status: 2, response: 'Error creating award!' });
-                        });
+                    }, (err, result)=>{
+                        if (err) res.json(handleError(err, "award"))
+                        else {
+                            res.json({
+                                status: 0, 
+                                response: 'Award created!',
+                                eventTitle: {
+                                    title: awardTitle,
+                                    recipient: recipient,
+                                    id: result._id
+                                }
+                            });
+                        }
+                    } );
                 } 
             })
             .catch(err => {
@@ -173,7 +181,7 @@ router.post('/addNews', (req, res)=>{
             newsDescription 
         } = req.body;
         
-        const pArticle = new News({
+        News.create({
             faculty: newsType,
             title: newsTitle,
             start: newsStartdate,
@@ -181,20 +189,16 @@ router.post('/addNews', (req, res)=>{
             contact: newsContact,
             description: newsDescription,
             creator: req.session.username
-        });
-        // save the article, return the proper response
-        pArticle.save()
-            .then((result)=>{
+        }, (err, result) =>{
+            if (err) res.json({ status: 2, response: 'Error accessing database! Try again later!' });
+            else {
                 res.json({
                     status: 0, 
                     response:'News article created!',
                     article:  {title: newsTitle, id:  result._id}
                 });
-            })
-            .catch(err=>{
-                console.log(err);
-                res.json({ status: 2, response: 'Error accessing database! Try again later!' });
-            })
+            }
+        });
         console.log("Sent response");
     } else {
         // On err, render 403 err and redirect
@@ -225,7 +229,7 @@ router.post('/addEvent', (req, res)=>{
                 } else {
                     console.log("No event found!");
                     // Create the event 
-                    const pEvent = new Event({
+                    Event.create({
                         eventType: eventType,
                         title: eventTitle,
                         start: eventStartdate,
@@ -233,18 +237,16 @@ router.post('/addEvent', (req, res)=>{
                         hostedBy: host,
                         description: eventDescription,
                         creator: req.session.username
+                    }, (err, result) => {
+                        if (err) res.json(handleError(err, 'event'));
+                        else {
+                            res.json({
+                                status: 0, 
+                                response: 'Event created!',
+                                event: { eventTitle: eventTitle, id: result._id }
+                            })
+                        }
                     });
-                    // Save event and handle events
-                    pEvent.save()
-                        .then((result)=>res.json({
-                            status: 0, 
-                            response: 'Event created!',
-                            event: { eventTitle: eventTitle, id: result._id }
-                        }))
-                        .catch(err=>{
-                            console.log(err);
-                            res.json({status: 2, response: 'Error creating event!' });
-                        });
                 }
             })
             .catch(err=>{
@@ -280,7 +282,7 @@ router.post('/addTech', (req, res)=>{
                     res.json({status: 1, response: 'This report has already been submitted!'});
                 } else {
                     console.log("New report to be submited!");
-                    const pReport = new TechnicalReport({
+                    TechnicalReport.create({
                         title: techTitle,
                         creator: user,
                         contact: techContact,
@@ -288,20 +290,16 @@ router.post('/addTech', (req, res)=>{
                         reportDate: Date.now(),
                         editors: [],
                         lastEdited: Date.now()
-                    });
-                    pReport.save()
-                        .then(result=>{
-                            console.log("Successfully created new report!");
+                    }, (err, result) => {
+                        if (err) res.json(handleError(err, "report"));
+                        else {
                             res.json({
                                 status: 0, 
                                 response: 'New technical report created!',
                                 report: {title: techTitle, id: result._id}
                             });
-                        })
-                        .catch(err=>{
-                            console.log(err);
-                            res.json({status: 2, response: 'Error during creation! Please try again!'});
-                        })
+                        }
+                    });
                 }
             })
             .catch(err => {
@@ -329,11 +327,8 @@ router.post('/addPosting', (req, res)=>{
             postingContact,
             postingDescription
         }  = req.body; 
-        // Just saving a posting.
-        // Should we have database checking? Not sure. Two jobs of the same nature could be created!
-        // __      __
-        //   \(ツ)/
-        const pPosting = new Posting({
+        
+        Posting.create({
             faculty:postingType,
             title: postingTitle,
             start: postingStartdate,
@@ -341,22 +336,16 @@ router.post('/addPosting', (req, res)=>{
             contact: postingContact,
             description: postingDescription,
             creator: req.session.username
-        });
-
-        pPosting.save()
-            .then(result => {
-                console.log("New Posting created!");
+        }, (err, result)=>{
+            if (err) res.json(handleError(err, "posting"));
+            else {
                 res.json({
                     status: 0, 
                     response: 'Posting created!',
                     posting: {title: postingTitle, id: result._id}
                 });
-            })
-            .catch(err=>{
-                console.log(err);
-                res.json({status: 2, response: 'Error during creation the posting!' });
-            })
-        console.log("Sent response");
+            }
+        });
     } else{
         // On err, render 403 err and redirect
         res.status(403).render();
@@ -371,10 +360,8 @@ router.post('/addPosting', (req, res)=>{
 router.post('/addCourse', (req, res)=>{ 
     if (req.session.authenticated){
         Course.create(req.body, (err, content) => {
-            if(err){
-                console.log(err);
-                res.json({ status: 2, response: 'Error during creation the course!' });
-            } else{
+            if (err) res.json(handleError(err, 'course'));
+            else {
                 console.log(content);
                 res.json({
                     status: 0,

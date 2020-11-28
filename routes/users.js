@@ -12,7 +12,7 @@ router.get('/login', (req, res)=>{
         const title = "Login";
         const content = {"html": 'login.ejs', "script":""};
         const menu = [];
-        return res.render('lr-layout.ejs', {title, menu, content, logged: req.session.authenticated, user: req.session.username});
+        return res.render('user-layout', {title, menu, content, logged: req.session.authenticated, user: req.session.username});
     } else {
         return res.redirect('/');
     }
@@ -22,7 +22,7 @@ router.get('/register', (req, res)=>{
     if (!req.session.authenticated){
         const title = "Register";
         const content = {"html": 'register.ejs', "script": "<script src='/js/register.js'></script>"};
-        return res.render('lr-layout.ejs', {title, content, logged: req.session.authenticated, user: req.session.username});
+        return res.render('user-layout', {title, content, logged: req.session.authenticated, user: req.session.username});
     } else {
         return res.redirect('/');
     }
@@ -53,7 +53,7 @@ router.post('/login', (req, res)=> {
             console.log("No user with Username: " + username + " found.");
             errors.push({msg: "Wrong username or password!"});
         }
-        return res.render('lr-layout.ejs', {
+        return res.render('user-layout', {
             title, 
             menu: [],
             content,
@@ -94,7 +94,7 @@ router.post('/register', (req, res)=> {
                 }
                 console.log(item, email, username);
             });
-            return res.render('lr-layout.ejs', {
+            return res.render('user-layout', {
                 title, 
                 content,
                 logged: req.session.authenticated,
@@ -121,34 +121,98 @@ router.post('/register', (req, res)=> {
 
 // Adding the settings route
 router.get('/settings', (req, res)=>{
-    console.log(req.session);
-
     if (req.session.authenticated){
         User.findOne({username: req.session.username})
             .then(user=>{
                 if (user){
                     // Evidently if the user is logged in, this path should be the only one to be executed
                     const {username, email} = user;
-                    console.log(username, email);
-                    const title = "Error!";
-                    content = {"html": "<h1>Oops! We did a oopsie</h1> <a href='/'>Home</a>"}
+                    const title = "Settings";
+                    content = {"html": "settings",  "script": "<script src='/js/settings.js'></script>"}
                     // Render a subpage with the error
-                    res.render('subpage', {title, content, menu: [], logged: req.session.authenticated, user: req.session.username})
+                    res.render('user-layout', {title, content, menu: [], logged: req.session.authenticated, user: req.session.username, email: email})
                 } else {
                     // This shouldn't occur if the user is logged in, but protecting against errors
                     const title = "Error!";
-                    content = {"html": "<h1>Oops! We did a oopsie<a href='/'>Home</a></h1>"}
+                    content = {"html": "user-error"}
                     // Render a subpage with the error
-                    res.render('subpage', {title, content, menu: [], logged: req.session.authenticated, user: req.session.username})
+                    res.render('user-layout', {title, content, menu: [], logged: req.session.authenticated, user: req.session.username})
                 }
             })
             .catch(err=>{
                 console.log(err);
                 const title = "Error!";
-                content = {"html": "<h1>Oops! We did a oopsie<a href='/'>Home</a></h1>"}
+                content = {"html": "user-error"}
                 // Render a subpage with the error
-                res.render('subpage', {title, content, menu: [], logged: req.session.authenticated, user: req.session.username})
+                res.render('user-layout', {title, content, menu: [], logged: req.session.authenticated, user: req.session.username})
             });
+    } else {
+        // Set error page
+        const title = "Error!";
+        content = {"html": "<h1>You do not have access to this page! Please <a href='/users/login'>Login</a> to view this content</h1>"}
+        // Render a subpage with the error
+        res.render('subpage', {title, content, menu: [], logged: req.session.authenticated, user: req.session.username,})
+    }
+});
+
+
+router.post('/settings', (req, res)=>{
+    var errors = [];
+    if (req.session.authenticated){
+        console.log("Received update for a user!");
+        // This shouldn't occur if the user is logged in, but protecting against errors
+        console.log(req.body);
+        const mUser = req.session.username;
+        const {username, password, confPassword, curPassword, email } = req.body;
+        User.findOne({username: mUser}, (err,user) => {
+            if(err){ 
+                console.log(err);
+            }else if(user){
+                var authenticated = bcrypt.compareSync(curPassword, user.password);
+                if(authenticated){
+                    console.log("User "+ mUser + " entered the correct password, changing information now!");
+                    // update the users information
+                    if (username != user.username && username != '') {
+                        user.username = username;
+                        req.session.username = username;
+                    }
+                    if ( user.email != email && email != '') user.email = email
+                    if (password != '' && confPassword != '') {
+                        // update the passwords
+                        const mPass = bcrypt.hashSync(req.body.password,10);
+                        user.password = mPass;
+                    }
+                    // Saving the username into the session, potentially not the greatest solution, but works for now
+                    req.session.authenticated = true;
+                    user.save((err) =>{
+                        if (err) { 
+                            console.log(err);
+                            const title = "Error!";
+                            content = {"html": "user-error"}
+                            // Render a subpage with the error
+                            return res.render('user-layout', {title, content, menu: [], logged: req.session.authenticated, user: req.session.username})
+                        }
+                    })
+                    const title = "Settings";
+                    content = {"html": "settings",  "script": "<script src='/js/settings.js'></script>"}
+                    // Render a settings page with the error
+                    return res.render('user-layout', {title, content, menu: [], logged: req.session.authenticated, user: req.session.username, email: user.email})
+                } else {
+                    console.log("User "+ username + " entered the incorrect password.");
+                    errors.push({msg: 'Wrong password! try again!'});
+                    const title = "Settings";
+                    content = {"html": "settings",  "script": "<script src='/js/settings.js'></script>"}
+                    // Render a settings page with the error
+                    return res.render('user-layout', {title, content, menu: [], logged: req.session.authenticated, user: req.session.username, email: user.email, errors})
+                }
+            } else {
+                console.log("No user with Username: " + username + " found.");
+                const title = "Error!";
+                content = {"html": "user-error"}
+                // Render a subpage with the error
+                return res.render('user-layout', {title, content, menu: [], logged: req.session.authenticated, user: req.session.username})
+            }
+        });
     } else {
         // Set error page
         const title = "Error!";
