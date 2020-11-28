@@ -1,3 +1,9 @@
+//Fill in the dropdowns
+window.addEventListener('load', (event) => {
+    refreshDropdowns();
+    console.log('dropdowns were updated');
+});
+
 // Make the nav bar sticky at the top of the page
 var nav = document.querySelector("nav");
 nav.classList.add("fixed-top");
@@ -17,7 +23,7 @@ function toggleForm(name) {
     }
 }
 
-//Add a new input field
+//Add a new input field for instructor in Course Form
 var pointer = 0;
 var total = 0;
 function addField() {
@@ -46,6 +52,7 @@ function addField() {
 
 }
 
+//remove input field
 function removeField(index) {
     var field = document.getElementById('divInstr' + index);
     var minus = document.getElementById('minus' + index);
@@ -56,6 +63,127 @@ function removeField(index) {
     if (total == 0) pointer = 0;
 }
 
+function refreshDropdowns() {
+
+    var opts = { type: "GET", url: '/api/dashboard-info' };
+    var GetData = callBackEnd(opts);
+
+    GetData.then(response => {
+        //response = JSON.parse(response);
+        console.log(typeof response);
+        if (response.status == 0) {
+            console.log('response status = 0');
+            refreshDropdownCourse(response.data[0]);
+            refreshDropdownNews(response.data[1]);
+            refreshDropdownEvent(response.data[2]);
+            refreshDropdownAward(response.data[3]);
+            refreshDropdownTech(response.data[4]);
+            refreshDropdownPosting(response.data[5]);
+
+        } else if (response.status >= 1) {
+            console.log("Error on sending GET request");
+            createPopupMsg('error', response.response, 'center');
+        }
+
+    });
+
+}
+
+function refreshDropdownAward(awards) {
+
+    var menu = document.getElementById('modAward');
+    menu.innerHTML = '';
+    var defaultOpt = document.createElement('option');
+    defaultOpt.text = 'Modify Award Recipient';
+    menu.add(defaultOpt);
+
+    awards.forEach(award => {
+        var option = document.createElement('option');
+        option.value = award._id;
+        option.text = award.title + " for " + award.recipient;
+        menu.add(option);
+    });
+}
+
+function refreshDropdownCourse(courses) {
+    var menu = document.getElementById('modCourse');
+    menu.innerHTML = '';
+    var defaultOpt = document.createElement('option');
+    defaultOpt.text = 'Modify Course';
+    menu.add(defaultOpt);
+
+    courses.forEach(course => {
+        var option = document.createElement('option');
+        option.value = course._id;
+        option.text = course.title;
+        menu.add(option);
+    });
+}
+
+function refreshDropdownPosting(postings) {
+    var menu = document.getElementById('modPosting');
+    menu.innerHTML = '';
+    var defaultOpt = document.createElement('option');
+    defaultOpt.text = 'Modify Posting';
+    menu.add(defaultOpt);
+
+    postings.forEach(post => {
+        var option = document.createElement('option');
+        option.value = post._id;
+        option.text = post.title + " - " + post.contact;
+        menu.add(option);
+    });
+}
+
+function refreshDropdownNews(news) {
+    var menu = document.getElementById('modNews');
+    menu.innerHTML = '';
+    var defaultOpt = document.createElement('option');
+    defaultOpt.text = 'Modify News Story';
+    menu.add(defaultOpt);
+
+    news.forEach(n => {
+        var option = document.createElement('option');
+        option.value = n._id;
+        option.text = n.title + ' - ' + n.contact;
+        menu.add(option);
+    });
+}
+
+function refreshDropdownEvent(events) {
+    console.log('events');
+    console.log(events);
+    var menu = document.getElementById('modEvent');
+    menu.innerHTML = '';
+    var defaultOpt = document.createElement('option');
+    defaultOpt.text = 'Modify Events';
+    menu.add(defaultOpt);
+
+    events.forEach(event => {
+        var option = document.createElement('option');
+        option.value = event._id;
+        option.text = event.title + " - " + event.start;
+        menu.add(option);
+    });
+}
+
+function refreshDropdownTech(techSupports) {
+    var menu = document.getElementById('modTech');
+    menu.innerHTML = '';
+    var defaultOpt = document.createElement('option');
+    defaultOpt.text = 'Modify Technical Support';
+    menu.add(defaultOpt);
+
+    techSupports.forEach(tech => {
+        var option = document.createElement('option');
+        option.value = tech._id;
+        option.text = tech.title + " on " + tech.reportDate;
+        menu.add(option);
+    });
+}
+
+
+
 function callBackEnd(pOpts) {
     // Promisifying the callback in order to handle it asynchoronously.
     return new Promise((resolve, reject) => {
@@ -64,20 +192,20 @@ function callBackEnd(pOpts) {
         // On the load call for the data.
         aXML.onload = function () {
             if (this.status >= 200 && this.status < 300) {
-                resolve(aXML.response);
+                resolve(JSON.parse(aXML.response));
             } else {
-                reject({
+                reject(JSON.parse({
                     status: this.status,
                     statusText: aXML.statusText
-                })
+                }))
             }
         };
         // On an error.
         aXML.onerror = function () {
-            reject({
+            reject(JSON.parse({
                 status: this.status,
                 statusText: aXML.statusText
-            })
+            }))
         }
         aXML.setRequestHeader("Content-Type", "application/json;charset=UTF-8")
         aXML.send(JSON.stringify(pOpts.request));
@@ -177,7 +305,7 @@ function createPopupMsg(pType, pMsgText, pHeaderId) {
     const aHeader = document.getElementById(pHeaderId);
     // Remove an old popup
     console.log(pHeaderId);
-    if (aHeader.nextElementSibling.getAttribute('type') == 'popup-msg'){
+    if (aHeader.nextElementSibling.getAttribute('type') == 'popup-msg') {
         aHeader.parentNode.removeChild(aHeader.nextSibling);
     }
     aHeader.parentNode.insertBefore(aDiv, aHeader.nextSibling);
@@ -198,13 +326,11 @@ function handleRequest(event, element) {
             .then(function (response) {
                 // Returning element to its JSON format
                 var aId = element[0].id;
-                response = JSON.parse(response);
+                // response = JSON.parse(response);
                 console.log(response);
                 if (response.status == 0) {
                     document.getElementById(element[0].id).reset();
-                    // Object.keys(mForm).forEach(key=>{
-                    //     document.getElementById(key).value = '';
-                    // });
+                    refreshDropdowns();
                     createPopupMsg('success', response.response, aId + "Header");
                 } else if (response.status >= 1) {
                     console.log("Error on submission");
