@@ -16,14 +16,10 @@ router.get('/login', canUseRoute, (req, res)=>{
     
     
 });
-router.get('/register', (req, res)=>{
-    if (!req.session.authenticated){
-        const title = "Register";
-        const content = {"html": 'register.ejs', "script": "<script src='/js/register.js'></script>"};
-        return res.render('user-layout', {title, content, logged: req.session.authenticated, user: req.session.username});
-    } else {
-        return res.redirect('/');
-    }
+router.get('/register', canUseRoute, (req, res)=>{
+    const title = "Register";
+    const content = {"html": 'register.ejs', "script": "<script src='/js/register.js'></script>"};
+    return res.render('user-layout', {title, content, logged: req.session.authenticated, user: req.session.username});
 });
 
 router.post('/login', canUseRoute, (req, res)=> {
@@ -141,46 +137,6 @@ router.post('/register', canUseRoute, (req, res)=> {
                 errors
             });
         })
-    
-
-    // // User query from database
-    // User.find({$or: [{name: username},{email: email}]}, (err, result)=>{
-    //     if (err) console.log(err);
-    //     else console.log(result)
-    // }).then(user=>{
-    //     //console.log(user);
-    //     if (user.length > 0){
-    //         user.forEach(item=>{
-    //             if (item.email == email){
-    //                 errors.push({msg: "Email already registered!"});
-    //             }
-    //             if (item.username == username){
-    //                 errors.push({msg: "Username already registered!"});
-    //             }
-    //             console.log(item, email, username);
-    //         });
-    //         return res.render('user-layout', {
-    //             title, 
-    //             content,
-    //             logged: req.session.authenticated,
-    //             user: req.session.user,
-    //             errors
-    //         });
-    //     } else{
-    //         // The data has passed the data verification system. Enter it into the database
-    //         var user = new User({
-    //             username: username,
-    //             email: req.body.email,
-    //             password: password,
-    //             userType: 0
-    //         });
-    //         user.save((err) => {
-    //             if(err) {console.log(err);}
-    //         });
-    //         console.log("User was added to the database!!")
-    //     }
-    //     return res.redirect('/users/register');
-    // }).catch(err=>console.log(err));
 });
 
 
