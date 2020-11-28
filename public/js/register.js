@@ -142,7 +142,6 @@ function areErrors(){
  * @description Function to push the errors to the page in case bad submission (empty)
  */
 function onSubmitErrors(form){
-    
     for (var i = 0; i < form.length; i++){
         if (i == 2 && errors[i] && errors[i-1]){
             errorBox[i].getElement().innerHTML = errorBox[i-1].getErrorMsg();
@@ -151,7 +150,6 @@ function onSubmitErrors(form){
             errorBox[i].getElement().innerHTML = errorBox[i].getErrorMsg();
         }
     }
-    console.log(errors);
 }
 
 /**

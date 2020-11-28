@@ -10,4 +10,11 @@ middleware.isAuthenticated = (req, res, next) => {
     res.render('subpage', { title, content, menu: [], logged: req.session.authenticated, username: req.session.username });
 }
 
+middleware.canUseRoute = (req, res, next) =>{
+    if (!req.session.authenticated){
+        return next();
+    } 
+    return res.redirect('/');
+}
+
 module.exports = middleware;
