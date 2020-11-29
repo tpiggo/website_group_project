@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const session = require('express-session');
 const Page = require('../models/Page.js');
 const Subpage = require('../models/Subpage.js');
 
@@ -30,8 +29,8 @@ router.get('/:pagename', (req, res) => {
                     });
                     var title = data.title;
                     const logged = req.session.authenticated;
-                    const user = req.session.username;
-                    res.render('subpage.ejs', { title, menu, content, logged, user });
+                    const username = req.session.username;
+                    res.render('subpage.ejs', { title, menu, content, logged, username });
                 }
 
             }

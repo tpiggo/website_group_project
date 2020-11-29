@@ -11,9 +11,11 @@
     transform: translateX(10%);
 }
 
-#content h2,
-#content h3 {
+#content h2 {
     color : var(--mcgill-burgundy);
+}
+#content h3{
+    font-style:italic;
 }
 
 #icon {
