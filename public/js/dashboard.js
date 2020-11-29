@@ -1,8 +1,79 @@
 //Fill in the dropdowns
-window.addEventListener('load', (event) => {
+window.addEventListener('load', function (event) {
     refreshDropdowns();
-    console.log('dropdowns were updated');
+    // console.log('dropdowns were updated');
 });
+
+//called by the onchange functions on the dropdowns : 
+function getPageSelected(mId) {
+    var menu = document.getElementById(mId);
+    if (menu.value) {
+        var req = { id: menu.value };
+        console.log(req);
+        $.ajax({
+            url: '/parse/' + mId.substr(3),
+            data: req,
+            type: 'GET',
+            dataType: 'json', // added data type
+            success: function (response) {
+                //response = JSON.parse(response);
+                if (response.status == 0) {
+                    fillForm(mId.substr(3), response.posting);
+                } else {
+                    console.log("Error when Getting the data");
+                    createPopupMsg('Error', response.response, 'pageHeader');
+                }
+            },
+            error: function(jqXHR, exception) {
+                createPopupMsg('error', "Internal Error", 'pageHeader');
+            }
+        });
+
+    }
+}
+
+function fillForm(fId, content) {
+
+    var form = document.getElementById(fId);
+    for (var key in content) {
+
+        if (key == "instructor") {
+            var element = form.querySelector("[name=instructor0]");
+            element.value = content.instructor[0];
+            for (var i = 1; i < content.instructor.length; i++) {
+                addField();
+                element = form.querySelector("[name=instructor" + i + "]");
+                element.value = content.instructor[i];
+            }
+            continue;
+        }
+        if (key == "termsOffered") {
+            if (content[key].includes("Winter 2021")) {
+                var element = form.querySelector("[name=w2021]");
+                element.checked = true;
+            }
+            if (content[key].includes("Summer 2021")) {
+                var element = form.querySelector("[name=s2021]");
+                element.checked = true;
+            }
+            if (content[key].includes("Fall 2021")) {
+                var element = form.querySelector("[name=f2021]");
+                element.checked = true;
+            }
+            continue;
+        }
+
+        var element = form.querySelector("[name=" + key + "]");
+        if (!element) continue;
+        if (key == "date" || key == "start" || key == "end") {
+            if(element.type == 'date') element.value = content[key].substr(0, 10);
+            else element.value = content[key].substr(0, 22);
+        }
+        else element.value = content[key];
+    }
+    toggleForm(fId, 'PUT');
+}
+
 
 // Make the nav bar sticky at the top of the page
 var nav = document.querySelector("nav");
@@ -10,10 +81,14 @@ nav.classList.add("fixed-top");
 nav.setAttribute("style", "position:sticky !important");
 
 //Display forms
-function toggleForm(name) {
+function toggleForm(name, method) {
     var form = document.getElementById(name);
     form.classList.toggle("hidden");
-
+    if (name.includes("Course")) {
+        while (total > 0) {
+            removeField(pointer);
+        }
+    }
     var content = document.getElementById("center");
     content.classList.toggle("hidden");
 
@@ -21,6 +96,13 @@ function toggleForm(name) {
     for (var i = 0; i < buttons.length; i++) {
         buttons[i].disabled = !buttons[i].disabled;
     }
+    var selects = content.getElementsByTagName("select");
+    for (var i = 0; i < selects.length; i++) {
+        selects[i].disabled = !selects[i].disabled;
+    }
+
+    if (method) form.setAttribute('onsubmit', "handleRequest(event, $(this), '" + method + "')");
+
 }
 
 //Add a new input field for instructor in Course Form
@@ -69,10 +151,8 @@ function refreshDropdowns() {
     var GetData = callBackEnd(opts);
 
     GetData.then(response => {
-        //response = JSON.parse(response);
-        console.log(typeof response);
+
         if (response.status == 0) {
-            console.log('response status = 0');
             refreshDropdownCourse(response.data[0]);
             refreshDropdownNews(response.data[1]);
             refreshDropdownEvent(response.data[2]);
@@ -151,8 +231,6 @@ function refreshDropdownNews(news) {
 }
 
 function refreshDropdownEvent(events) {
-    console.log('events');
-    console.log(events);
     var menu = document.getElementById('modEvent');
     menu.innerHTML = '';
     var defaultOpt = document.createElement('option');
@@ -236,22 +314,24 @@ function makeJson(pObject) {
         if (pObject[i].id != '' && pObject[i].type != 'submit') {
             var currId = pObject[i].id;
 
+            if (currId.includes('_id') && pObject[i].value == '') continue;
+
             if (currId.includes('instruct')) {
                 instructors.push(pObject[i].value);
-            } else if (currId == "w2021c" || currId == "s2021c" || currId == "f2021c") {
+            } else if (currId.includes("w2021c") || currId.includes("s2021c") || currId.includes("f2021c")) {
                 if (document.getElementById(currId).checked) terms.push(pObject[i].value);
             }
             else aJson[pObject[i].name] = pObject[i].value;
         }
     }
-    if (instructors.length > 0) aJson['instructors'] = instructors;
+    if (instructors.length > 0) aJson['instructor'] = instructors;
     if (terms.length > 0) aJson['termsOffered'] = terms;
     return aJson;
 }
 
 /**
  * @description Handles the errors within a json object which each element points to an element within the page
- * @param {JSON} pJson 
+ * @param {object} pJson 
  */
 function errorCheck(pObject) {
     var areErrors = false;
@@ -304,22 +384,30 @@ function createPopupMsg(pType, pMsgText, pHeaderId) {
     aDiv.appendChild(aButton);
     const aHeader = document.getElementById(pHeaderId);
     // Remove an old popup
-    console.log(pHeaderId);
     if (aHeader.nextElementSibling.getAttribute('type') == 'popup-msg') {
         aHeader.parentNode.removeChild(aHeader.nextSibling);
     }
     aHeader.parentNode.insertBefore(aDiv, aHeader.nextSibling);
+    fade(aDiv);
 }
 
-function handleRequest(event, element) {
+function fade(div) {
+    setTimeout(function () {
+        div.remove();
+    }, 4000);
+}
+
+
+function handleRequest(event, element, method) {
     // Do not allow default.
     event.preventDefault();
+    console.log(element);
     // Building the request JSON
     var mForm = makeJson(element[0]);
     if (!errorCheck(mForm)) {
         // clear each one!
         // Create the async promise
-        var opts = { type: "POST", url: '/parse/' + element[0].id, request: mForm };
+        var opts = { type: method, url: '/parse/' + element[0].id, request: mForm };
         var aPromise = callBackEnd(opts);
         // Handle
         aPromise
@@ -327,9 +415,9 @@ function handleRequest(event, element) {
                 // Returning element to its JSON format
                 var aId = element[0].id;
                 // response = JSON.parse(response);
-                console.log(response);
+                // console.log(response);
                 if (response.status == 0) {
-                    document.getElementById(element[0].id).reset();
+                    if (method != 'PUT') document.getElementById(element[0].id).reset();
                     refreshDropdowns();
                     createPopupMsg('success', response.response, aId + "Header");
                 } else if (response.status >= 1) {

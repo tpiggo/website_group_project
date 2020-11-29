@@ -15,13 +15,18 @@ const e = require('express');
 // Body parser for these routes. Needed since sending JSONs to and from the frontend.
 router.use(bodyParser.json());
 
-function handleError(err, type){
+/**
+ * Responds with appropriate error message when Creating an element to DB
+ * @param {Error} err 
+ * @param {String} type type of error
+ */
+function handleError(err, type) {
     console.log(err);
-    if( err && err.code == 11000 ){
+    if (err && err.code == 11000) {
         type = type.charAt(0).toUpperCase() + type.slice(1);
         return { status: 1, response: type + ' already exists!' };
-    } else if ( err )  {
-        return { status: 2, response: 'Error during creation of '+ type };
+    } else if (err) {
+        return { status: 2, response: 'Error during creation of ' + type };
     }
 }
 
@@ -31,7 +36,7 @@ function handleError(err, type){
  */
 
 // Add TA form API
-router.post('/addTA', middleware.isAuthenticated, (req, res) => {
+router.post('/TA', middleware.isAuthenticated, (req, res) => {
     // Last logical is up for changing depending on how we maintain summer semester (since there are 2)
     // Query to find a course which contains the same name during the same semester
 
@@ -44,7 +49,7 @@ router.post('/addTA', middleware.isAuthenticated, (req, res) => {
      */
     function findCourse(title, semester) {
         return new Promise((resolve, reject) => {
-            Course.find({ title: {'$regex': title, '$options': 'ix'}, termsOffered: semester }, (err, match) => {
+            Course.find({ title: { '$regex': title, '$options': 'ix' }, termsOffered: semester }, (err, match) => {
                 if (err) {
                     console.error(err);
                     reject({ status: 2, response: 'Error accessing Course database! Try again later!' });
@@ -127,9 +132,10 @@ router.post('/addTA', middleware.isAuthenticated, (req, res) => {
 });
 
 // TODO: Implement this route
-router.post('/addAward', middleware.isAuthenticated, (req, res) => {
+router.post('/Award', middleware.isAuthenticated, (req, res) => {
     // Auth the session
     console.log(req.body);
+    console.log('received post request for award');
 
     /**
      * @description Finds an award or produces an error
@@ -137,10 +143,10 @@ router.post('/addAward', middleware.isAuthenticated, (req, res) => {
      * @param {String} recipient 
      * @returns {Promise}
      */
-    function findAward(title, recipient){
-        return new Promise((resolve, reject)=>{
-            Award.findOne({'$and':[{title: title}, {recipient: recipient}]}, (err, result) => {
-                if (err){
+    function findAward(title, recipient) {
+        return new Promise((resolve, reject) => {
+            Award.findOne({ '$and': [{ title: title }, { recipient: recipient }] }, (err, result) => {
+                if (err) {
                     console.error(err);
                     reject({ status: 2, response: 'Error accessing database! Try again later!' })
                 } else {
@@ -161,7 +167,7 @@ router.post('/addAward', middleware.isAuthenticated, (req, res) => {
                 Award.create({
                     ...req.body,
                     creator: req.session.username
-                }, (err, award)=>{
+                }, (err, award) => {
                     if (err) reject({ status: 2, response: 'Error creating award!' });
                     else {
                         resolve({
@@ -192,7 +198,7 @@ router.post('/addAward', middleware.isAuthenticated, (req, res) => {
 });
 
 // TODO: Implement this route
-router.post('/addNews', middleware.isAuthenticated, (req, res) => {
+router.post('/News', middleware.isAuthenticated, (req, res) => {
     /** 
      * Not enforcing unique names for the articles.
      * Return object Id for rendering of article
@@ -202,17 +208,17 @@ router.post('/addNews', middleware.isAuthenticated, (req, res) => {
         ...req.body,
         creator: req.session.username
     }, (err, result) => {
-        if (err){
+        if (err) {
             console.log(err);
             res.json({ status: 2, response: 'Error accessing database! Try again later!' });
         } else {
             res.json({
                 status: 0,
                 response: 'News article created!',
-                article: { 
+                article: {
                     title: req.body.title,
                     creator: req.session.username,
-                    id: result._id 
+                    id: result._id
                 }
             });
         }
@@ -221,7 +227,7 @@ router.post('/addNews', middleware.isAuthenticated, (req, res) => {
 });
 
 // TODO: Implement this route
-router.post('/addEvent', middleware.isAuthenticated, (req, res) => {
+router.post('/Event', middleware.isAuthenticated, (req, res) => {
     console.log(req.body);
     // Search for an event which already exists
     /**
@@ -231,7 +237,7 @@ router.post('/addEvent', middleware.isAuthenticated, (req, res) => {
      * @param {String} eventType 
      * @returns {Promise}
      */
-    function findEvent(title, start, eventType){
+    function findEvent(title, start, eventType) {
         return new Promise((resolve, reject) => {
             Event.findOne({
                 "$and": [
@@ -239,7 +245,7 @@ router.post('/addEvent', middleware.isAuthenticated, (req, res) => {
                     { start: start },
                     { eventType: eventType }
                 ]
-            },(err, event) => {
+            }, (err, event) => {
                 if (err) reject({ status: 2, response: 'Error accessing database! Try again later!' });
                 else {
                     resolve(event);
@@ -253,9 +259,9 @@ router.post('/addEvent', middleware.isAuthenticated, (req, res) => {
      * @param {Event} event 
      * @returns {Promise}
      */
-    function createEvent(event){
-        return new Promise((resolve, reject) =>{
-            if (event){
+    function createEvent(event) {
+        return new Promise((resolve, reject) => {
+            if (event) {
                 reject({ status: 1, response: 'Event exists. Please update it!' });
             } else {
                 Event.create({
@@ -272,9 +278,9 @@ router.post('/addEvent', middleware.isAuthenticated, (req, res) => {
             }
         });
     }
-    
+
     // Find event and handle
-    findEvent(req.body.title, req.body.start, req.body.eventType )
+    findEvent(req.body.title, req.body.start, req.body.eventType)
         .then((event) => {
             return createEvent(event);
         })
@@ -283,14 +289,14 @@ router.post('/addEvent', middleware.isAuthenticated, (req, res) => {
 });
 
 // TODO: Implement this route
-router.post('/addTech', middleware.isAuthenticated, (req, res) => {
+router.post('/Tech', middleware.isAuthenticated, (req, res) => {
     /**
      * @description Finds a technical report if one exists
      * @param {String} title 
      * @param {User} user 
      * @returns {Promise} 
-     */ 
-    function findTechnicalReport(title, user){
+     */
+    function findTechnicalReport(title, user) {
         return new Promise((resolve, reject) => {
             TechnicalReport.findOne({
                 "$and": [
@@ -299,7 +305,7 @@ router.post('/addTech', middleware.isAuthenticated, (req, res) => {
                 ]
             }, (err, report) => {
                 if (err) {
-                    reject({status: 2, response: 'Error accessing database! Try again later!'});
+                    reject({ status: 2, response: 'Error accessing database! Try again later!' });
                     console.error(err);
                 } else {
                     resolve(report);
@@ -312,9 +318,9 @@ router.post('/addTech', middleware.isAuthenticated, (req, res) => {
      * @param {TechnicalReport} report 
      * @returns {Promise} 
      */
-    function createReport(report){
+    function createReport(report) {
         return new Promise((resolve, reject) => {
-            if (report) reject({status: 1, response: 'This report has already been submitted!'});
+            if (report) reject({ status: 1, response: 'This report has already been submitted!' });
             else {
                 TechnicalReport.create({
                     ...req.body,
@@ -326,9 +332,9 @@ router.post('/addTech', middleware.isAuthenticated, (req, res) => {
                     if (err) reject(handleError(err, "report"));
                     else {
                         resolve({
-                            status: 0, 
+                            status: 0,
                             response: 'New technical report created!',
-                            report: {title: techTitle, id: result._id}
+                            report: { title: techTitle, id: result._id }
                         });
                     }
                 });
@@ -348,23 +354,23 @@ router.post('/addTech', middleware.isAuthenticated, (req, res) => {
 });
 
 // TODO: Implement this route
-router.post('/addPosting', middleware.isAuthenticated, (req, res) => {
+router.post('/Posting', middleware.isAuthenticated, (req, res) => {
     // Auth the session
     // setting params
     const {
         postingTitle
-    }  = req.body; 
+    } = req.body;
     console.log(req.body);
     Posting.create({
         ...req.body,
         creator: req.session.username
-    }, (err, result)=>{
+    }, (err, result) => {
         if (err) res.json(handleError(err, "posting"));
         else {
             res.json({
-                status: 0, 
+                status: 0,
                 response: 'Posting created!',
-                posting: {title: postingTitle, id: result._id}
+                posting: { title: postingTitle, id: result._id }
             });
         }
     });
@@ -374,7 +380,7 @@ router.post('/addPosting', middleware.isAuthenticated, (req, res) => {
  * TODO: Fix the Courses "Add" button in order to create a new Course.
  * Maybe we could use a scraper in order to scrape the courses for CS off the McGill website? 
  */
-router.post('/addCourse', middleware.isAuthenticated, (req, res) => {
+router.post('/Course', middleware.isAuthenticated, (req, res) => {
     Course.create(req.body, (err, content) => {
         if (err) res.json(handleError(err, 'course'));
         else {
@@ -386,6 +392,277 @@ router.post('/addCourse', middleware.isAuthenticated, (req, res) => {
             });
         }
     });
+});
+
+//  ********************************* UPDATING REQUESTS *********************************
+
+router.get('/Award', middleware.isAuthenticated, (req, res) => {
+    Award.findById(req.query.id, (err, content) => {
+        if (err) {
+            console.error(err);
+            res.json({ status: 2, response: "Internal Error" });
+        } else {
+            if (content) {
+                console.log('content found !');
+                res.json({ status: 0, response: 'Award found', posting: content });
+            } else {
+                console.log('content not found');
+                res.json({ status: 1, response: "Error : Award can't be found - Internal error or award deleted" });
+            }
+
+        }
+    });
+
+});
+
+
+router.get('/Course', (req, res) => {
+    Course.findById(req.query.id, (err, content) => {
+        if (err) {
+            console.error(err);
+            res.json({ status: 2, response: "Internal Error" });
+        } else {
+            if (content) {
+                console.log('content found !');
+                console.log(content);
+                res.json({ status: 0, response: 'Course found', posting: content });
+            } else {
+                console.log('content not found');
+                res.json({ status: 1, response: "Error : Course can't be found -  Internal error or course deleted" });
+            }
+
+        }
+    });
+
+});
+
+router.get('/Posting', middleware.isAuthenticated, (req, res) => {
+    Posting.findById(req.query.id, (err, content) => {
+        if (err) {
+            console.error(err);
+            res.json({ status: 2, response: "Internal Error" });
+        } else {
+            if (content) {
+                console.log('content found !');
+                res.json({ status: 0, response: 'Posting found', posting: content });
+            } else {
+                console.log('content not found');
+                res.json({ status: 1, response: "Error : Posting can't be found - Internal error or posting deleted" });
+            }
+
+        }
+    });
+
+});
+
+router.get('/News', (req, res) => {
+    News.findById(req.query.id, (err, content) => {
+        if (err) {
+            console.error(err);
+            res.json({ status: 2, response: "Internal Error" });
+        } else {
+            if (content) {
+                console.log('content found !');
+                console.log(content);
+                res.json({ status: 0, response: 'News found', posting: content });
+            } else {
+                console.log('content not found');
+                res.json({ status: 1, response: "Error : News can't be found -  Internal error or news deleted" });
+            }
+
+        }
+    });
+
+});
+
+router.get('/Event', (req, res) => {
+    Event.findById(req.query.id, (err, content) => {
+        if (err) {
+            console.error(err);
+            res.json({ status: 2, response: "Internal Error" });
+        } else {
+            if (content) {
+                console.log('content found !');
+                console.log(content);
+                res.json({ status: 0, response: 'Event found', posting: content });
+            } else {
+                console.log('content not found');
+                res.json({ status: 1, response: "Error : Event can't be found -  Internal error or course deleted" });
+            }
+
+        }
+    });
+
+});
+
+router.get('/Tech', (req, res) => {
+    TechnicalReport.findById(req.query.id, (err, content) => {
+        if (err) {
+            console.error(err);
+            res.json({ status: 2, response: "Internal Error" });
+        } else {
+            if (content) {
+                console.log('content found !');
+                console.log(content);
+                res.json({ status: 0, response: 'Technical Report found', posting: content });
+            } else {
+                console.log('content not found');
+                res.json({ status: 1, response: "Error : Technical report can't be found -  Internal error or report deleted" });
+            }
+
+        }
+    });
+
+});
+
+router.put('/Award', middleware.isAuthenticated, (req, res) => {
+    var id = req.body._id;
+    delete req.body._id;
+
+    Award.findByIdAndUpdate(id, req.body, (err, update)=> {
+        if(err){
+            console.error(err);
+            res.json({status:2, response:'Error while accessing the databse'});
+        } else {
+            if(update) {
+                res.json({
+                    status:0,
+                    response: 'Award was succesfully updated'
+                });
+            } else {
+                res.json({
+                    status: 1,
+                    response: 'Award deleted, please close window, the current form is invalid'
+                })
+            }
+        }
+    });
+
+});
+
+router.put('/Course', middleware.isAuthenticated, (req, res) => {
+    var id = req.body._id;
+    delete req.body._id;
+
+    Course.findByIdAndUpdate(id, req.body, (err, update)=> {
+        if(err){
+            console.error(err);
+            res.json({status:2, response:'Error while accessing the databse'});
+        } else {
+            if(update) {
+                res.json({
+                    status:0,
+                    response: 'Course was succesfully updated'
+                });
+            } else {
+                res.json({
+                    status: 1,
+                    response: 'Course deleted, please close window, the current form is invalid'
+                })
+            }
+        }
+    });
+
+});
+
+router.put('/Posting', middleware.isAuthenticated, (req, res) => {
+    var id = req.body._id;
+    delete req.body._id;
+
+    Posting.findByIdAndUpdate(id, req.body, (err, update)=> {
+        if(err){
+            console.error(err);
+            res.json({status:2, response:'Error while accessing the databse'});
+        } else {
+            if(update) {
+                res.json({
+                    status:0,
+                    response: 'Posting was succesfully updated'
+                });
+            } else {
+                res.json({
+                    status: 1,
+                    response: 'Posting deleted, please close window, the current form is invalid'
+                })
+            }
+        }
+    });
+
+});
+
+router.put('/News', middleware.isAuthenticated, (req, res) => {
+    var id = req.body._id;
+    delete req.body._id;
+
+    News.findByIdAndUpdate(id, req.body, (err, update)=> {
+        if(err){
+            console.error(err);
+            res.json({status:2, response:'Error while accessing the databse'});
+        } else {
+            if(update) {
+                res.json({
+                    status:0,
+                    response: 'News was succesfully updated'
+                });
+            } else {
+                res.json({
+                    status: 1,
+                    response: 'News deleted, please close window, the current form is invalid'
+                })
+            }
+        }
+    });
+
+});
+
+router.put('/Event', middleware.isAuthenticated, (req, res) => {
+    var id = req.body._id;
+    delete req.body._id;
+
+    Event.findByIdAndUpdate(id, req.body, (err, update)=> {
+        if(err){
+            console.error(err);
+            res.json({status:2, response:'Error while accessing the databse'});
+        } else {
+            if(update) {
+                res.json({
+                    status:0,
+                    response: 'Event was succesfully updated'
+                });
+            } else {
+                res.json({
+                    status: 1,
+                    response: 'Event deleted, please close window, the current form is invalid'
+                })
+            }
+        }
+    });
+
+});
+
+router.put('/Tech', middleware.isAuthenticated, (req, res) => {
+    var id = req.body._id;
+    delete req.body._id;
+
+    TechnicalReport.findByIdAndUpdate(id, req.body, (err, update)=> {
+        if(err){
+            console.error(err);
+            res.json({status:2, response:'Error while accessing the databse'});
+        } else {
+            if(update) {
+                res.json({
+                    status:0,
+                    response: 'Technical report was succesfully updated'
+                });
+            } else {
+                res.json({
+                    status: 1,
+                    response: 'Technical report deleted, please close window, the current form is invalid'
+                })
+            }
+        }
+    });
+
 });
 
 module.exports = router;

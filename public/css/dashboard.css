@@ -71,7 +71,7 @@ button{
     margin : 1em 0.2em;
 }
 
-button:hover {
+button.general:hover{
     background-color:var(--mcgill-burgundy);
     color: white;
     transition-duration: 0.5s;
@@ -83,4 +83,18 @@ footer {
 }
 body {
     background-color: black;
+}
+
+.alert {
+    -webkit-animation: disappear 3.5s forwards;
+}
+@-webkit-keyframes disappear {
+    90% {
+        opacity: 1;
+      }
+      100% {
+        opacity: 0;
+        visibility: none;
+        display: none;
+      }
 }

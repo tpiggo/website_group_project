@@ -27,38 +27,38 @@
             <h2>Visitors</h2>
 
             <!-- What is a visitor Form ?-->
-            <button>Add a Visitor form</button>
+            <button class="general">Add a Visitor form</button>
 
             <hr>
-            <h2>Data Modification</h2>
+            <h2 id="pageHeader">Data Modification</h2>
 
             <div class="row">
                 <div class="col">
                     <h3>TA</h3>
-                    <button <% if(user.userType>0) {%> onclick="toggleForm('addTA')" <%}%> >Add Posting</button>
-                    <button  <% if(user.userType>0) {%> onclick="toggleForm('addAward')" <%}%>>Add Award Recipient</button><br>
+                    <button class="general" <% if(user.userType>0) {%> onclick="toggleForm('TA')" <%}%> >Add Posting</button>
+                    <button class="general"  <% if(user.userType>0) {%> onclick="toggleForm('Award')" <%}%>>Add Award Recipient</button><br>
                     
-                    <select id="modAward" class="form-control" name="modAward">
+                    <select id="modAward" class="form-control"<% if(user.userType>0) {%> onchange="getPageSelected('modAward')" <%}%>>
                         <option>Modify Award Recipient</option>
                     </select>
 
                     <h3>Course</h3>
-                    <button
-                    <% if(user.userType>0) {%> onclick="toggleForm('addCourse')" <%}%>
+                    <button class="general"
+                    <% if(user.userType>0) {%> onclick="toggleForm('Course')" <%}%>
                     >Add</button>
                     <br>
 
-                    <select class="form-control" id="modCourse" name="modCourse">
+                    <select class="form-control" id="modCourse" <% if(user.userType>0) {%> onchange="getPageSelected('modCourse')" <%}%>>
                         <option>Modify Course</option> 
                     </select>
 
                     <h3> Posting</h3>
-                    <button
-                    <% if(user.userType>0) {%> onclick="toggleForm('addPosting')" <%}%>
+                    <button class="general"
+                    <% if(user.userType>0) {%> onclick="toggleForm('Posting')" <%}%>
                     >Add</button>
                     <br>
 
-                    <select class="form-control" id="modPosting" name="modPosting">
+                    <select class="form-control" id="modPosting"<% if(user.userType>0) {%> onchange="getPageSelected('modPosting')" <%}%>>
                         <option>Modify Posting</option>
                     </select> <br>
 
@@ -66,31 +66,31 @@
 
                 <div class="col">
                     <h3> News & Events</h3>
-                    <button
-                    <% if(user.userType>0) {%> onclick="toggleForm('addNews')" <%}%>
+                    <button class="general"
+                    <% if(user.userType>0) {%> onclick="toggleForm('News')" <%}%>
                     >Add News</button>
                     <br>
 
-                    <select class="form-control" id="modNews" name="modNews">
+                    <select class="form-control" id="modNews" <% if(user.userType>0) {%> onchange="getPageSelected('modNews')" <%}%>>
                         <option>Modify News Story</option>
                     </select> <br>
 
-                    <button
-                    <% if(user.userType>0) {%> onclick="toggleForm('addEvent')" <%}%>
+                    <button class="general"
+                    <% if(user.userType>0) {%> onclick="toggleForm('Event')" <%}%>
                     >Add Events</button>
                     <br>
 
-                    <select class="form-control" id="modEvent" name="modEvent">
+                    <select class="form-control" id="modEvent" <% if(user.userType>0) {%> onchange="getPageSelected('modEvent')" <%}%>>
                         <option>Modify Events</option>
                     </select> <br>
 
                     <h3 class="mt-3"> Technical Report</h3>
-                    <button
-                    <% if(user.userType>0) {%> onclick="toggleForm('addTech')" <%}%>
+                    <button class="general"
+                    <% if(user.userType>0) {%> onclick="toggleForm('Tech')" <%}%>
                     >Add</button>
                     <br>
 
-                    <select class="form-control" id="modTech" name="modTech">
+                    <select class="form-control" id="modTech" <% if(user.userType>0) {%> onchange="getPageSelected('modTech')" <%}%>>
                         <option>Modify Technical Support</option> 
                     </select> <br>
                 </div>
@@ -98,16 +98,17 @@
 
             <hr>
             <h3>Other</h3>
-            <button>Modify Color Palette</button>
+            <button class="general">Modify Color Palette</button>
         </div>
     </div>
     <!-- The forms will only be renderer if the user is of type 1 or above -->
     <!-- Make these async? Sends down a path and returns an answer which renders a message? Seem like the best idea! -->
     <!-- Make all the required fields required, e.prevent default the form -->
-    <% if(user.userType>0) {  %> <div id="form-wrap">
-        <form id="addTA" class="hidden" method="POST" onsubmit="handleRequest(event, $(this))">
-            <span id="closeIcon" onclick="toggleForm('addTA')">&times;</span>
-            <h2 id="addTAHeader"> Add TA Posting</h2>
+    <% if(user.userType>0) {  %> 
+        <div id="form-wrap">
+        <form id="TA" class="hidden" method="POST" onsubmit="handleRequest(event, $(this), 'POST')">
+            <span id="closeIcon" onclick="toggleForm('TA', 'POST')">&times;</span>
+            <h2 id="TAHeader">TA Posting</h2>
             <label for="courseTitle">Course:</label>
             <input type="text" id="courseTitle" name="courseTitle" placeholder="COMP XXX">
             <br>
@@ -134,13 +135,14 @@
                 placeholder="Short description of the posting"></textarea>
             <br>
 
-            <button type="submit">Add TA Posting</button>
+            <input id="ta_id" name="_id" style="display:none;">
+            <button class="general" type="submit">Submit</button>
         </form>
 
         <!-- Add Award -->
-        <form id="addAward" class="hidden" method="POST" onsubmit="handleRequest(event, $(this))">
-            <span id="closeIcon" onclick="toggleForm('addAward')">&times;</span>
-            <h2 id="addAwardHeader">Add Award recipient</h2>
+        <form id="Award" class="hidden" method="POST" onsubmit="handleRequest(event, $(this), 'POST')">
+            <span id="closeIcon" onclick="toggleForm('Award', 'POST')">&times;</span>
+            <h2 id="AwardHeader">Award</h2>
 
             <label for="title">Title:</label>
             <input type="text" id="awardTitle" name="title" placeholder="New Award for XX ">
@@ -158,14 +160,14 @@
                 placeholder="Short description"></textarea>
             <br>
             <br>
-
-            <button type="submit">Add Award</button>
+            <input id="a_id" name="_id" style="display:none;">
+            <button class="general" type="submit">Submit</button>
         </form>
 
         <!-- Add News -->
-        <form id="addNews" class="hidden" method="POST" onsubmit="handleRequest(event, $(this))">
-            <span id="closeIcon" onclick="toggleForm('addNews')">&times;</span>
-            <h2 id="addNewsHeader"> Add News</h2>
+        <form id="News" class="hidden" method="POST" onsubmit="handleRequest(event, $(this), 'POST')">
+            <span id="closeIcon" onclick="toggleForm('News', 'POST')">&times;</span>
+            <h2 id="NewsHeader">News</h2>
             <label for="type">News about:</label>
             <select id="newsType" name="type">
                 <option value='faculty'>Faculty</option>
@@ -195,14 +197,14 @@
             <textarea id="newsDescription" name="description" cols="60"
                 placeholder="Short description"></textarea>
             <br>
-
-            <button type="submit">Add News</button>
+            <input id="n_id" name="_id" style="display:none;">
+            <button class="general" type="submit">Add News</button>
         </form>
 
         <!-- Add Event -->
-        <form id="addEvent" class="hidden" method="POST" onsubmit="handleRequest(event, $(this))">
-            <span id="closeIcon" onclick="toggleForm('addEvent')">&times;</span>
-            <h2 id="addEventHeader"> Add Event</h2>
+        <form id="Event" class="hidden" method="POST" onsubmit="handleRequest(event, $(this), 'POST')">
+            <span id="closeIcon" onclick="toggleForm('Event', 'POST')">&times;</span>
+            <h2 id="EventHeader">Event</h2>
             <label for="type">Event:</label>
             <select id="eventType" name="eventType">
                 <option value='colloquium'>Colloquium</option>
@@ -233,13 +235,14 @@
                 placeholder="Description of the Event"></textarea>
             <br>
 
-            <button type="submit">Add Event</button>
+            <input id="e_id" name="_id" style="display:none;">
+            <button class="general" type="submit">Event</button>
         </form>
 
         <!-- Add Course -->
-        <form id="addCourse" class="hidden" method="POST" onsubmit="handleRequest(event, $(this))">
-            <span id="closeIcon" onclick="toggleForm('addCourse')">&times;</span>
-            <h2 id="addCourseHeader"> Add a Course</h2>
+        <form id="Course" class="hidden" method="POST" onsubmit="handleRequest(event, $(this), 'POST')">
+            <span id="closeIcon" onclick="toggleForm('Course'), 'POST'">&times;</span>
+            <h2 id="CourseHeader">Course</h2>
 
             <label for="title">Course:</label>
             <input type="text" id="title" name="title" placeholder="COMP XXX Introduction to YY">
@@ -251,9 +254,9 @@
             Terms Offered : &emsp;&emsp;
             <input type="checkbox" id="w2021c" name="w2021" value="Winter 2021">
             <label for="w2021c"> Winter 2021</label> &emsp;&emsp;
-            <input type="checkbox" id="s2021c" name="w2021" value="Summer 2021">
+            <input type="checkbox" id="s2021c" name="s2021" value="Summer 2021">
             <label for="s2021c"> Summer 2021</label>&emsp;&emsp;
-            <input type="checkbox" id="f2021c" name="w2021" value="Fall 2021">
+            <input type="checkbox" id="f2021c" name="f2021" value="Fall 2021">
             <label for="f2021c"> Fall 2021</label>
             <br>
 
@@ -267,7 +270,7 @@
             </span>
 
             <label for="calendar">McGill Ecalendar Link:</label>
-            <input type="text" id="calendar" name="calendar"
+            <input type="text" id="calendar" name="mcgillCalendar"
                 placeholder="Paste the Ecalendar link of the course">
             <br>
 
@@ -290,14 +293,14 @@
             <label for="syllabus">Syllabus:</label>
             <input type="text" id="syllabus" name="syllabus" placeholder="holder">
             <br>
-
-            <button type="submit">Add Course</button>
+            <input id="c_id" name="_id" style="display:none;">
+            <button class="general" type="submit">Submit</button>
         </form>
 
         <!-- Add Technical Support -->
-        <form id="addTech" class="hidden" method="POST" onsubmit="handleRequest(event, $(this))">
-            <span id="closeIcon" onclick="toggleForm('addTech')">&times;</span>
-            <h2 id='addTechHeader'> Add Technical Report</h2>
+        <form id="Tech" class="hidden" method="POST" onsubmit="handleRequest(event, $(this), 'POST')">
+            <span id="closeIcon" onclick="toggleForm('Tech', 'POST')">&times;</span>
+            <h2 id='TechHeader'>Technical Report</h2>
 
             <label for="title" class="p-3">Title:</label>
             <input type="text" id="techTitle" name="title" placeholder="Title">
@@ -311,13 +314,14 @@
             <br>
             <textarea id="techDescription" name="description" cols="60" placeholder="Report"></textarea>
             <br>
-            <button type="submit">Add Technical Report</button>
+            <input id="tech_id" name="_id" style="display:none;">
+            <button class="general" type="submit">Submit</button>
         </form>
 
         <!-- Add Posting -->
-        <form id="addPosting" class="hidden" method="POST" onsubmit="handleRequest(event, $(this))">
-            <span id="closeIcon" onclick="toggleForm('addPosting')">&times;</span>
-            <h2 id='addPostingHeader'> Add Posting</h2>
+        <form id="Posting" class="hidden" method="POST" onsubmit="handleRequest(event, $(this), 'POST')">
+            <span id="closeIcon" onclick="toggleForm('Posting', 'POST')">&times;</span>
+            <h2 id='PostingHeader'> Add Posting</h2>
             <label for="type">Posting for:</label>
             <select id="postingType" name="type">
                 <option value='faculty'>Faculty</option>
@@ -349,7 +353,8 @@
             <textarea id="postingDescription" name="description" cols="60"
                 placeholder="Short description of the posting"></textarea>
             <br>
-            <button type="submit">Add Posting</button>
+            <input id="p_id" name="_id" style="display:none;">
+            <button class="general" type="submit">Submit</button>
         </form>
 </div>
 
@@ -361,9 +366,7 @@
 <% if(user.userType>0) {%>
 <script src='/js/dashboard.js'></script>
 <% }  %>
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
-    integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
-    crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
     integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
     crossorigin="anonymous"></script>
