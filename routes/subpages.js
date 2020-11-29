@@ -35,9 +35,11 @@ router.get('/:pagename', (req, res) => {
                     });
                     var title = data.title;
                     const logged = req.session.authenticated;
+
                     const user = req.session.username;
                     const rendered_html = content.markdown ? markdown.render(content.markdown) : content.html;
                     res.render('subpage.ejs', { title, menu, content, rendered_html, logged, user });
+
                 }
 
             }

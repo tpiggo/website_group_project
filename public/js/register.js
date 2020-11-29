@@ -35,7 +35,6 @@ function initErrorBoxes(){
 window.onload = initErrorBoxes();
 
 /**
- * @author Timothy
  * @param {Object} form_entry 
  * @description Check if the username is the proper type. Outputs errors if not.
  */
@@ -50,7 +49,6 @@ function checkUser(form_entry){
 }
 
 /**
- * @author Timothy
  * @param {Boolean} isPass 
  * @param {Object} form_entry 
  * @description Comprehensive checking of the password/confirmation password, with proper 
@@ -115,7 +113,6 @@ function checkEmail(form_entry){
 }
 
 /**
- * @author Timothy
  * @param {String} pass 
  * @param {String} confPass 
  * @description Function which takes in password and confirmation and matches them 
@@ -128,7 +125,6 @@ function matchPass(pass, confPass){
 }
 
 /**
- * @author Timothy
  * @description Finds errors on the page.
  */
 function areErrors(){
@@ -142,12 +138,10 @@ function areErrors(){
 
 
 /**
- * @author Timothy
  * @param {Array} form
  * @description Function to push the errors to the page in case bad submission (empty)
  */
 function onSubmitErrors(form){
-    
     for (var i = 0; i < form.length; i++){
         if (i == 2 && errors[i] && errors[i-1]){
             errorBox[i].getElement().innerHTML = errorBox[i-1].getErrorMsg();
@@ -156,10 +150,13 @@ function onSubmitErrors(form){
             errorBox[i].getElement().innerHTML = errorBox[i].getErrorMsg();
         }
     }
-    console.log(errors);
 }
 
-
+/**
+ * @description Takes an event of submission and handles the event depending on the presence of errors
+ * @param {Event} event 
+ * @param {*} value 
+ */
 function onSubmit(event, value){
     if (areErrors()){
         onSubmitErrors(value);

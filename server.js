@@ -6,7 +6,7 @@ const app = express();
 const session = require('express-session');
 const MongoStore = require('connect-mongo')(session);
 // DB config
-const db = require('./config/keys').MongoURI;
+const db = require('./config/keys.js').MongoURI;
 
 // Connect to Mongo
 // Setting the proper instances for the mongoose engine 
@@ -21,9 +21,10 @@ mongoose.connect(db)
 
 //Session Config
 app.use(session({
-    secret: require('./config/keys').session_secret,
+    secret: require('./config/keys.js').session_secret,
     resave: true,
     saveUninitialized: true,
+    rolling: true,
     cookie: { 
         maxAge: 3600000,
         secure: false
@@ -42,7 +43,16 @@ app.use(express.static('public'));
 app.use(expressLayouts);
 app.set('view engine', 'ejs');
 
+// Global variables 
+app.use((req, res, next)=>{
+    res.locals.success_msg;
+    res.locals.error_msg;
+    next();
+});
+
+
 app.use('/', require("./routes/index"));
+app.use('/parse', require("./routes/form-validator")); // Routing the requests for form parsing
 app.use('/users', require("./routes/users"));
 app.use('/:page', require('./routes/subpages'));
 
@@ -53,5 +63,5 @@ app.get('*', (req, res) => {
     res.send(`404 REQUEST NOT RECOGNIZED [${req.url}]`);
 });
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8016;
 app.listen(PORT, console.log(`Server started on port ${PORT}`));

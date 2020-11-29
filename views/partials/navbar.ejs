@@ -1,9 +1,12 @@
 <nav>
     <div id="user-bar">
         <% if (logged) {%>
-            <%- include('user-logged.ejs', {user}); %>
+            <div id='user-info'><a href="/dashboard">Welcome, <%- username %></a></div>
+            <a id="logout" href="/users/logout">Logout</a>
         <% } else { %>
-            <%- include('user-box.ejs'); %>
+            <div id="user-info">You are not signed in!</div>
+            <a id="login" href="/users/login">Login</a></li>
+            <a id="register" href="/users/register">Register</a></li>
         <% } %>
     </div>
     <ul class="nav">

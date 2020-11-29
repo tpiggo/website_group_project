@@ -47,3 +47,18 @@
     color: white;
     margin: 1em;
 }
+
+#teaching{
+    height: 500px;
+}
+/* Need to move the controller block outside and change the colours 
+#carousel-controller{
+    position: relative;
+    top: -100px;
+}
+*/
+
+.carousel-item.teaching-slide img {
+    max-width: 100%;
+    max-height: 500px;
+}
