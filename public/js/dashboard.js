@@ -261,35 +261,6 @@ function refreshDropdownTech(techSupports) {
 }
 
 
-
-function callBackEnd(pOpts) {
-    // Promisifying the callback in order to handle it asynchoronously.
-    return new Promise((resolve, reject) => {
-        var aXML = new XMLHttpRequest();
-        aXML.open(pOpts.type, pOpts.url);
-        // On the load call for the data.
-        aXML.onload = function () {
-            if (this.status >= 200 && this.status < 300) {
-                resolve(JSON.parse(aXML.response));
-            } else {
-                reject(JSON.parse({
-                    status: this.status,
-                    statusText: aXML.statusText
-                }))
-            }
-        };
-        // On an error.
-        aXML.onerror = function () {
-            reject(JSON.parse({
-                status: this.status,
-                statusText: aXML.statusText
-            }))
-        }
-        aXML.setRequestHeader("Content-Type", "application/json;charset=UTF-8")
-        aXML.send(JSON.stringify(pOpts.request));
-    })
-}
-
 /**
  * @description Takes a collection and returns an array of objects
  * @param {Collection} pCol
@@ -345,17 +316,6 @@ function errorCheck(pObject) {
     return areErrors;
 }
 
-
-/**
- * @description Function triggered on good responses from the server. Since we need to update the UI without reloading
- *              the page, forcing the update by hand during the running of the Dashboard UI.
- * @param {String} type 
- * @param {JSON} aJson 
- */
-function handleResponse(type, pJson) {
-    return 0;
-}
-
 /**
  * @description creates a dynamic collapsable element for the server response.
  * @param {*} type 
@@ -397,11 +357,15 @@ function fade(div) {
     }, 4000);
 }
 
-
+/**
+ * 
+ * @param {Event} event 
+ * @param {HTMLElement} element 
+ * @param {String} method 
+ */
 function handleRequest(event, element, method) {
     // Do not allow default.
     event.preventDefault();
-    console.log(element);
     // Building the request JSON
     var mForm = makeJson(element[0]);
     if (!errorCheck(mForm)) {

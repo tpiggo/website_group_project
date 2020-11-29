@@ -95,7 +95,7 @@ router.post('/TA', middleware.isAuthenticated, (req, res) => {
         return new Promise((resolve, reject) => {
             if (!post) {
                 const content = req.body;
-                TAPosting.create({ ...content, creator: req.session.username }, (err, createdPost) => {
+                TAPosting.create({ ...content, creator: req.session.username, creationDate: Date.now() }, (err, createdPost) => {
                     if (err) {
                         console.error(err);
                         reject({ status: 2, response: 'Error creating the course!' });
@@ -206,7 +206,8 @@ router.post('/News', middleware.isAuthenticated, (req, res) => {
 
     News.create({
         ...req.body,
-        creator: req.session.username
+        creator: req.session.username,
+        creationDate: Date.now()
     }, (err, result) => {
         if (err) {
             console.log(err);
@@ -266,7 +267,8 @@ router.post('/Event', middleware.isAuthenticated, (req, res) => {
             } else {
                 Event.create({
                     ...req.body,
-                    creator: req.session.username
+                    creator: req.session.username,
+                    creationDate: Date.now()
                 }, (err, createdEvent) => {
                     if (err) reject({ status: 2, response: 'Error creating event!' });
                     else resolve({
@@ -363,7 +365,8 @@ router.post('/Posting', middleware.isAuthenticated, (req, res) => {
     console.log(req.body);
     Posting.create({
         ...req.body,
-        creator: req.session.username
+        creator: req.session.username,
+        creationDate: Date.now()
     }, (err, result) => {
         if (err) res.json(handleError(err, "posting"));
         else {

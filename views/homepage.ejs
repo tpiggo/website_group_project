@@ -7,6 +7,7 @@
     <link rel="shortcut icon" href="https://www.cs.mcgill.ca/static/base/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="/css/homepage.css">
     <link rel="stylesheet" href="/css/general.css">
+    <script src="/js/frontendAPI.js"></script>
     <script src="/js/homepage.js"></script>
     <!-- Add icon -->
 </head>
@@ -34,30 +35,64 @@
 
     <div id="teaching" class="content container-fluid">
         <h2>teaching@cs</h2>
-        <!-- Slideshow
-            image with title that appears on transition -->
+        <!-- Slideshow image with title that appears on transition, using bootstrap -->
+        <div id="teachingCarousel" class="carousel slide" data-ride="carousel" data-interval="7500">
+            <ol class="carousel-indicators">
+                <li data-target="#teachingCarousel" data-slide-to="0" class="active"></li>
+                <li data-target="#teachingCarousel" data-slide-to="1"></li>
+            </ol>
+            <div class="carousel-inner">
+                <div class="carousel-item active teaching-slide">
+                    <img class="d-block" src="images/29_Remote_Learning_Resources...._Xj4iyVJ.png" alt="First slide">
+                    <div class="carousel-caption d-none d-md-block" style="color:black">  
+                        <p>Teaching stuff!</p>
+                    </div>
+                </div>
+                <div class="carousel-item teaching-slide">
+                    <img class="d-block" src="images/CSUS-logo.png" alt="Second slide">
+                    <div class="carousel-caption d-none d-md-block" style="color:black">  
+                        <p>Get some help with homework!</p>
+                    </div>
+                </div>
+            </div>
+            <div id="carousel-controller">
+                <a class="carousel-control-prev" href="#teachingCarousel" role="button" data-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#teachingCarousel" role="button" data-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+                <ol class="carousel-indicators">
+                    <li data-target="#teachingCarousel" data-slide-to="0" class="active"></li>
+                    <li data-target="#teachingCarousel" data-slide-to="1"></li>
+                </ol>
+            </div>
+        </div>
 
     </div>
 
     <!-- Events and latest should be side to side -->
     <div id="events" class="content container-fluid">
-        <h2>events@cs</h2>
+        <h2 id="eventsHeader">events@cs</h2>
         <!-- events 
                 Listing of evetns with logo of date and time-->
-        <button class="btn">Learn more about Events</button>
+        <button id='events-btn' class="btn">Learn more about Events</button>
     </div>
 
     <div id="latest" class="content container-fluid">
-        <h2>latest@cs</h2>
+        <h2 id="latestHeader">latest@cs</h2>
         <!-- latest 
                 Also slideshow images that appears with title of informations
             on hover, image blurs out and info listing appears-->
+        <button id='news-btn' class="btn">See more!</button>
     </div>
 
     <div id="posting" class="content container-fluid">
-        <h2>posting@cs</h2>
+        <h2 id="postingHeader">posting@cs</h2>
         <!--Posting of latest jobs on the cs website-->
-        <button class="btn">Learn more about Job Posting</button>
+        <button id='postings-btn' class="btn">Learn more about Job Posting</button>
     </div>
 
     <!-- Extra to maybe include -->

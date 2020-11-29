@@ -24,7 +24,8 @@ const TAPostingSchema = new mongoose.Schema({
     creator: {
         type: String,
         required: true
-    }
+    },
+    creationDate: Date
 });
 
 const TAPosting = mongoose.model('TAPosting', TAPostingSchema);

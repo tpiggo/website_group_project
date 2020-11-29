@@ -22,7 +22,8 @@ const PostingSchema = new mongoose.Schema({
     creator: {
         type: String,
         required: true
-    }
+    },
+    creationDate: Date
 });
 
 const Posting = mongoose.model('Posting', PostingSchema);

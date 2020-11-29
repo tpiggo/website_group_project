@@ -9,8 +9,6 @@ const NewsSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    start: Date,
-    end: Date,
     contact: {
         type: String,
         required: true
@@ -22,7 +20,8 @@ const NewsSchema = new mongoose.Schema({
     creator: {
         type: String,
         required: true
-    }
+    },
+    creationDate: Date
 });
 
 const News = mongoose.model('News', NewsSchema);

@@ -21,7 +21,8 @@ const EventSchema = new mongoose.Schema({
     creator: {
         type: String,
         required: true
-    }
+    },
+    creationDate: Date
 });
 
 const Events = mongoose.model('Events', EventSchema);

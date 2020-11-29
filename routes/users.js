@@ -71,8 +71,11 @@ router.post('/register', canUseRoute, (req, res)=> {
             "html": 'register.ejs', 
             "script": "<script src='/js/register.js'></script>"
         };
-    // var errors = [];
-
+    /**
+     * 
+     * @param {*} username 
+     * @param {*} email 
+     */
     function findUserUnique(username, email){
         return new Promise((resolve, reject) => {
             var errors = [];
@@ -87,7 +90,10 @@ router.post('/register', canUseRoute, (req, res)=> {
         });
     }
 
-
+    /**
+     * 
+     * @param {*} user 
+     */
     function createNewUser(user){
         var errors = [];
         return new Promise((resolve, reject) =>{
@@ -124,7 +130,9 @@ router.post('/register', canUseRoute, (req, res)=> {
             return createNewUser(users);
         })
         .then(user => {
-            // Should get a success message that user was created
+            /**
+             * @todo: Should get a success message that user was created 
+             */
             return res.redirect('/users/register');
         })
         .catch(errors => {
