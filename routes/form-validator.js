@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const bodyParser = require('body-parser');
 const middleware = require("../middleware");
-
+const fs = require('fs');
 const TAPosting = require('../models/TAPosting');
 const Course = require('../models/Courses');
 const Event = require('../models/Events');
@@ -10,10 +10,17 @@ const News = require('../models/News');
 const TechnicalReport = require('../models/TechnicalReport');
 const Posting = require('../models/Posting');
 const Award = require('../models/Award');
-const mongoose = require('mongoose');
-const e = require('express');
+const multer = require('multer');
+const path = require('path');
 // Body parser for these routes. Needed since sending JSONs to and from the frontend.
 router.use(bodyParser.json());
+
+
+var upload = multer({
+    dest: path.join(__dirname, "../fileHolderDir/")
+});
+
+
 
 /**
  * Responds with appropriate error message when Creating an element to DB
@@ -379,11 +386,8 @@ router.post('/Posting', middleware.isAuthenticated, (req, res) => {
     });
 });
 
-/** 
- * TODO: Fix the Courses "Add" button in order to create a new Course.
- * Maybe we could use a scraper in order to scrape the courses for CS off the McGill website? 
- */
-router.post('/Course', middleware.isAuthenticated, (req, res) => {
+router.post('/Course', upload.single("syllabus"), middleware.isAuthenticated, (req, res) => {
+    console.log("Checking the file", req.file, req.body);
     Course.create(req.body, (err, content) => {
         if (err) res.json(handleError(err, 'course'));
         else {
@@ -667,6 +671,17 @@ router.put('/Tech', middleware.isAuthenticated, (req, res) => {
     });
 
 });
+
+
+/**
+ * Testing forms
+ */
+router.post("/fileUploader", upload.single("file"), (req, res) => {
+    console.log(req.body, req.file);
+    console.log(JSON.stringify(req.headers));
+    res.redirect('/dashboard');
+});
+
 
 module.exports = router;
 

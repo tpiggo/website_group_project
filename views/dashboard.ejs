@@ -95,7 +95,13 @@
                     </select> <br>
                 </div>
             </div>
-
+            <hr>
+            <form id="fileUploader" enctype="multipart/form-data" action="/parse/fileUploader" method="POST">
+                <label for="string">Enter a string:</label>
+                <input type="text" name="string">
+                <input type="file" name='file'>
+                <button type="submit">Submit</button>
+            </form>
             <hr>
             <h3>Other</h3>
             <button class="general">Modify Color Palette</button>
@@ -232,7 +238,7 @@
         </form>
 
         <!-- Add Course -->
-        <form id="Course" class="hidden" method="POST" onsubmit="handleRequest(event, $(this), 'POST')">
+        <form id="Course" class="hidden" method="POST" onsubmit="handleRequest(event, $(this), 'POST')" enctype="multipart/form-data">
             <span id="closeIcon" onclick="toggleForm('Course'), 'POST'">&times;</span>
             <h2 id="CourseHeader">Course</h2>
 
@@ -283,7 +289,7 @@
             <br>
 
             <label for="syllabus">Syllabus:</label>
-            <input type="text" id="syllabus" name="syllabus" placeholder="holder">
+            <input type="file" id="syllabus" name="syllabus" placeholder="holder">
             <br>
             <input id="c_id" name="_id" style="display:none;">
             <button class="general" type="submit">Submit</button>
