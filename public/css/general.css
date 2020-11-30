@@ -24,7 +24,7 @@ nav ul {
     padding: 1rem 1rem;
 }
 
-nav img {
+#logo {
     margin-left: 4rem;
     margin-right: 1rem;
     left: 0;
@@ -33,31 +33,54 @@ nav img {
 
 /* user-bar CSS */
 #user-bar{
-    display: flex;
-    margin: 0 4rem;
-    color: white;
+    display: grid;
+    justify-content: right;
 }
 
-#login, #logout, #register{
+#user-bar .dropdown-toggle{
+    color: white;
     padding-left: 1rem;
+    text-decoration: none;
+    /* transition: all .2s ease-in-out; */
 }
+#username {
+    color: var(--mcgill-burgundy);
+}
+
+#login,
+#register,
+#logout{
+    color:grey;
+}
+/* #user-bar a:hover,
+#user-info a:hover{
+    padding-left: 1rem;
+    text-decoration: none;
+    transform: scale(2);
+} */
 
 .nav {
     right:1em;
 }
+
 #navbar.fixed-top{
     z-index: 0 !important;
 }
+
 .nav-link {
     color: white;
 }
+.nav-item {
+    margin: auto 0;
+}
+
 div.collapse {
     position:relative;
     z-index:0 !important;
 }
 
-#prospective {
-    background-color: var(--mcgill-grey);
+.target {
+    background-color: var(--mcgill-burgundy);
     text-align: center;
     padding: 2em;
 }

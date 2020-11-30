@@ -121,7 +121,7 @@ function addField() {
 
     if (pointer == 1) {
         var minus = document.createElement('img');
-        minus.src = '../images/minus.png'
+        minus.src = '../images/icons/minus.png'
         newField.getElementsByTagName('br')[0].parentNode.insertBefore(minus, newField.getElementsByTagName('input')[0].nextSibling);
 
     } else var minus = newField.getElementsByTagName('img')[0];
