@@ -2,6 +2,7 @@
     <div id="user-bar">
         <% if (logged) {%>
             <div id='user-info'><a href="/dashboard">Welcome, <%- username %></a></div>
+            <a id='settings' href="/settings">Settings</a>
             <a id="logout" href="/users/logout">Logout</a>
         <% } else { %>
             <div id="user-info">You are not signed in!</div>
