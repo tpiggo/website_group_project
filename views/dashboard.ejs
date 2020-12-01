@@ -96,13 +96,6 @@
                 </div>
             </div>
             <hr>
-            <form id="fileUploader" enctype="multipart/form-data" action="/parse/fileUploader" method="POST">
-                <label for="string">Enter a string:</label>
-                <input type="text" name="string">
-                <input type="file" name='file'>
-                <button type="submit">Submit</button>
-            </form>
-            <hr>
             <h3>Other</h3>
             <button class="general">Modify Color Palette</button>
         </div>
@@ -112,7 +105,7 @@
     <!-- Make all the required fields required, e.prevent default the form -->
     <% if(user.userType>0) {  %> 
         <div id="form-wrap">
-        <form id="TA" class="hidden" method="POST" onsubmit="handleRequest(event, $(this), 'POST')">
+        <form id="TA" class="hidden" method="POST" onsubmit="handleRequest(event, $(this), 'POST', false)">
             <span id="closeIcon" onclick="toggleForm('TA', 'POST')">&times;</span>
             <h2 id="TAHeader">TA Posting</h2>
             <label for="courseTitle">Course:</label>
@@ -146,7 +139,7 @@
         </form>
 
         <!-- Add Award -->
-        <form id="Award" class="hidden" method="POST" onsubmit="handleRequest(event, $(this), 'POST')">
+        <form id="Award" class="hidden" method="POST" onsubmit="handleRequest(event, $(this), 'POST', false)">
             <span id="closeIcon" onclick="toggleForm('Award', 'POST')">&times;</span>
             <h2 id="AwardHeader">Award</h2>
 
@@ -171,7 +164,7 @@
         </form>
 
         <!-- Add News -->
-        <form id="News" class="hidden" method="POST" onsubmit="handleRequest(event, $(this), 'POST')">
+        <form id="News" class="hidden" method="POST" onsubmit="handleRequest(event, $(this), 'POST', false)">
             <span id="closeIcon" onclick="toggleForm('News', 'POST')">&times;</span>
             <h2 id="NewsHeader">News</h2>
             <label for="type">News about:</label>
@@ -200,7 +193,7 @@
         </form>
 
         <!-- Add Event -->
-        <form id="Event" class="hidden" method="POST" onsubmit="handleRequest(event, $(this), 'POST')">
+        <form id="Event" class="hidden" method="POST" onsubmit="handleRequest(event, $(this), 'POST', false)">
             <span id="closeIcon" onclick="toggleForm('Event', 'POST')">&times;</span>
             <h2 id="EventHeader">Event</h2>
             <label for="type">Event:</label>
@@ -238,7 +231,7 @@
         </form>
 
         <!-- Add Course -->
-        <form id="Course" class="hidden" method="POST" onsubmit="handleRequest(event, $(this), 'POST')" enctype="multipart/form-data">
+        <form id="Course" class="hidden" method="POST" onsubmit="handleRequest(event, $(this), 'POST', true)">
             <span id="closeIcon" onclick="toggleForm('Course'), 'POST'">&times;</span>
             <h2 id="CourseHeader">Course</h2>
 
@@ -296,7 +289,7 @@
         </form>
 
         <!-- Add Technical Support -->
-        <form id="Tech" class="hidden" method="POST" onsubmit="handleRequest(event, $(this), 'POST')">
+        <form id="Tech" class="hidden" method="POST" onsubmit="handleRequest(event, $(this), 'POST', false)">
             <span id="closeIcon" onclick="toggleForm('Tech', 'POST')">&times;</span>
             <h2 id='TechHeader'>Technical Report</h2>
 
@@ -317,7 +310,7 @@
         </form>
 
         <!-- Add Posting -->
-        <form id="Posting" class="hidden" method="POST" onsubmit="handleRequest(event, $(this), 'POST')">
+        <form id="Posting" class="hidden" method="POST" onsubmit="handleRequest(event, $(this), 'POST', false)">
             <span id="closeIcon" onclick="toggleForm('Posting', 'POST')">&times;</span>
             <h2 id='PostingHeader'> Add Posting</h2>
             <label for="type">Posting for:</label>
