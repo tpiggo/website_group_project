@@ -18,24 +18,12 @@
     font-style:italic;
 }
 
-#icon {
-    position: fixed;
-    width:1.4em;
-    top: 2.3em;
-    left: 1em;
-    z-index: 1030;
-}
-
-#icon:hover {
-    cursor: pointer;
-}
-
 /* Side nav */
 #menu {
     color: white;
     transition: all 1s;
     width: 15rem;
-    max-height: 90vh;
+    height: 90vh;
     overflow: scroll;
     position: fixed;
     z-index: 1000;
@@ -55,4 +43,7 @@
 
 #menu.hidden {
     transform: translateX(-100%);
+}
+.card-body {
+    text-align: left;
 }

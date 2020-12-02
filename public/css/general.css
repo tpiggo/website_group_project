@@ -5,6 +5,7 @@
     --mcgill-red: #ed1b2f;
     --mcgill-burgundy: #9E0918;
     --mcgill-grey: #8f9ba5;
+    --scroll:0;
 }
 
 body {
@@ -20,14 +21,10 @@ nav {
 nav ul {
     padding: 1rem;
 }
-.nav-link {
-    padding: 1rem 1rem;
-}
 
 #logo {
-    margin-left: 4rem;
-    margin-right: 1rem;
-    left: 0;
+     margin: 0 1rem;
+    /* left: 0; */
     cursor: pointer;
 }
 
@@ -52,6 +49,21 @@ nav ul {
 #logout{
     color:grey;
 }
+
+#icon {
+    /* position: fixed; */
+    width:1.4em;
+    /* top: 2.3em; */
+    /* left: 1em; */
+    /* z-index: 1030; */
+    margin:auto;
+    /* padding:1rem; */
+}
+
+#icon:hover {
+    cursor: pointer;
+}
+
 /* #user-bar a:hover,
 #user-info a:hover{
     padding-left: 1rem;
@@ -59,15 +71,19 @@ nav ul {
     transform: scale(2);
 } */
 
-.nav {
+/* .nav {
     right:1em;
+} */
+nav *,
+nav::after,
+nav::before{
+    box-sizing:unset;
 }
-
 #navbar.fixed-top{
     z-index: 0 !important;
 }
-
 .nav-link {
+    padding: 1rem 1rem;
     color: white;
 }
 .nav-item {

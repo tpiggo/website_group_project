@@ -14,33 +14,31 @@
 
     <!-- Saves the variable 'title' so it can be accessed by the script subpage.js -->
     <span id="title" style="display:none"><%=title%></span>
-    
-    <!-- Top fixed menu -->
-    <%- include('partials/navbar', {logged, username}) %>
 
-    <img id="icon" src="/images/icons/hamburger.png" alt="icon" onclick="openMenu()">
+    <!-- Top fixed menu -->
+    <%- include('partials/navbar', {logged, username, menuIcon:true}) %>
     <!-- left side menu-->
     <div id="menu" class="hidden">
         <!-- menu list specifically for the Prospective page -->
-
-        <% for(let item of menu) { %>
-            <ul onclick= <%- "window.location='./" + item[0] +"'"%>> <%= item[1]%></ul>
+        <div>
+            <% for(let item of menu) { %>
+            <ul onclick=<%- "window.location='./" + item[0] +"'"%>> <%= item[1]%></ul>
             <% } %>
+        </div>
     </div>
-
     <!-- <span id="icon">icon</span> -->
     <div id="content">
         <!--Get the content from the database and render it here -->
         <%-rendered_html %>
         <% if(logged) { %>
-            <a href="<%=content.path%>/edit">Edit Source</a>
+        <a href="<%=content.path%>/edit">Edit Source</a>
         <% } %>
     </div>
     <%- include('partials/footer'); %>
 
-    <script src="/js/subpage.js"></script>
 </body>
 
+<script src="/js/subpage.js"></script>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
     integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
     crossorigin="anonymous"></script>
