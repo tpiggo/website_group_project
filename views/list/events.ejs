@@ -1,0 +1,20 @@
+<% for(let event of content.data) { %>
+    <div class="card-body">
+        <h5 class="card-title"> <%=event.title%></h5>
+        <small class="text-muted">From <%=event.start.getFullYear()%>-<%=event.start.getMonth();%>-<%=event.start.getDate();%>, <%=event.start.getHours();%>:<%=event.start.getMinutes();%></small>
+        <small class="text-muted"> to <%=event.end.getFullYear()%>-<%=event.end.getMonth();%>-<%=event.end.getDate();%>, <%=event.end.getHours();%>:<%=event.end.getMinutes();%></small>
+        <p class="card-text"><%=event.description%></p>
+        <p class="card-text">Host : <%=event.hostedBy%> &emsp;
+            <% if(type == 'all') { %>
+                <span class="badge badge-dark"><%=event.eventType%></span>
+                <% }%>
+        </p>
+        
+      </div>
+    <% } %>
+    <% if(content.data.length==0) { %>
+        <h3> There is no 
+            <% if(type == 'all') { %>event
+            <% }else { %><%=type%><% } %>
+                 at the moment</h3>
+        <% } %>
