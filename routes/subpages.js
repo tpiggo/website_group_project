@@ -13,6 +13,7 @@ router.get('/:pagename', (req, res) => {
     console.log('Request received for /' + req.params.pagename + ' - sending file /views/' + req.params.pagename);
 
     const entry = req.baseUrl.replace("/", '');
+    console.log(entry);
     Page
         .findOne({ path: entry })
         .populate('subpages')
@@ -24,7 +25,7 @@ router.get('/:pagename', (req, res) => {
                 res.send("404 : this page doesn't exist");
             }
             else {
-                var content = data.subpages.find(e => e.path == req.params.pagename);
+                var content = data.subpages.find(e => e.path.includes(req.params.pagename));
                 if (content == undefined) {
                     res.send("404 : this subpage doesn't exist");
                 }
@@ -37,8 +38,9 @@ router.get('/:pagename', (req, res) => {
                     const logged = req.session.authenticated;
 
                     const username = req.session.username;
-                    const rendered_html = content.markdown ? markdown.render(content.markdown) : content.html;
-                    res.render('subpage.ejs', { title, menu, content, rendered_html, logged, username });
+                    content.html = content.markdown ? markdown.render(content.markdown) : content.html;
+                    
+                    res.render('subpage.ejs', { title, menu, content, logged, username });
 
                 }
 

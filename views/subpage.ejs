@@ -22,15 +22,19 @@
         <!-- menu list specifically for the Prospective page -->
         <div>
             <% for(let item of menu) { %>
-            <ul onclick=<%- "window.location='./" + item[0] +"'"%>> <%= item[1]%></ul>
+            <ul> <a href=<%- "'/" + item[0] +"'"%>><%= item[1]%> </a></ul>
             <% } %>
         </div>
     </div>
     <!-- <span id="icon">icon</span> -->
     <div id="content">
         <!--Get the content from the database and render it here -->
-        <%-rendered_html %>
-        <% if(logged) { %>
+        <% if(content.data) {%> 
+            <%-include(content.html)%>
+        <% } else{%> 
+            <%-content.html %>
+
+        <% }if(!content.data && logged) { %>
         <a href="<%=content.path%>/edit">Edit Source</a>
         <% } %>
     </div>
