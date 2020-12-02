@@ -54,6 +54,7 @@
                     <% if (logged) {%>
                     <a class="dropdown-item" id="username" href="/dashboard"><%- username.charAt(0).toUpperCase() + username.substr(1) %></a>
                     <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" id='settings' href="/settings">Settings</a>
                     <a class="dropdown-item" id="logout" href="/users/logout">Logout</a>
                     <% } else { %>
 

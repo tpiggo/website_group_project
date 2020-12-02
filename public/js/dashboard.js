@@ -34,7 +34,7 @@ function getPageSelected(mId) {
 
 //element declared multiple time
 function fillForm(fId, content) {
-
+    const hasFile = fId=='Course'?true:false;
     var form = document.getElementById(fId);
     for (var key in content) {
 
@@ -63,6 +63,7 @@ function fillForm(fId, content) {
             }
             continue;
         }
+        if (key == 'syllabus') continue;
 
         var element = form.querySelector("[name=" + key + "]");
         if (!element) continue;
@@ -72,7 +73,7 @@ function fillForm(fId, content) {
         }
         else element.value = content[key];
     }
-    toggleForm(fId, 'PUT');
+    toggleForm(fId, 'PUT', hasFile);
 }
 
 
@@ -82,7 +83,7 @@ nav.classList.add("fixed-top");
 nav.setAttribute("style", "position:sticky !important");
 
 //Display forms
-function toggleForm(name, method) {
+function toggleForm(name, method, hasFile) {
     var form = document.getElementById(name);
     form.classList.toggle("hidden");
     if (name.includes("Course")) {
@@ -102,7 +103,7 @@ function toggleForm(name, method) {
         selects[j].disabled = !selects[j].disabled;
     }
 
-    if (method) form.setAttribute('onsubmit', "handleRequest(event, $(this), '" + method + "')");
+    if (method) form.setAttribute('onsubmit', "handleRequest(event, $(this), '" + method + "', "+ hasFile +")");
 
 }
 
@@ -299,7 +300,35 @@ function makeJson(pObject) {
     }
     if (instructors.length > 0) aJson['instructor'] = instructors;
     if (terms.length > 0) aJson['termsOffered'] = terms;
+    console.log(aJson);
     return aJson;
+}
+
+/**
+ * @description Takes an Array of objects and returns FormData object
+ * @param {Array} pObject 
+ */
+function createForm(pObject){
+    var formData = new FormData
+    var terms = [];
+    var instructors = []
+    for (var i = 0; i < pObject.length; i++) {
+        if (pObject[i].id != '' && pObject[i].type != 'submit') {
+            var currId = pObject[i].id;
+
+            if (currId.includes('_id') && pObject[i].value == '') continue;
+            if (pObject[i].type == 'file') formData.append(pObject[i].name, pObject[i].files[0]);
+            else if (currId.includes('instruct')) {
+                instructors.push(pObject[i].value);
+            } else if (currId.includes("w2021c") || currId.includes("s2021c") || currId.includes("f2021c")) {
+                if (document.getElementById(currId).checked) terms.push(pObject[i].value);
+            }
+            else formData.append(pObject[i].name, pObject[i].value)
+        }
+    }
+    if (instructors.length > 0) formData.append('instructor', instructors);
+    if (terms.length > 0) formData.append('termsOffered', terms);
+    return formData;
 }
 
 /**
@@ -365,15 +394,23 @@ function fade(div) {
  * @param {HTMLElement} element 
  * @param {String} method 
  */
-function handleRequest(event, element, method) {
+function handleRequest(event, element, method, hasFile) {
     // Do not allow default.
     event.preventDefault();
     // Building the request JSON
-    var mForm = makeJson(element[0]);
+    var mForm, type;
+    if (hasFile){
+        mForm = createForm(element[0]);
+        type = 'FormData';
+    } else {
+        mForm = makeJson(element[0]);
+        type = 'JSON';
+    }
+    
     if (!errorCheck(mForm)) {
         // clear each one!
         // Create the async promise
-        var opts = { type: method, url: '/parse/' + element[0].id, request: mForm };
+        var opts = { type: method, url: '/parse/' + element[0].id, request: mForm , contentType: type};
         var aPromise = callBackEnd(opts);
         // Handle
         aPromise
@@ -390,6 +427,8 @@ function handleRequest(event, element, method) {
                     console.log("Error on submission");
                     // Creating Element to display in the form!
                     createPopupMsg('error', response.response, aId + "Header");
+                } else {
+                    console.log(response)
                 }
             })
             .catch(function (err) { console.log("error", err) });
@@ -403,4 +442,4 @@ collectionToArray(document.getElementsByTagName('input')).forEach(element => {
     element.addEventListener('change', () => {
         if (element.style.border == "1px solid red") element.style.border = "";
     });
-})
+});
