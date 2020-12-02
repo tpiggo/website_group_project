@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const middleware = require("../middleware");
+const common = require("../common.js");
 const User = require('../models/User.js');
 const Course = require('../models/Courses');
 const Event = require('../models/Events');
@@ -31,9 +32,9 @@ router.get('/dashboard', middleware.isAuthenticated, (req, res) => {
 
 router.get('/api/index-info', (req, res) => {
     // Get the events, latest , and postings. Get first 10, and then rest will be on the  
-    var getNews = () => getAllDataFrom(News);
-    var getEvents = () => getAllDataFrom(Event);
-    var getPosting = () => getAllDataFrom(Posting);
+    var getNews = () => common.getAllDataFrom(News);
+    var getEvents = () => common.getAllDataFrom(Event);
+    var getPosting = () => common.getAllDataFrom(Posting);
     function mapIndex(i){
         if (i == 0) return "news";
         else if (i == 1) return "events";
@@ -45,14 +46,14 @@ router.get('/api/index-info', (req, res) => {
             // Data is an array of arrays
             console.log("Handling firstTen");
             var newArr = [];
-            const maxStringLength = 100;
+            const maxStringLength = 200;
             data.forEach((value, index) => {
-                newArr.push({name: mapIndex(index), elements: getFirstN(value, 2)});
+                newArr.push({name: mapIndex(index), elements: getFirstN(value, 3)});
             });
-            newArr.forEach(value => {
-                value.elements.forEach(value => {
+            newArr.forEach(values => {
+                values.elements.forEach(value => {
                     if (value.description.length > maxStringLength){
-                        value.description = value.description.slice(0, maxStringLength);
+                        value.description = value.description.slice(0, maxStringLength) +'...';
                     }
                 });
             });
@@ -66,12 +67,12 @@ router.get('/api/index-info', (req, res) => {
 
 router.get('/api/dashboard-info', middleware.isAuthenticated, (req, res) => {
     console.log('request received for dropdowns');
-    var getCourses = () => getAllDataFrom(Course);
-    var getNews = () => getAllDataFrom(News);
-    var getEvents = () => getAllDataFrom(Event);
-    var getAwards = () => getAllDataFrom(Award);
-    var getTech = () => getAllDataFrom(TechnicalReport);
-    var getPosting = () => getAllDataFrom(Posting);
+    var getCourses = () => common.getAllDataFrom(Course);
+    var getNews = () => common.getAllDataFrom(News);
+    var getEvents = () => common.getAllDataFrom(Event);
+    var getAwards = () => common.getAllDataFrom(Award);
+    var getTech = () => common.getAllDataFrom(TechnicalReport);
+    var getPosting = () => common.getAllDataFrom(Posting);
 
     Promise.all([getCourses(), getNews(), getEvents(), getAwards(), getTech(), getPosting()])
         .then(data => {
@@ -97,21 +98,4 @@ function getFirstN(pArray, maxSize){
     }
 }
 
-/**
- * Get all the data from the collection specified by Model
- * @param {Model} Model indicate the collection to get data from
- * @returns {Promise}
- */
-function getAllDataFrom(Model) {
-    return new Promise((resolve, reject) => {
-        Model.find({}, (err, content) => {
-            if (err) {
-                console.error(err);
-                reject(err);
-            } else {
-                resolve(content);
-            }
-        });
-    });
-}
 module.exports = router;

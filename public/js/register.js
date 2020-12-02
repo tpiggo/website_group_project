@@ -32,7 +32,7 @@ function initErrorBoxes(){
     });
 }  
 
-window.onload = initErrorBoxes();
+onload = initErrorBoxes();
 
 /**
  * @param {Object} form_entry 
@@ -56,8 +56,10 @@ function checkUser(form_entry){
  */
 function checkPass(isPass, form_entry){
     // Checking password or confirmation password
+    var pass;
+    var confPass ;
     if (isPass){
-        var pass = form_entry.value;
+        pass = form_entry.value;
         // Making sure the password is proper length and does not have spaces
         if (pass.length < 5 || pass.includes(' ')){
             errorBox[1].getElement().innerHTML = errorBox[1].getErrorMsg();
@@ -66,7 +68,7 @@ function checkPass(isPass, form_entry){
             // Checking the confirmation password (if there is one)
             errorBox[1].getElement().innerHTML = "";
             errors[1] = false;
-            var confPass = document.getElementById("confirm-password");
+            confPass = document.getElementById("confirm-password");
             if (confPass.value != '' && !matchPass(pass, confPass.value)){
                 errorBox[2].getElement().innerHTML = errorBox[2].getErrorMsg();
                 errors[2] = true;
@@ -80,8 +82,8 @@ function checkPass(isPass, form_entry){
         }
     } else {
         // Check confirmation pass with the true pass.
-        var pass = document.getElementById('password').value;
-        var confPass = form_entry.value
+        pass = document.getElementById('password').value;
+        confPass = form_entry.value
         if(matchPass(pass, confPass) && confPass != ''){
             errorBox[2].getElement().innerHTML = '';
             errors[2] = false;

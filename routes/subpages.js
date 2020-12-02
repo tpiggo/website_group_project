@@ -46,23 +46,24 @@ router.get('/:pagename', (req, res) => {
         }
         );
 });
+
 router.get('/:pagename/edit', (req, res) => {
     console.log("Loading page " + req.params.pagename + " for editing.");
     var pagename = req.params.pagename;
-    var page = Subpage.findOne({path: pagename}, (err,pagedata) => {
+    Subpage.findOne({path: pagename}, (err,pagedata) => {
         if(err){
             console.log(err);
         }else if(pagedata){
             var title=pagedata.name;
             var logged=req.session.authenticated;
-            var user=req.session.username;
+            var username=req.session.username;
             var content=pagedata.markdown;
             if(logged){ //TODO: Integrate proper permissions here
                 res.render('editor.ejs',{
                     title,
                     content,
                     logged,
-                    user
+                    username
                 });
              }
         }else {
@@ -75,13 +76,13 @@ router.get('/:pagename/edit', (req, res) => {
 
 router.post('/:pagename/edit',(req, res) => {
     var pagename = req.params.pagename;
-    var page = Subpage.findOne({path: pagename}, (err,pagedata) => {
+    Subpage.findOne({path: pagename}, (err,pagedata) => {
         if(err){
             console.log(err);
         }else if(pagedata){
             pagedata.markdown = req.body.markdown;   
-            pagedata.save((err) => {
-                console.log(err);
+            pagedata.save((err2) => {
+                console.log(err2);
             });
             var title=pagedata.name;
             var logged=req.session.authenticated;
@@ -91,7 +92,7 @@ router.post('/:pagename/edit',(req, res) => {
                 title,
                 content,
                 logged,
-                user
+                username
             });
         }else {
             console.log("User " + req.session.username + "tried to edit non-existent subpage "+ pagename);

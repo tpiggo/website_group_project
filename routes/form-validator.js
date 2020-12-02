@@ -167,16 +167,16 @@ router.post('/Award', middleware.isAuthenticated, (req, res) => {
                 Award.create({
                     ...req.body,
                     creator: req.session.username
-                }, (err, award) => {
+                }, (err, newAward) => {
                     if (err) reject({ status: 2, response: 'Error creating award!' });
                     else {
                         resolve({
                             status: 0,
                             response: 'Award created!',
                             eventTitle: {
-                                title: award.title,
-                                recipient: award.recipient,
-                                id: award._id
+                                title: newAward.title,
+                                recipient: newAward.recipient,
+                                id: newAward._id
                             }
                         });
                     }
@@ -346,6 +346,7 @@ router.post('/Tech', middleware.isAuthenticated, (req, res) => {
 
     console.log(req.body);
     const user = req.session.username;
+    //BUG
     const { techTitle, techContact, techDescription } = req.body
     findTechnicalReport(techTitle, user)
         .then(report => {
