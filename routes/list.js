@@ -15,9 +15,11 @@ router.get('/news/:pagename', (req, res) => {
     const username = req.session.username;
 
     if (req.params.pagename == "all") {
+        var content;
         common.getAllDataFrom(News).then(allNews => {
             //res.send("request received !");
-            res.render('list/news.ejs', { title, menu, content: allNews, logged, username });
+            content = { html: './news', data:allNews};
+            res.render('list/list-layout.ejs', { title, menu, content, logged, username });
         }).catch(err => {
             console.error(err);
             res.send(err);
@@ -25,7 +27,8 @@ router.get('/news/:pagename', (req, res) => {
     }
     else if (req.params.pagename == "awards") {
         common.getAllDataFrom(Award).then(awards => {
-            res.render('list/awards.ejs', { title, menu, content: awards, logged, username });
+            content= { html: './awards', data:awards};
+            res.render('list/list-layout.ejs', { title, menu, content, logged, username });
         }).catch(err => {
             console.error(err);
         res.send(err);
@@ -42,7 +45,8 @@ router.get('/employement/:pagename', (req, res) => {
     const username = req.session.username;
 
     common.getAllDataWith(Posting, { type: req.params.pagename }).then(posts => {
-        res.render('list/posting.ejs', { type:req.params.pagename, title, menu, content: posts, logged, username });
+        var content= { html: './postings', data:posts};
+        res.render('list/list-layout.ejs', { type:req.params.pagename, title, menu, content, logged, username });
     }).catch(err => {
         console.error(err);
         res.send(err);
