@@ -43,8 +43,7 @@ router.get('/:pagename', (req, res) => {
                 }
 
             }
-        }
-        );
+        });
 });
 router.get('/:pagename/edit', (req, res) => {
     console.log("Loading page " + req.params.pagename + " for editing.");
