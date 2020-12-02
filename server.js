@@ -55,7 +55,9 @@ app.set('view engine', 'ejs');
 app.use('/', require("./routes/index"));
 app.use('/parse', require("./routes/form-validator")); // Routing the requests for form parsing
 app.use('/users', require("./routes/users"));
-app.use('/list', require('./routes/list'));
+app.use('/employement', require('./routes/employement'));
+app.use('/news', require('./routes/news'));
+app.use('/events', require('./routes/events'));
 app.use('/:page', require('./routes/subpages'));
 
 

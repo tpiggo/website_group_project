@@ -5,7 +5,6 @@ var common = {};
 * @param {Model} Model indicate the collection to get data from
 * @returns {Promise}
 */
-
 common.getAllDataFrom = (Model) => {
     return new Promise((resolve, reject) => {
         Model.find({}, (err, content) => {
@@ -25,7 +24,6 @@ common.getAllDataFrom = (Model) => {
 * @param {JSON} attribute indicates the attribute the documents need to have
 * @returns {Promise}
 */
-
 common.getAllDataWith = (Model, attribute) =>{
     return new Promise((resolve, reject) => {
         Model.find(attribute, (err, content) => {

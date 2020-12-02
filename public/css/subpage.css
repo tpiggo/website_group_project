@@ -20,7 +20,6 @@
 
 /* Side nav */
 #menu {
-    color: white;
     transition: all 1s;
     width: 15rem;
     height: 90vh;
@@ -29,15 +28,16 @@
     z-index: 1000;
     background-color: black;
 }
-
 #menu ul:hover {
     cursor: pointer;
     background-color: var(--mcgill-burgundy);
 }
-
+#menu ul a,
 #menu ul {
     padding: 2rem 1rem;
     text-align: center;
+    text-decoration: none;
+    color: white;
     margin: 0;
 }
 

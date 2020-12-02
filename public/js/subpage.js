@@ -5,11 +5,12 @@ nav.setAttribute("style", "position:sticky !important");
 
 //Disable the nav item corresponding to the 'title' of the page
 var items = nav.getElementsByClassName("nav-item");
- for(var i = 2; i < items.length; i++) {
-    var link = items[i].getElementsByClassName('nav-link');
+ for(var i = 2; i < items.length-1; i++) {
+    var link = items[i].getElementsByTagName('a');
     if(link != undefined) {
         if(link[0].innerText == document.querySelector("#title").innerText) {
             link[0].classList.add("disabled");
+            break;
         }
     }
 }
