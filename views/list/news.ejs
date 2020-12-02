@@ -1,0 +1,10 @@
+<% for(let news of content.data) { %>
+    <div class="card-body">
+        <h5 class="card-title"> <%=news.title%></h5>
+        <small
+            class="text-muted"><%=news.creationDate.getFullYear()%>-<%=news.creationDate.getMonth();%>-<%=news.creationDate.getDate();%>
+            <%=news.creationDate.getHours();%>:<%=news.creationDate.getMinutes();%></small>
+        <p class="card-text"><%=news.description%></p>
+        <p class="card-text">Contact : <%=news.contact%></p>
+    </div>
+    <% } %>

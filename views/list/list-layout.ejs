@@ -11,30 +11,31 @@
 </head>
 
 <body>
+    <!-- Saves the variable 'title' so it can be accessed by the script subpage.js -->
+    <span id="title" style="display:none"><%=title%></span>
 
     <!-- Saves the variable 'title' so it can be accessed by the script subpage.js -->
     <span id="title" style="display:none"><%=title%></span>
 
     <!-- Top fixed menu -->
-    <%- include('partials/navbar', {logged, username, menuIcon:true}) %>
+    <%- include('../partials/navbar', {logged, username, menuIcon:true}) %>
     <!-- left side menu-->
     <div id="menu" class="hidden">
         <!-- menu list specifically for the Prospective page -->
+
         <div>
             <% for(let item of menu) { %>
             <ul onclick=<%- "window.location='./" + item[0] +"'"%>> <%= item[1]%></ul>
             <% } %>
         </div>
+
     </div>
     <!-- <span id="icon">icon</span> -->
     <div id="content">
         <!--Get the content from the database and render it here -->
-        <%-rendered_html %>
-        <% if(logged) { %>
-        <a href="<%=content.path%>/edit">Edit Source</a>
-        <% } %>
+        <%- include(content.html) %>
     </div>
-    <%- include('partials/footer'); %>
+    <%- include('../partials/footer'); %>
 
 </body>
 

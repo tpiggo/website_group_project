@@ -32,33 +32,34 @@ function getPageSelected(mId) {
     }
 }
 
+//element declared multiple time
 function fillForm(fId, content) {
     const hasFile = fId=='Course'?true:false;
     var form = document.getElementById(fId);
     for (var key in content) {
 
         if (key == "instructor") {
-            var element = form.querySelector("[name=instructor0]");
-            element.value = content.instructor[0];
+            var instElement = form.querySelector("[name=instructor0]");
+            instElement.value = content.instructor[0];
             for (var i = 1; i < content.instructor.length; i++) {
                 addField();
-                element = form.querySelector("[name=instructor" + i + "]");
-                element.value = content.instructor[i];
+                instElement = form.querySelector("[name=instructor" + i + "]");
+                instElement.value = content.instructor[i];
             }
             continue;
         }
-        if (key == "termsOffered") {
+        else if (key == "termsOffered") {
             if (content[key].includes("Winter 2021")) {
-                var element = form.querySelector("[name=w2021]");
-                element.checked = true;
+                var winter = form.querySelector("[name=w2021]");
+                winter.checked = true;
             }
-            if (content[key].includes("Summer 2021")) {
-                var element = form.querySelector("[name=s2021]");
-                element.checked = true;
+            else if (content[key].includes("Summer 2021")) {
+                var summer = form.querySelector("[name=s2021]");
+                summer.checked = true;
             }
-            if (content[key].includes("Fall 2021")) {
-                var element = form.querySelector("[name=f2021]");
-                element.checked = true;
+            else if (content[key].includes("Fall 2021")) {
+                var fall = form.querySelector("[name=f2021]");
+                fall.checked = true;
             }
             continue;
         }
@@ -98,8 +99,8 @@ function toggleForm(name, method, hasFile) {
         buttons[i].disabled = !buttons[i].disabled;
     }
     var selects = content.getElementsByTagName("select");
-    for (var i = 0; i < selects.length; i++) {
-        selects[i].disabled = !selects[i].disabled;
+    for (var j = 0; j < selects.length; j++) {
+        selects[j].disabled = !selects[j].disabled;
     }
 
     if (method) form.setAttribute('onsubmit', "handleRequest(event, $(this), '" + method + "', "+ hasFile +")");
@@ -119,13 +120,14 @@ function addField() {
     newField.getElementsByTagName('input')[0].id = 'instructor' + pointer;
     newField.getElementsByTagName('input')[0].name = 'instructor' + pointer;
     newField.getElementsByTagName('input')[0].value = '';
-
+    
+    var minus;
     if (pointer == 1) {
-        var minus = document.createElement('img');
-        minus.src = '../images/minus.png'
+        minus = document.createElement('img');
+        minus.src = '../images/icons/minus.png'
         newField.getElementsByTagName('br')[0].parentNode.insertBefore(minus, newField.getElementsByTagName('input')[0].nextSibling);
 
-    } else var minus = newField.getElementsByTagName('img')[0];
+    } else minus = newField.getElementsByTagName('img')[0];
 
     minus.id = 'minus' + pointer;
     minus.alt = 'minus' + pointer;

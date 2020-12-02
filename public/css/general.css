@@ -5,6 +5,7 @@
     --mcgill-red: #ed1b2f;
     --mcgill-burgundy: #9E0918;
     --mcgill-grey: #8f9ba5;
+    --scroll:0;
 }
 
 body {
@@ -20,44 +21,84 @@ nav {
 nav ul {
     padding: 1rem;
 }
-.nav-link {
-    padding: 1rem 1rem;
-}
 
-nav img {
-    margin-left: 4rem;
-    margin-right: 1rem;
-    left: 0;
+#logo {
+     margin: 0 1rem;
+    /* left: 0; */
     cursor: pointer;
 }
 
 /* user-bar CSS */
 #user-bar{
-    display: flex;
-    margin: 0 4rem;
+    display: grid;
+    justify-content: right;
+}
+
+
+#user-bar .dropdown-toggle{
     color: white;
-}
-
-#login, #logout, #register, #settings{
     padding-left: 1rem;
+    text-decoration: none;
+    /* transition: all .2s ease-in-out; */
+}
+#username {
+    color: var(--mcgill-burgundy);
 }
 
-.nav {
+#login,
+#register,
+#logout,
+ #settings{
+    color:grey;
+}
+
+#icon {
+    /* position: fixed; */
+    width:1.4em;
+    /* top: 2.3em; */
+    /* left: 1em; */
+    /* z-index: 1030; */
+    margin:auto;
+    /* padding:1rem; */
+}
+
+#icon:hover {
+    cursor: pointer;
+}
+
+/* #user-bar a:hover,
+#user-info a:hover{
+    padding-left: 1rem;
+    text-decoration: none;
+    transform: scale(2);
+} */
+
+/* .nav {
     right:1em;
+} */
+nav *,
+nav::after,
+nav::before{
+    box-sizing:unset;
 }
 #navbar.fixed-top{
     z-index: 0 !important;
 }
 .nav-link {
+    padding: 1rem 1rem;
     color: white;
 }
+.nav-item {
+    margin: auto 0;
+}
+
 div.collapse {
     position:relative;
     z-index:0 !important;
 }
 
-#prospective {
-    background-color: var(--mcgill-grey);
+.target {
+    background-color: var(--mcgill-burgundy);
     text-align: center;
     padding: 2em;
 }

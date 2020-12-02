@@ -1,18 +1,11 @@
 <nav>
-    <div id="user-bar">
-        <% if (logged) {%>
-            <div id='user-info'><a href="/dashboard">Welcome, <%- username %></a></div>
-            <a id='settings' href="/settings">Settings</a>
-            <a id="logout" href="/users/logout">Logout</a>
-        <% } else { %>
-            <div id="user-info">You are not signed in!</div>
-            <a id="login" href="/users/login">Login</a></li>
-            <a id="register" href="/users/register">Register</a></li>
-        <% } %>
-    </div>
     <ul class="nav">
         <li class="nav-item">
-            <img src="../images/coat-of-arms.png" alt="Coat of arms" onclick="window.location='/'">
+        <img class="nav-link" id="icon" src="/images/icons/hamburger.png" alt="icon" <% if (menuIcon) {%> onclick="openMenu()"  <% } else { %> style="visibility:hidden;"<%}%>>
+        </li>
+        <li class="nav-item">
+            <img id="logo" style="width: 5em" src="/images/socs-bird.png" alt="SOCS bird"
+                onclick="window.location='/'">
         </li>
         <li class="nav-item">
             <a class="nav-link" data-toggle="collapse" href="#prospective">
@@ -29,10 +22,15 @@
             <a class="nav-link">People</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link">News</a>
+            <a class="nav-link" data-toggle="collapse" href="#news">
+                News</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link">Employement</a>
+            <a class="nav-link">Events</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="collapse" href="#employement">
+                Employement</a>
         </li>
         <li class="nav-item">
             <a class="nav-link">Donate</a>
@@ -40,9 +38,39 @@
         <li class="nav-item">
             <a class="nav-link" data-toggle="collapse" href="#about">About</a>
         </li>
+        <li class="nav-item">
+            <div id="user-bar" class="dropdown show">
+                <a class="dropdown-toggle" href="#" role="button" id="UserMenu" data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false">
+                    <% if (logged) {%>
+                    <img style="width:2em;" src="/images/icons/signed-in.png">
+                    <% } else { %>
+                    <img style="width:2em;" src="/images/icons/not-logged.png">
+                    <% } %>
+                </a>
+
+                <div id="user-info" class="dropdown-menu" aria-labelledby="UserMenu">
+                    <% if (logged) {%>
+                    <a class="dropdown-item" id="username" href="/dashboard"><%- username.charAt(0).toUpperCase() + username.substr(1) %></a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" id='settings' href="/settings">Settings</a>
+                    <a class="dropdown-item" id="logout" href="/users/logout">Logout</a>
+                    <% } else { %>
+
+                    <a class="dropdown-item" id="login" href="/users/login">Login</a>
+                    <a class="dropdown-item" id="register" href="/users/register">Register</a>
+                    <% } %>
+                </div>
+            </div>
+        </li>
+
+        <li class="nav-item">
+            <div>
+            </div>
+        </li>
     </ul>
     <!-- We have all this information stored in the database, why not redner it from there?-->
-    <div id="prospective" class="collapse container-fluid">
+    <div id="prospective" class="target collapse container-fluid">
         <a href="/prospective/general-info" class="unit">General Info</a>
         <a href="/prospective/why-cs" class="unit">Why CS?</a>
         <a href="/prospective/cegep" class="unit">CEGEP</a>
@@ -54,7 +82,22 @@
         <a href="prospective/undergraduate" class="unit">Undergraduate</a>
         <a href="prospective/graduate" class="unit">Graduate</a>
     </div>
-    <div id="about" class="collapse container-fluid">
+
+    <div id="news" class="target collapse container-fluid">
+        <a href="/list/news/all" class="unit">All</a>
+        <a href="/list/news/announcements" class="unit">Announcements</a>
+        <a href="/list/news/awards" class="unit">Awards</a>
+    </div>
+
+    <div id="employement" class="target collapse container-fluid">
+        <a href="/list/employement/faculty" class="unit">Faculty</a>
+        <a href="/list/employement/lecturer" class="unit">Announcement</a>
+        <a href="/list/employement/student" class="unit">Student</a>
+        <a href="/list/employement/research" class="unit">Research</a>
+        
+    </div>
+
+    <div id="about" class="target collapse container-fluid">
         <a href="/about/general" class="unit">General</a>
     </div>
 </nav>
