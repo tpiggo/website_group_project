@@ -15,7 +15,7 @@
     <span id="title" style="display:none"><%=title%></span>
     
     <!-- Top fixed menu -->
-    <%- include('partials/navbar', {logged, username : user }); %>
+    <%- include('partials/navbar', {logged, username, menuIcon:false}); %>
 
     <div id="content">
     <form id="subpage-editor" method="POST">

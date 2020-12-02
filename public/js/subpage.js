@@ -5,14 +5,14 @@ nav.setAttribute("style", "position:sticky !important");
 
 //Disable the nav item corresponding to the 'title' of the page
 var items = nav.getElementsByClassName("nav-item");
- for(var i = 1; i < items.length; i++) {
+ for(var i = 2; i < items.length; i++) {
     var link = items[i].getElementsByClassName('nav-link');
     if(link != undefined) {
         if(link[0].innerText == document.querySelector("#title").innerText) {
             link[0].classList.add("disabled");
         }
     }
-};
+}
 
 // Open and close the left menu with onclick() (hamburger icon)
 function openMenu() {
@@ -21,9 +21,9 @@ function openMenu() {
 }
 
 
-function onLoad(){
-    const titleSpan = document.getElementById('title');
-    if (titleSpan.innerHTML == 'Login' || titleSpan.innerHTML == 'Register'){
-        document.getElementById('icon').hidden = true;
-    }
-};
+// function onLoad(){
+//     const titleSpan = document.getElementById('title');
+//     if (titleSpan.innerHTML == 'Login' || titleSpan.innerHTML == 'Register'){
+//         document.getElementById('icon').hidden = true;
+//     }
+// }

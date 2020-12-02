@@ -1,46 +1,76 @@
 .content {
-    border: 1px solid rgba(134, 47, 6, 0.582);
+    /* border: 1px solid rgba(134, 47, 6, 0.582); */
     background-color: white;
-    min-height: 25rem;
+    /* \min-height: 25rem; */
 }
 
 #header {
     background-color: var(--mcgill-red);
     padding: 0.5em 0;
+    display: grid;
     text-align: center;
-    top: var(--top-header);
-    transition: top 0.5s;
+    top: 0;
+    /* transition: all linear 1; */
+    /* min-height:100vh;
+    animation: head 1s linear;
+    animation-play-state: paused;
+   
+    animation-delay: calc(var(--scroll) * -1s);
+    animation-iteration-count: 1;
+    animation-fill-mode: both; */
 }
+hr {
+    margin:0;
+}
+@keyframes head{
+    to{
+        min-height: 3rem;
+    }
+}
+
+#header span {
+    animation : flashing 3s infinite;
+    color:white;
+    position: absolute;
+    bottom: 5em;
+    left: 45vw;
+    transition: all ease 0.5s;
+}
+
+@keyframes flashing{
+    0%{opacity: 1;}
+    50%{opacity: 0;}
+    100%{opacity: 1;}
+}
+
 #logo-header {
-    display:flex;
-    justify-content: center;
+    /* display:inline-block; */
     text-align: center;
     flex-direction:row;
+    margin: auto;
     transition: all linear 0.1s;
 }
-/* #logo-header{
-   
-} */
 
-#background-video {
-    position: relative;
-    text-align: center;
-}
-
-
-/* #centered-quote {
-    position: absolute;
-    top: 10%;
-    left: 65%;
-} */
-
-#background-video img {
-    width: 100%;
-}
 
 #background-video {
     padding: 0;
+    display:grid;
+    justify-content: center;
+    position: relative;
+    text-align: center;
+    height:100vh;
 }
+
+#backgroundCarousel{
+    z-index: -100;
+    top: 4rem;
+}
+
+#background-video img {
+    width: 100vw;
+    height: auto;
+    /* z-index:-200; */
+}   
 
 .item {
     font-size: large;
@@ -61,4 +91,21 @@
 .carousel-item.teaching-slide img {
     max-width: 100%;
     max-height: 500px;
+}
+
+.card-deck {
+    flex-flow: unset;
+    overflow-y: auto;
+}
+.card{
+    min-width: 25rem;
+    min-height:25rem;
+}
+
+.title {
+    display: grid;
+}
+
+.title h1 {
+    margin: auto;
 }

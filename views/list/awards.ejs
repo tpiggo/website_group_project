@@ -1,0 +1,8 @@
+<% for(let awards of content.data) { %>
+    <div class="card-body">
+        <h5 class="card-title"> <%=awards.title%></h5>
+        <small class="text-muted"><%=awards.date.getFullYear()%>-<%=awards.date.getMonth();%>-<%=awards.date.getDate();%>. <%=awards.date.getHours();%>:<%=awards.date.getMinutes();%></small>
+        <p class="card-text"><%=awards.description%></p>
+        <p class="card-text">Recipient : <%=awards.recipient%></p>
+      </div>
+    <% } %>
