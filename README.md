@@ -6,23 +6,23 @@ A 307 Group project developed using Node.js and MongoDB which was routed by Apac
 
 # Requirements
 Upon downloading, please ensure the following:
-"""bash
+```bash
 sudo apt install npm
 git clone [This project]
 npm install
-"""
+```
 The last line will ensure are dependencies are installed prioir to running
   
 # Startup
 To run the application, use the following command:
-"""bash
+```bash
 npm run
-"""
+```
   
 In order to run in the development mode, the following command should be used:  
-"""bash
+```bash
 npm run dev
-"""
+```
 
 # Contributors
 Timothy Piggott  
