@@ -3,11 +3,12 @@ const router = express.Router();
 const app = express();
 const session = require('express-session');
 const markdown = require('markdown-it')('commonmark');
-const Page = require('../models/Page.js');
-const Subpage = require('../models/Subpage.js');
+const Page = require('../models/Page');
+const Subpage = require('../models/Subpage');
 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
+
 
 router.get('/:pagename', (req, res) => {
     console.log('Request received for /' + req.params.pagename + ' - sending file /views/' + req.params.pagename);
@@ -24,7 +25,7 @@ router.get('/:pagename', (req, res) => {
                 res.send("404 : this page doesn't exist");
             }
             else {
-                var content = data.subpages.find(e => e.path == req.params.pagename);
+                var content = data.subpages.find(e => e.path.includes(req.params.pagename));
                 if (content == undefined) {
                     res.send("404 : this subpage doesn't exist");
                 }

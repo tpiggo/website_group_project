@@ -17,7 +17,7 @@ router.use(bodyParser.json());
 
 
 var upload = multer({
-    dest: path.join(__dirname, "../fileHolderDir/")
+    dest: path.join(__dirname, "/fileHolderDir/")
 });
 
 

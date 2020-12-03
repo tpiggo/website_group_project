@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const common = require("../common.js");
-const Course = require('../models/Courses');
 const Event = require('../models/Events');
 const News = require('../models/News');
 const TechnicalReport = require('../models/TechnicalReport');
@@ -45,7 +44,7 @@ router.get('/employement/:pagename', (req, res) => {
     const username = req.session.username;
 
     common.getAllDataWith(Posting, { type: req.params.pagename }).then(posts => {
-        var content= { html: './postings', data:posts};
+        var content= { html: './posting', data:posts};
         res.render('list/list-layout.ejs', { type:req.params.pagename, title, menu, content, logged, username });
     }).catch(err => {
         console.error(err);
