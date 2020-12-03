@@ -7,13 +7,15 @@ router.get('/courses', (req, res) => {
     const logged = req.session.authenticated;
     const username = req.session.username;
     const title = "Courses";
-    const getCourses = () => common.getAllDataFrom(Courses);
-    getCourses()
+    var courses;
+    common.getAllDataFrom(Courses)
         .then(result => {
-            result = mergeSortCourses(result);
-            console.log(result);
-            content = { html: './courses', data: result};
-            res.render('list/list-layout.ejs', { title, menu: [], content, logged, username});
+            courses = mergeSortCourses(result);
+            return common.getPagesMenu('academic');
+        })
+        .then(result => {
+            content = { html: './list/courses', data: courses};
+            res.render('subpage', { title, menu: result.menu, content, logged, username});
         })
         .catch(err => {
             console.error(err);
