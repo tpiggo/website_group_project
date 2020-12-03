@@ -10,6 +10,8 @@ const TechnicalReport = require('../models/TechnicalReport');
 const Posting = require('../models/Posting');
 const Award = require('../models/Award');
 const { Model } = require('mongoose');
+const fs = require('fs');
+const path = require('path');
 
 router.get('/index-info', (req, res) => {
     // Get the events, latest , and postings. Get first 10, and then rest will be on the  
@@ -64,6 +66,35 @@ router.get('/dashboard-info', middleware.isAuthenticated, (req, res) => {
             res.json({ status: 2, response:"error while fecthing data from db"});
         });
 
+});
+
+router.get('/courses/syllabus/:courseName', (req, res) =>{
+    // Fix the course name
+    let pCourse =  req.params.courseName.replace('-', " ");
+    console.log(pCourse);
+    Course.findOne({title: { '$regex': pCourse, '$options': 'i' }})
+        .then(course => {
+            if (!course){
+                console.log("No course found! Error");
+                return res.send('Error loading course page: No course found!');
+            }
+            console.log(course);
+            let filePath = path.join(__dirname, '../fileHolderDir/', course.syllabus);
+            let stats = fs.statSync(filePath);
+            res.writeHead(200, {
+                'Content-Type': 'application/pdf',
+                'Content-Length': stats.size
+            });
+            var readStream = fs.createReadStream(filePath);
+            // Replace event handlers with readStream.pipe()
+            readStream.pipe(res);
+            return;
+        })
+        .catch(err=>{
+            console.error(err);
+            
+            return res.send('Error loading course page');
+        });
 });
 
 /**

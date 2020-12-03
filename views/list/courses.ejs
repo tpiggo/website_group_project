@@ -22,9 +22,11 @@
         <p class="card-text">Restrictions : <%=course.restrictions%></p>
         <% } %>
         <p class="card-text">Prerequisites : <%=course.prerequisites%></p>
-        <p class="card-text">Syllabus : <%=course.syllabus%></p>
+        <% if (course.syllabus != '' && course.syllabus != undefined) {%>
+        <p class="card-text"><a href=<%= course.syllabus %> target="_blank">Syllabus</a></p>
+        <% } %>
         <% if (course.mcgillCalendar != '' && course.mcgillCalendar != undefined) {%>
-        <p class="card-text"><a href=<%= course.mcgillCalendar %>>McGill Ecalender</a></p>
+        <p class="card-text"><a href=<%= course.mcgillCalendar  %> target="_blank">McGill Ecalender</a></p>
         <% } %>
     </div>
 <% } %>
