@@ -41,13 +41,13 @@ router.get('/settings', middleware.isAuthenticated,  (req, res)=>{
                 // Evidently if the user is logged in, this path should be the only one to be executed
                 const {username, email} = user;
                 const title = "Settings";
-                content = {"html": "settings",  "script": "<script src='/js/settings.js'></script>"}
+                content = {"html": "./partials/settings",  "script": "<script src='/js/settings.js'></script>"}
                 // Render a subpage with the error
                 res.render('user-layout', {title, content, menu: [], logged: req.session.authenticated, user: req.session.username, email: email})
             } else {
                 // This shouldn't occur if the user is logged in, but protecting against errors
                 const title = "Error!";
-                content = {"html": "user-error"}
+                content = {"html": "./partials/user-error"}
                 // Render a subpage with the error
                 res.render('user-layout', {title, content, menu: [], logged: req.session.authenticated, user: req.session.username})
             }
@@ -55,7 +55,7 @@ router.get('/settings', middleware.isAuthenticated,  (req, res)=>{
         .catch(err=>{
             console.log(err);
             const title = "Error!";
-            content = {"html": "user-error"}
+            content = {"html": "./partials/user-error"}
             // Render a subpage with the error
             res.render('user-layout', {title, content, menu: [], logged: req.session.authenticated, user: req.session.username})
         });
@@ -133,14 +133,14 @@ router.post('/settings', middleware.isAuthenticated, (req, res)=>{
         .then(result => {
             // Success messages in success.msg
             const title = "Settings";
-            content = {"html": "settings",  "script": "<script src='/js/settings.js'></script>"}
+            content = {"html": "./partials/settings",  "script": "<script src='/js/settings.js'></script>"}
             // Render a settings page with the error
             const user = result.user;
             return res.render('user-layout', {title, content, menu: [], logged: req.session.authenticated, user: req.session.username, email: user.email});
         })
         .catch(result => {
             const title = "Settings";
-            content = {"html": "settings",  "script": "<script src='/js/settings.js'></script>"}
+            content = {"html": "./partials/settings",  "script": "<script src='/js/settings.js'></script>"}
             // Render a settings page with the error
             const user = result.user;
             console.log(result);
