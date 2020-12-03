@@ -53,6 +53,8 @@ app.set('view engine', 'ejs');
 
 
 app.use('/', require("./routes/index"));
+app.use('/api', require('./routes/api'));
+app.use('/academic', require('./routes/academic'));
 app.use('/parse', require("./routes/form-validator")); // Routing the requests for form parsing
 app.use('/users', require("./routes/users"));
 app.use('/employement', require('./routes/employement'));

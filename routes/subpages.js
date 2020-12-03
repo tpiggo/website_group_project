@@ -5,11 +5,12 @@ const session = require('express-session');
 const { resolve } = require('path');
 const common = require('../common.js');
 const markdown = require('markdown-it')('commonmark');
-const Page = require('../models/Page.js');
-const Subpage = require('../models/Subpage.js');
+const Page = require('../models/Page');
+const Subpage = require('../models/Subpage');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
 
 router.get('/:pagename', (req, res) => {
     console.log('Request received for /' + req.params.pagename + ' - sending file /views/' + req.params.pagename);
@@ -48,8 +49,7 @@ router.get('/:pagename', (req, res) => {
                 }
 
             }
-        }
-        );
+        });
 });
 
 router.get('/:pagename/edit', (req, res) => {
