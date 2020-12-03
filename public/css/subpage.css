@@ -20,24 +20,45 @@
 
 /* Side nav */
 #menu {
-    transition: all 1s;
+    transition: all 0.5s;
     width: 15rem;
-    height: 90vh;
+    height: calc(100vh - var(--nav-height));
     overflow: scroll;
     position: fixed;
     z-index: 1000;
     background-color: black;
 }
-#menu ul:hover {
+#menu a,
+#menu a:hover {
+    text-decoration: none;
+    color: white;
+}
+#menu li {
+    display:block;
+    padding: 0.5em 0;
+}
+
+#menu li:hover{
+    font-style:italic;
+}
+.submenu {
+    transition: all 1s ease;
+    overflow: scroll;
+    max-height:15rem;
+    background-color: #6B0610;
+}
+.submenu.hidden {
+   max-height: 0;
+   overflow: hidden;
+}
+
+.menu-item:hover {
     cursor: pointer;
     background-color: var(--mcgill-burgundy);
 }
-#menu ul a,
-#menu ul {
-    padding: 2rem 1rem;
+.menu-item {
+    padding:1.5rem 0;
     text-align: center;
-    text-decoration: none;
-    color: white;
     margin: 0;
 }
 
