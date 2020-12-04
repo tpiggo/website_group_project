@@ -1,3 +1,7 @@
+
+var prosp = document.getElementById('navbar');
+document.getElementById('body-content').before(prosp);
+
 window.addEventListener('scroll', () => {
 
     var navbar = document.querySelector("nav");
@@ -66,7 +70,6 @@ function createElementsOnLoad(id, newElements) {
         const newDiv = document.createElement("div");
         newDiv.id = value._id;
         newDiv.classList.add("card", "bg-light");
-        // newDiv.setAttribute("style", "max-width:18rem");
 
         newDiv.innerHTML = `
         <div class="card-header"><h5 class="card-title"> ${value.title}</h5></div></div>
@@ -75,15 +78,6 @@ function createElementsOnLoad(id, newElements) {
             <p class="card-text">${value.description}</p>
         </div>
         `;
-        //cardDeck.parentNode.insertBefore(newDiv, cardDeck)
         cardDeck.appendChild(newDiv);
     });
-
-    //     <div class="card text-white bg-info mb-3" style="max-width: 18rem;"></div>
-    //   <div class="card-header">Header</div>
-    //   <div class="card-body">
-    //     <h5 class="card-title">Info card title</h5>
-    //     <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-    //   </div>
-    //   </div>
 }
