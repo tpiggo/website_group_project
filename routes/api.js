@@ -10,6 +10,10 @@ const TechnicalReport = require('../models/TechnicalReport');
 const Posting = require('../models/Posting');
 const Award = require('../models/Award');
 const { Model } = require('mongoose');
+const fs = require('fs');
+const path = require('path');
+const Courses = require('../models/Courses');
+const bodyParser = require('body-parser');
 
 router.get('/index-info', (req, res) => {
     // Get the events, latest , and postings. Get first 10, and then rest will be on the  
@@ -66,6 +70,34 @@ router.get('/dashboard-info', middleware.isAuthenticated, (req, res) => {
 
 });
 
+router.get('/courses/syllabus/:courseName', (req, res) =>{
+    // Fix the course name
+    let pCourse =  req.params.courseName.replace('-', " ");
+    console.log(pCourse);
+    Course.findOne({title: { '$regex': pCourse, '$options': 'i' }})
+        .then(course => {
+            if (!course){
+                console.log("No course found! Error");
+                return res.send('Error loading course page: No course found!');
+            }
+            console.log(course);
+            let filePath = path.join(__dirname, '../fileHolderDir/', course.syllabus);
+            let stats = fs.statSync(filePath);
+            res.writeHead(200, {
+                'Content-Type': 'application/pdf',
+                'Content-Length': stats.size
+            });
+            var readStream = fs.createReadStream(filePath);
+            // Replace event handlers with readStream.pipe()
+            readStream.pipe(res);
+            return;
+        })
+        .catch(err=>{
+            console.error(err);
+            return res.send('Error loading course page');
+        });
+});
+
 /**
  * @description Given a list of n elements, return the first 10 or the whole thing (if less than 10)
  * @param {*} pArray 
@@ -78,5 +110,35 @@ function getFirstN(pArray, maxSize){
         return pArray;
     }
 }
+
+router.get('/getCourse', (req, res) => {
+    const classTitle = req.query.class;
+    Courses.findOne({title: classTitle})
+        .then(result => {
+            if (result) {
+                if (result.syllabus != undefined){
+                    console.log(result.syllabus);
+                    result.syllabus = '/api/courses/syllabus/comp-' + result.title.split(" ")[1];
+                }
+                res.json({
+                    response: result,
+                    status: 0
+                });
+            } else {
+                res.json({
+                    response: 'Nothing found',
+                    status: 1
+                });
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            res.json({
+                response: "Error!!!! Nothing found or some other shit",
+                status: 2
+            });
+        });
+});
+
 
 module.exports = router;

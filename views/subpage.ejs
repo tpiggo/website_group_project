@@ -43,12 +43,12 @@
     <!-- <span id="icon">icon</span> -->
     <div id="content">
         <!--Get the content from the database and render it here -->
-        <% if(content.data) {%>
-            <%-include(content.html)%>
-            <% } else{%>
+        <% if(content.data) { %>
+            <%- include(content.html) %>
+            <% } else { %>
             <%-content.html %>
 
-            <% }if(!content.data && logged) { %>
+            <% } if(!content.data && logged) { %>
             <a href="<%=content.path%>/edit">Edit Source</a>
             <% } %>
         </div>
