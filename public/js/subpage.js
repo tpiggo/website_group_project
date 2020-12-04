@@ -18,11 +18,11 @@ for (var i = 2; i < items.length - 1; i++) {
     }
 }
 
-// Open and close the left menu with onclick() (hamburger icon)
-function openMenu() {
-    document.getElementById('menu').classList.toggle('hidden');
-    document.getElementById('content').classList.toggle('hidden');
-}
+// // Open and close the left menu with onclick() (hamburger icon)
+// function openMenu() {
+//     document.getElementById('menu').classList.toggle('hidden');
+//     document.getElementById('content').classList.toggle('hidden');
+// }
 
 var submenus = document.getElementsByClassName('submenu');
 
