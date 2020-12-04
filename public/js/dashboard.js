@@ -263,19 +263,6 @@ function refreshDropdownTech(techSupports) {
     });
 }
 
-
-/**
- * @description Takes a collection and returns an array of objects
- * @param {Collection} pCol
- */
-function collectionToArray(pCol) {
-    var aCol = [];
-    for (var i = 0; i < pCol.length; i++) {
-        aCol.push(pCol[i]);
-    }
-    return aCol;
-}
-
 /**
  * @description Takes an Array of objects and returns a JSON
  * @param {Array} pObject 
@@ -345,41 +332,6 @@ function errorCheck(pObject) {
         }
     });
     return areErrors;
-}
-
-/**
- * @description creates a dynamic collapsable element for the server response.
- * @param {*} type 
- * @param {*} msgText 
- * @todo:   Maybe this should check if a popup exists there already, if it does remove it.
- *          Or create popups which only live for 3 seconds?
- */
-function createPopupMsg(pType, pMsgText, pHeaderId) {
-    const aDiv = document.createElement('div');
-    const aButton = document.createElement('button');
-    if (pType == 'error') {
-        aDiv.className = "alert alert-warning alert-dismissible fade show";
-    } else {
-        aDiv.className = "alert alert-success alert-dismissible fade show";
-    }
-    aDiv.setAttribute('type', 'popup-msg')
-    aDiv.setAttribute('role', 'alert');
-    aButton.className = "close";
-    aButton.style.margin = 0;
-    aButton.setAttribute('data-dismiss', 'alert');
-    aButton.setAttribute('aria-label', 'Close');
-    aButton.setAttribute('type', 'button');
-    aButton.innerHTML = "<span aria-hidden='true'>&times;</span>";
-    const aTextNode = document.createTextNode(pMsgText);
-    aDiv.appendChild(aTextNode);
-    aDiv.appendChild(aButton);
-    const aHeader = document.getElementById(pHeaderId);
-    // Remove an old popup
-    if (aHeader.nextElementSibling.getAttribute('type') == 'popup-msg') {
-        aHeader.parentNode.removeChild(aHeader.nextSibling);
-    }
-    aHeader.parentNode.insertBefore(aDiv, aHeader.nextSibling);
-    fade(aDiv);
 }
 
 function fade(div) {

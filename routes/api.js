@@ -12,6 +12,8 @@ const Award = require('../models/Award');
 const { Model } = require('mongoose');
 const fs = require('fs');
 const path = require('path');
+const Courses = require('../models/Courses');
+const bodyParser = require('body-parser');
 
 router.get('/index-info', (req, res) => {
     // Get the events, latest , and postings. Get first 10, and then rest will be on the  
@@ -92,7 +94,6 @@ router.get('/courses/syllabus/:courseName', (req, res) =>{
         })
         .catch(err=>{
             console.error(err);
-            
             return res.send('Error loading course page');
         });
 });
@@ -109,5 +110,36 @@ function getFirstN(pArray, maxSize){
         return pArray;
     }
 }
+
+router.use(bodyParser.json());
+
+router.get('/getCourse', (req, res) => {
+    const classTitle = req.query.class;
+    Courses.findOne({title: classTitle})
+        .then(result => {
+            if (result) {
+                if (result.syllabus != undefined){
+                    result.syllabus = '/api/courses/comp-' + result.title.split(" ")[1];
+                }
+                res.json({
+                    response: result,
+                    status: 0
+                });
+            } else {
+                res.json({
+                    response: 'Nothing found',
+                    status: 1
+                });
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            res.json({
+                response: "Error!!!! Nothing found or some other shit",
+                status: 2
+            });
+        });
+});
+
 
 module.exports = router;

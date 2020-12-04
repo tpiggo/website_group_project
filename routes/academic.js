@@ -12,7 +12,7 @@ router.get('/courses', (req, res) => {
     common.getAllDataFrom(Courses)
         .then(result => {
             courses = mergeSortCourses(result);
-            console.log(fixSyllabuses(courses));
+            courses = fixCourses(courses);
             return common.getPagesMenu('academic');
         })
         .then(result => {
@@ -76,13 +76,17 @@ function merge(lArr, rArr){
  * 
  * @param {Array} courses 
  */
-function fixSyllabuses(courses){
+function fixCourses(courses){
+    var mArr = []
     courses.forEach((value)=>{
+        var stringSplit = value.title.split(" ");
+        value["mClass"] = stringSplit[0] + '-' + stringSplit[1];
         if (value.syllabus != undefined){
-            value.syllabus = '/api/courses/syllabus/comp-' + value.title.split(" ")[1];
+            value.syllabus = '/api/courses/comp-' + stringSplit[1];
         }
+        mArr.push(value);
     });
-    return courses;
+    return mArr;
 }
 
 module.exports = router;
