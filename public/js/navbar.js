@@ -51,6 +51,14 @@ function dropDown(type, id) {
     }
 
     if (type == 'nav-submenu') {
+        var wrapper = document.getElementById('submenu-wrapper');
+        
+        if(wrapper.classList.contains('collapsed')) {
+            if(toDisplay) wrapper.classList.remove('collapsed');
+        } else if(!toDisplay){
+            wrapper.classList.add('collapsed');
+        }
+
         var targets = document.querySelectorAll('.nav-2nd-submenu:not(collapsed)');
         for (var i = 0; i < targets.length; i++) {
             if (!targets[i].classList.contains('collapsed'))

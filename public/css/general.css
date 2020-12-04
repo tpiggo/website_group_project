@@ -31,11 +31,34 @@ body {
     }
 }
 
+@media screen and (max-width: 665px) {
+    #submenu-wrapper {
+        flex-basis: 0;
+        flex-grow: 1;
+        max-width: 100%;
+        left: 0 !important;
+        bottom: 0!important;
+        position: initial!important;
+        width: 100%!important;
+        height: auto!important;
+    }
+    
+    #navbar img{
+        width:13% !important;
+    }
+
+    #navbar svg{
+        right: 5%;
+    }
+
+}
+
 #navbar img{
     position: fixed;
     top: 2rem;
     right: 2.2rem;
     opacity: 0;
+    width: 5.5em;
 }
 #navbar img.appear {
     animation-delay: 2s;
@@ -68,31 +91,51 @@ body {
     right: 2.7rem;
 }
 
-.nav-2nd-submenu,
-.nav-submenu {
+#submenu-wrapper{
+    background-color: #9e09189c;
+    left: 25%;
+    bottom: 15%;
     position: absolute;
-    display: flex;
-    flex-direction: column;
     overflow-x: scroll;
-    color: white;
-    min-width: 9em;
-    transition: all 1s ease;
+    width: 30rem;
+    height: 32rem;
+    transition: opacity 1s ease;
 }
 
-.nav-submenu{
-    left: 15rem;
-    background-color: #9e09189c;
+#submenu-wrapper.collapsed {
+    opacity:0;
 }
+
+.nav-submenu {
+    color: white;
+    display: flex;
+    flex-direction: column;
+    font-weight: 100;
+}
+
 .nav-2nd-submenu {
     left: 26rem;
     font-size: smaller;
-    background-color:#024c69;
+    background-color:white;
+    height: fit-content;
+    max-height: 100vh;
+    transition: all 1s ease;
+    overflow: hidden;
+    opacity: 1;
+    transition: all ease 0.5s;
+}
+
+.nav-2nd-submenu.collapsed{
+    max-height: 0;
+}
+
+.nav-submenu.collapsed {
+    display: none;
 }
 
 .nav-2nd-submenu a,
 .nav-submenu a {
     padding: 1em;
-    color:white;
     align-items:center!important;
     display:flex;
     flex-direction:column;
@@ -100,21 +143,28 @@ body {
     text-align: center;
 }
 
+.nav-submenu a {
+    color:white;
+}
+.nav-submenu a:hover {
+    font-weight: bolder;
+}
+
+.nav-2nd-submenu a{
+    color:black;
+}
+
 #navbar a:hover{
     cursor: pointer;
     text-decoration: none;
-    border-bottom: white solid 0.1em;
-    color: white;
+}
+
+#navbar li a.nav-link{
+    border-bottom: transparent solid 0.1em;
 }
 
 #navbar li a.nav-link:hover {
-    border-right: white solid 0.1em;
-    font-size: larger;  
-}
-
-.nav-2nd-submenu.collapsed,
-.nav-submenu.collapsed {
-    transform:translateY(-100vh);
+    border-bottom: white solid 0.1em;
 }
 
 @keyframes translateDown {
@@ -129,8 +179,6 @@ body {
     margin: auto 0;
     margin-left: 2rem;
     opacity: 0;
-    color: white;
-   
 }
 
 #navbar li.appear {
@@ -246,7 +294,6 @@ nav::before{
     margin: auto 0;
 }
 .nav-item a:hover {
-    font-style: italic;
     color:white;
     cursor: pointer;
 }

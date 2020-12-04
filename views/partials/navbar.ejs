@@ -156,8 +156,6 @@
      collapse container-fluid-->
 
     
-
-    
 <!-- responsive Nav-Bar -->
     
     <div id="about" class="target collapse container-fluid">
@@ -167,60 +165,16 @@
 
 <div id="navbar" class="">
     <div class="row">
-        <div class="col" style='display:grid; text-align:left;'>
+        <div style='display:grid; text-align:left;'>
             <li class="nav-item">
                 <!-- data-toggle="collapse" href="#prospective" -->
                 <a class="nav-link" onclick="dropDown('nav-submenu', 's0')">
                     Prospective
                 </a>
-                <div id='s0' class='nav-submenu collapsed'>
-                    <a href="/prospective/general-info" >General Info</a>
-                    <a href="/prospective/why-cs" >Why CS?</a>
-                    <a href="/prospective/cegep" >CEGEP</a>
-                    <a href="/prospective/freshman" >Freshman</a>
-                    <a href="/prospective/choosing-major" >Choosing a Major</a>
-                    <a href="/prospective/transfer" >Transfer</a>
-                    <a href="/prospective/internship" >Internship</a>
-                    <a href="/academic/undergraduate" >Undergraduate</a>
-                    <a href="/academic/graduate" >Graduate</a>
-
-                </div>
             </li>
             <li class="nav-item">
                 <a class="nav-link" onclick="dropDown('nav-submenu', 's1')">
                     Academic</a>
-
-                <div id='s1' class='nav-submenu collapsed'>
-                    <a onclick="dropDown('nav-2nd-submenu','sb1')"> Undergraduate</a>
-                    <a onclick="dropDown('nav-2nd-submenu','sb2')"> Graduate</a>
-                    <a href="/academic/Courses" >Courses</a>
-                    <a onclick="dropDown('nav-2nd-submenu', 'sb3')">Teaching Assitant</a>
-                    <a href="/academic/funding">Funding</a>
-                </div>
-                    <div id="sb1" class="nav-2nd-submenu collapsed">
-                        <a href="/academic/undergraduate/" >Overview</a>
-                        <a href="/academic/undergraduate/incoming-student" >Incoming Student</a>
-                        <a href="/academic/undergraduate/remote-learning" >Remote Learning</a>
-                        <a href="/academic/undergraduate/faq" >FAQ</a>
-                        <a href="/academic/undergraduate/advising" >Advising</a>
-                    </div>
-
-                    <div id="sb2" class="nav-2nd-submenu collapsed">
-                        <a href="/academic/graduate/" >Overview</a>
-                        <a href="/academic/graduate/masters" >Masters</a>
-                        <a href="/academic/graduate/phd" >Ph. D.</a>
-                        <a href="/academic/graduate/admission" >Admission</a>
-                        <a href="/academic/graduate/applying" >Applying</a>
-                        <a href="/academic/graduate/faq" >FAQ</a>
-
-                    </div>
-
-                    <div id="sb3" class="nav-2nd-submenu collapsed">
-                        <a href="/academic/ta/" >Overview</a>
-                        <a href="/academic/ta/taAwards" >TA Awards</a>
-                    </div>
-
-                
             </li>
             <li class="nav-item">
                 <a class="nav-link">Research</a>
@@ -231,35 +185,16 @@
             <li class="nav-item">
                 <a class="nav-link" onclick="dropDown('nav-submenu', 's3')">
                     News</a>
-
-                <div id="s3" class='nav-submenu collapsed'>
-                    <a href="/news/all" >All</a>
-                    <a href="/news/announcements" >Announcements</a>
-                    <a href="/news/awards" >Awards</a>
-                </div>
             </li>
             <li class="nav-item">
                 <a class="nav-link" onclick="dropDown('nav-submenu', 's4')">
                     Events</a>
-
-                <div id="s4" class='nav-submenu collapsed'>
-                    <a href="/events/all" >All</a>
-                    <a href="/events/colloquium" >Colloquia</a>
-                    <a href="/events/seminar" >Seminars</a>
-
-                </div>
             </li>
             <li class="nav-item">
                 <a class="nav-link" onclick="dropDown('nav-submenu', 's5')">
                     Employement</a>
 
-                <div id="s5" class='nav-submenu collapsed'>
-                    <a href="/employement/faculty" >Faculty</a>
-                    <a href="/employement/lecturer" >Announcement</a>
-                    <a href="/employement/student" >Student</a>
-                    <a href="/employement/research" >Research</a>
-
-                </div>
+            
             </li>
             <li class="nav-item">
                 <a class="nav-link">Donate</a>
@@ -267,23 +202,98 @@
             <li class="nav-item">
                 <a class="nav-link" data-toggle="collapse" href="#about">About</a>
             </li>
-            <li class="nav-item" style="margin: auto 1em;">
-                <svg id="search" width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-search" fill="currentColor"
-                    xmlns="http://www.w3.org/2000/svg">
-                    <path fill-rule="evenodd"
-                        d="M10.442 10.442a1 1 0 0 1 1.415 0l3.85 3.85a1 1 0 0 1-1.414 1.415l-3.85-3.85a1 1 0 0 1 0-1.415z" />
-                    <path fill-rule="evenodd"
-                        d="M6.5 12a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11zM13 6.5a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0z" />
-                </svg>
-            </li>
-            <!-- 
-             -->
+            
         </div>
+
+        <div id="submenu-wrapper" class="collapsed">
+            <div id='s0' class='nav-submenu collapsed'>
+                <a href="/prospective/general-info" >General Info</a>
+                <a href="/prospective/why-cs" >Why CS?</a>
+                <a href="/prospective/cegep" >CEGEP</a>
+                <a href="/prospective/freshman" >Freshman</a>
+                <a href="/prospective/choosing-major" >Choosing a Major</a>
+                <a href="/prospective/transfer" >Transfer</a>
+                <a href="/prospective/internship" >Internship</a>
+                <a href="/academic/undergraduate" >Undergraduate</a>
+                <a href="/academic/graduate" >Graduate</a>
+    
+            </div>
+
+
+            <div id='s1' class='nav-submenu collapsed'>
+                <span>
+                    <a onclick="dropDown('nav-2nd-submenu','sb1')"> Undergraduate</a>
+
+                    <div id="sb1" class="nav-2nd-submenu collapsed">
+                        <a href="/academic/undergraduate/" >Overview</a>
+                        <a href="/academic/undergraduate/incoming-student" >Incoming Student</a>
+                        <a href="/academic/undergraduate/remote-learning" >Remote Learning</a>
+                        <a href="/academic/undergraduate/faq" >FAQ</a>
+                        <a href="/academic/undergraduate/advising" >Advising</a>
+                    </div>
+                </span>
+
+               <span>
+                <a onclick="dropDown('nav-2nd-submenu','sb2')"> Graduate</a>
+                <div id="sb2" class="nav-2nd-submenu collapsed">
+                    <a href="/academic/graduate/" >Overview</a>
+                    <a href="/academic/graduate/masters" >Masters</a>
+                    <a href="/academic/graduate/phd" >Ph. D.</a>
+                    <a href="/academic/graduate/admission" >Admission</a>
+                    <a href="/academic/graduate/applying" >Applying</a>
+                    <a href="/academic/graduate/faq" >FAQ</a>
+
+                </div>
+               </span> 
+
+                <a href="/academic/Courses" >Courses</a>
+                <span>
+                    <a onclick="dropDown('nav-2nd-submenu', 'sb3')">Teaching Assitant</a>
+                    <div id="sb3" class="nav-2nd-submenu collapsed">
+                        <a href="/academic/ta/" >Overview</a>
+                        <a href="/academic/ta/taAwards" >TA Awards</a>
+                    </div>
+                </span>
+                
+                <a href="/academic/funding">Funding</a>
+            </div>
+
+            <div id="s3" class='nav-submenu collapsed'>
+                <a href="/news/all" >All</a>
+                <a href="/news/announcements" >Announcements</a>
+                <a href="/news/awards" >Awards</a>
+            </div>
+
+
+            <div id="s4" class='nav-submenu collapsed'>
+                <a href="/events/all" >All</a>
+                <a href="/events/colloquium" >Colloquia</a>
+                <a href="/events/seminar" >Seminars</a>
+
+            </div>
+
+            <div id="s5" class='nav-submenu collapsed'>
+                <a href="/employement/faculty" >Faculty</a>
+                <a href="/employement/lecturer" >Announcement</a>
+                <a href="/employement/student" >Student</a>
+                <a href="/employement/research" >Research</a>
+
+            </div>
+        </div>
+       
+
     </div>
-    <img style="width: 5.5em" src="/images/socs-bird.png" alt="SOCS bird" onclick="window.location='/'">
+    <img src="/images/socs-bird.png" alt="SOCS bird" onclick="window.location='/'">
     <svg onclick='toggleMenu()' id='close' width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-x"
         fill="currentColor" xmlns="http://www.w3.org/2000/svg">
         <path fill-rule="evenodd"
             d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
     </svg>
+    <svg id="search" width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-search" fill="currentColor"
+    xmlns="http://www.w3.org/2000/svg">
+    <path fill-rule="evenodd"
+        d="M10.442 10.442a1 1 0 0 1 1.415 0l3.85 3.85a1 1 0 0 1-1.414 1.415l-3.85-3.85a1 1 0 0 1 0-1.415z" />
+    <path fill-rule="evenodd"
+        d="M6.5 12a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11zM13 6.5a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0z" />
+</svg>
 </div>
