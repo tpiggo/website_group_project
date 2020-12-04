@@ -33,7 +33,15 @@ function createPopupMsg(pType, pMsgText, pAfterElement) {
     fade(aDiv);
 }
 
-
+/**
+ * 
+ * @param {HTMLElement} div 
+ */
+function fade(div) {
+    setTimeout(function () {
+        div.remove();
+    }, 4000);
+}
 /**
  * @description Calls the proper route desired and returns a promise
  * @param {JSON} pOpts 

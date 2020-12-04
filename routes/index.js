@@ -146,7 +146,16 @@ router.post('/settings', middleware.isAuthenticated, (req, res)=>{
             console.log(result);
             const errors = result.errors;
             return res.render('user-layout', {title, content, menu: [], logged: req.session.authenticated, user: req.session.username, email: user.email, errors});
-        })
+        });
+});
+
+/**
+ * The search bar route.
+ */
+
+router.get('/search', (req, res) => {
+    console.log(req.query);
+    res.send("Hello you searched", req.query);
 });
 
 module.exports = router;
