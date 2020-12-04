@@ -111,15 +111,14 @@ function getFirstN(pArray, maxSize){
     }
 }
 
-router.use(bodyParser.json());
-
 router.get('/getCourse', (req, res) => {
     const classTitle = req.query.class;
     Courses.findOne({title: classTitle})
         .then(result => {
             if (result) {
                 if (result.syllabus != undefined){
-                    result.syllabus = '/api/courses/comp-' + result.title.split(" ")[1];
+                    console.log(result.syllabus);
+                    result.syllabus = '/api/courses/syllabus/comp-' + result.title.split(" ")[1];
                 }
                 res.json({
                     response: result,
