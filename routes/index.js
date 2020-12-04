@@ -5,12 +5,15 @@ const common = require("../common.js");
 const User = require('../models/User.js');
 const Course = require('../models/Courses');
 const Event = require('../models/Events');
+const Subpage = require("../models/Subpage");
 const News = require('../models/News');
 const TechnicalReport = require('../models/TechnicalReport');
 const Posting = require('../models/Posting');
+const TAPosting = require('../models/TAPosting');
 const Award = require('../models/Award');
 const { Model } = require('mongoose');
 const bcrypt = require('bcrypt');
+const Page = require('../models/Page');
 
 router.get('/', (req, res) => {
     res.render('homepage', { logged: req.session.authenticated, username: req.session.username });
@@ -152,10 +155,89 @@ router.post('/settings', middleware.isAuthenticated, (req, res)=>{
 /**
  * The search bar route.
  */
-
 router.get('/search', (req, res) => {
     console.log(req.query);
-    res.send("Hello you searched", req.query);
+    let mText = "Hello you searched" + JSON.stringify(req.query);
+    res.send(mText);
+    // Building Generic search of the site
+    let searchQuery = {'$regex': req.query.searched, '$options': 'i'};
+    
+    //functions which search each table within the database
+     
+    const searchCourses = () =>common.getAllDataWith(Course, {$or: [
+        {title: searchQuery},
+        {description: searchQuery},
+        {termsOffered: searchQuery}
+    ]});
+    const searchPages = () => common.getAllDataWith(Page, { title: searchQuery });
+    const searchSubpages = () =>common.getAllDataWith(Subpage, {$or: [
+        {title: searchQuery},
+        {html: searchQuery},
+        {markdown: searchQuery}
+    ]});
+    const searchNews = () => common.getAllDataWith(News, {$or: [
+        {type: searchQuery},
+        {title: searchQuery},
+        {contact: searchQuery},
+        {description: searchQuery}
+    ]});
+    const searchAwards = () => common.getAllDataWith(Award, {$or: [
+        {title: searchQuery},
+        {contact: searchQuery},
+        {recipient: searchQuery},
+        {description: searchQuery}
+    ]});
+    const searchEvents = () => common.getAllDataWith(Event, {$or: [
+        {title: searchQuery},
+        {hostedBy: searchQuery},
+        {eventType: searchQuery},
+        {description: searchQuery}
+    ]});
+    const searchTAPosting = () => common.getAllDataWith(TAPosting, {$or: [
+        {title: searchQuery},
+        {contact: searchQuery},
+        {semester: searchQuery},
+        {description: searchQuery}
+    ]});
+    const searchPosting = () => common.getAllDataWith(Posting, {$or: [
+        {title: searchQuery},
+        {contact: searchQuery},
+        {type: searchQuery},
+        {description: searchQuery}
+    ]});
+    const searchTechRep = () => common.getAllDataWith(TechnicalReport, {$or: [
+        {title: searchQuery},
+        {contact: searchQuery},
+        {creator: searchQuery},
+        {description: searchQuery}
+    ]});
+    // Execute all the promises, receiving an array of responses.
+    const mapping = ['course', 'pages', 'subpages', 'news', 'awards', 'events', 'taposting', 'posting', 'techreport'];
+    Promise.all([
+        searchCourses(),
+        searchPages(),
+        searchSubpages(),
+        searchNews(),
+        searchAwards(),
+        searchEvents(),
+        searchTAPosting(),
+        searchPosting(),
+        searchTechRep()
+    ])
+        .then(result => {
+            result.forEach((value, index) => {
+                value.forEach(innerVal => {
+                    console.log(innerVal);
+                    console.log(innerVal.modelName, "name of model");
+                })
+            });
+            //console.log(result);
+        })
+        .catch(err => {
+            console.error(err);
+        });
+
+
 });
 
 module.exports = router;

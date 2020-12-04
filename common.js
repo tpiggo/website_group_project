@@ -31,6 +31,9 @@ common.getAllDataWith = (Model, attribute) => {
                 console.error(err);
                 reject(err);
             } else {
+                content.forEach(value=> {
+                    value.modelName = Model.collection.collectionName;
+                });
                 resolve(content);
             }
         });
