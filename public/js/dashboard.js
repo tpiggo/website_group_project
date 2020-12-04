@@ -334,12 +334,6 @@ function errorCheck(pObject) {
     return areErrors;
 }
 
-function fade(div) {
-    setTimeout(function () {
-        div.remove();
-    }, 4000);
-}
-
 /**
  * 
  * @param {Event} event 

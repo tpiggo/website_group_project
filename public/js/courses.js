@@ -11,6 +11,11 @@ courseSelector.addEventListener('change', () => {
         if (aClass != courseSelector.value) aClass = courseSelector.value;
 });
 
+/**
+ * @description Creates an element from a JSON which contains an array
+ * @param {JSON} pJson 
+ * @returns {HTMLElement}
+ */
 function createElementFromArray(pJson){
     let contentDiv = document.createElement(pJson.type);
     contentDiv.innerHTML = pJson.text;
@@ -22,17 +27,28 @@ function createElementFromArray(pJson){
     contentDiv.setAttribute('level', pJson.level)
     return contentDiv;
 }
-
+/**
+ * @description Creates an element from a JSON
+ * @param {JSON} pJson 
+ * @returns {HTMLElement}
+ */
 function createAnElement(pJson){
     let contentDiv = document.createElement(pJson.type);
-    if (pJson.type == 'a') contentDiv.href = pJson.ref;
+    if (pJson.type == 'a') {
+        contentDiv.href = pJson.ref;
+        contentDiv.target = '_blank';
+    }
     contentDiv.innerHTML = pJson.content;
     contentDiv.className = pJson.class;
     contentDiv.setAttribute('level', pJson.level)
     return contentDiv;
 }
 
-
+/**
+ * @description Appends a new node within a course box following a defined layout
+ * @param {HTMLElement} parentNode 
+ * @param {HTMLElement} newNode 
+ */
 function buildCourseLayout(parentNode, newNode){
     var added = false;
     for (var i  = 0; i < parentNode.children.length; i++){
@@ -46,7 +62,12 @@ function buildCourseLayout(parentNode, newNode){
         parentNode.appendChild(newNode);
 }
 
-function createCourse(content){
+/**
+ * @description Creates an HTMLElement to be appended to the page.
+ * @param {JSON} content
+ * @param {HTMLElement} target
+ */
+function createCourse(content, target){
     const aCardDiv = document.createElement('div');
     aCardDiv.className = 'card card-body';
     for (var key of Object.keys(content)){
@@ -77,33 +98,38 @@ function createCourse(content){
         }
         if (contentDiv != undefined) buildCourseLayout(aCardDiv, contentDiv);
     }
-    if (courseBox.firstChild == null){
-        courseBox.appendChild(aCardDiv);
+    if (target.firstChild == null){
+        target.appendChild(aCardDiv);
     } else {
-        courseBox.insertBefore(aCardDiv, courseBox.firstChild);
+        target.insertBefore(aCardDiv, target.firstChild);
     }
 }
-
-function displayError(err){
-    console.log("ERROR", err);
+/**
+ * @description Displays an error using the frontendAPI Popup Error
+ * @param {Error} err 
+ */
+function displayError(err, targetHeader){
+    // target Header is the element to latch onto in order
+    createPopupMsg('error', err, targetHeader);
 }
 
-
+/**
+ * @description Function call to the API on the backend to get the course element. Adds the course to the page or displays error
+ */
 function getClass() {
-    console.log(aClass);
     const pOpts = {type: "GET", url: '/api/getCourse?class='+aClass, contentType: "None"}
     callBackEnd(pOpts)
         .then( response => {
             if (response.status == 0){
                 console.log(response);
-                createCourse(response.response);
+                createCourse(response.response, courseBox);
             } else {
-                displayError(response.response);
+                displayError(response.response, 'coursesHeader');
             }
             
         })
         .catch( err => {
             console.error(err);
-            displayError(err);
+            displayError(response.response, 'coursesHeader');
         });
 }

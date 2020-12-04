@@ -1,11 +1,16 @@
 <link rel="stylesheet" href="/css/courses.css">
 
-<select id='course-select'>
-    <% for(let course of content.data) { %>
-        <option class='course-option' id=<%= course.mClass %>> <%= course.title %></option>
-    <% } %>
-</select>
-<button class="btn btn-primary" onclick="getClass()" >Get course!</button>
+<h3 id='coursesHeader'>Courses</h3>
+
+<div id="select-box">
+    <select id='course-select'>
+        <% for(let course of content.data) { %>
+            <option class='course-option' id=<%= course.mClass %>> <%= course.title %></option>
+        <% } %>
+    </select>
+    <button class="btn btn-primary" onclick="getClass()" >Get course!</button>
+</div>
+
 <div id="response-container"></div>
 
 <script src="/js/frontEndApi.js"></script>

@@ -116,17 +116,19 @@ router.get('/getCourse', (req, res) => {
     Courses.findOne({title: classTitle})
         .then(result => {
             if (result) {
+                // Need to check if this is already a link. Courses syllabus can be a link or a file  
                 if (result.syllabus != undefined){
-                    console.log(result.syllabus);
                     result.syllabus = '/api/courses/syllabus/comp-' + result.title.split(" ")[1];
                 }
+                // Hide the database ID
+                result._id = null;
                 res.json({
                     response: result,
                     status: 0
                 });
             } else {
                 res.json({
-                    response: 'Nothing found',
+                    response: 'Error: No course found!',
                     status: 1
                 });
             }
@@ -134,7 +136,7 @@ router.get('/getCourse', (req, res) => {
         .catch(err => {
             console.error(err);
             res.json({
-                response: "Error!!!! Nothing found or some other shit",
+                response: "Internal Server Error.",
                 status: 2
             });
         });
