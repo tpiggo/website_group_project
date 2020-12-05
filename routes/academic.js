@@ -9,6 +9,9 @@ router.get('/courses', (req, res) => {
     const username = req.session.username;
     const title = "Courses";
     var courses;
+    // Check if the query is empty! Only possible matches can be all or a course. 
+    const {query} = req.query;
+    
     common.getAllDataFrom(Courses)
         .then(result => {
             courses = mergeSortCourses(result);
@@ -16,7 +19,16 @@ router.get('/courses', (req, res) => {
             return common.getPagesMenu('academic');
         })
         .then(result => {
-            content = { html: './list/courses', data: courses};
+            var queryCourses = [];
+            if (query != undefined){
+                if (query=='all'){
+                    queryCourses = courses;
+                } else {
+                    queryCourses = findCourse(query, courses);
+                }
+            }
+            console.log(queryCourses);
+            content = { html: './list/courses', data: courses, query: query, queryCourses: queryCourses};
             res.render('subpage', { title, menu: result.menu, content, logged, username});
         })
         .catch(err => {
@@ -87,6 +99,17 @@ function fixCourses(courses){
         mArr.push(value);
     });
     return mArr;
+}
+
+function findCourse(courseTitle, courses){
+    const regex = new RegExp(courseTitle, "i");
+    var found = [];
+    courses.forEach((value) => {
+        if (regex.exec(value.title)){
+            found.push(value);
+        }
+    });
+    return found;
 }
 
 module.exports = router;

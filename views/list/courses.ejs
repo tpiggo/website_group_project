@@ -11,7 +11,43 @@
     <button class="btn btn-primary" onclick="getClass()" >Get course!</button>
 </div>
 
-<div id="response-container"></div>
+<div id="response-container">
+    <% if (content.query != 'undefined') { %>
+        <% for(let course of content.queryCourses) { %>
+            <div class="card card-body">
+                <h3 class="card-text"><%= course.title %></h3>
+                <p class="card-text"><%=course.description%></p>
+                <p class="card-text">Credits : <%=course.credits%></p>
+                <p class="card-text">Terms Offered : 
+                    <% for (let term of course.termsOffered) { %>
+                        <%= term %>
+                    <% } %>
+                </p>
+                <% if (course.instructor != undefined) {%>
+                <p class="card-text">Instructor(s) : 
+                    <% for (let instructor of course.instructor) { %>
+                        <%= instructor %>
+                    <% } %>
+                </p>
+                <% } %>
+                <% if (course.notes != 'none' && course.notes != undefined) {%>
+                    <p class="card-text">Notes : <%=course.notes%></p>
+                <% } %>
+                <% if (course.restrictions != 'none' && course.restrictions != undefined) {%>
+                <p class="card-text">Restrictions : <%=course.restrictions%></p>
+                <% } %>
+                <p class="card-text">Prerequisites : <%=course.prerequisites%></p>
+                <% if (course.syllabus != '' && course.syllabus != undefined) {%>
+                <p class="card-text"><a href=<%= course.syllabus %> target="_blank">Syllabus</a></p>
+                <% } %>
+                <% if (course.mcgillCalendar != '' && course.mcgillCalendar != undefined) {%>
+                <p class="card-text"><a href=<%= course.mcgillCalendar  %> target="_blank">McGill Ecalender</a></p>
+                <% } %>
+            </div>
+        <% } %>
+    <% } %>
+
+</div>
 
 <script src="/js/frontEndApi.js"></script>
 <script src="/js/courses.js"></script>

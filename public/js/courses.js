@@ -96,6 +96,9 @@ function createCourse(content, target){
         } else if (key == 'description'){
             contentDiv = createAnElement({type: 'p', content: content[key], class:'card-text', level: 1});
         }
+        let newDiv = document.createElement('div');
+        
+
         if (contentDiv != undefined) buildCourseLayout(aCardDiv, contentDiv);
     }
     if (target.firstChild == null){

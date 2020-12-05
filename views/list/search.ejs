@@ -1,0 +1,16 @@
+<h5>Search Results:</h5>
+<% if (content.data != 'undefined') {%>
+    <ul class="list-group">
+        <% for (let result of content.data) {%>
+            <% if (result.length > 0 ) {%>
+                <% for (let searched of result) {%>
+                    <% if (searched.title != undefined ) {%>
+                        <li class="list-group-item"><%=searched.title%></li>
+                    <% } else { %>
+                        <li class="list-group-item"><%=searched.name%></li>
+                    <% } %>
+                <% } %>
+            <% } %>
+        <% } %>
+    </ul>   
+<% } %>

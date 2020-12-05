@@ -43,7 +43,7 @@ common.getAllDataWith = (Model, attribute) => {
 /** Get and populate all the subpages of a page and extract the content of a specified subpage
  * @param {String} page indicate the collection to get data from
  * @param {String} subpage indicates the document to extract the content from
- * @returns {Promise}   returns a formatted menu of the page to be rendered and the content of the specified subpage
+ * @returns {Promise} returns a formatted menu of the page to be rendered and the content of the specified subpage
 */
 const Page = require('./models/Page.js');
 common.getDataOfSubpage = (page, subpage) => {

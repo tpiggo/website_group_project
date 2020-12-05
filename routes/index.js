@@ -156,12 +156,10 @@ router.post('/settings', middleware.isAuthenticated, (req, res)=>{
  * The search bar route.
  */
 router.get('/search', (req, res) => {
-    console.log(req.query);
-    let mText = "Hello you searched" + JSON.stringify(req.query);
-    res.send(mText);
     // Building Generic search of the site
     let searchQuery = {'$regex': req.query.searched, '$options': 'i'};
-    
+    const logged = req.session.authenticated;
+    const username = req.session.username;
     //functions which search each table within the database
      
     const searchCourses = () =>common.getAllDataWith(Course, {$or: [
@@ -171,7 +169,7 @@ router.get('/search', (req, res) => {
     ]});
     const searchPages = () => common.getAllDataWith(Page, { title: searchQuery });
     const searchSubpages = () =>common.getAllDataWith(Subpage, {$or: [
-        {title: searchQuery},
+        {name: searchQuery},
         {html: searchQuery},
         {markdown: searchQuery}
     ]});
@@ -225,13 +223,15 @@ router.get('/search', (req, res) => {
         searchTechRep()
     ])
         .then(result => {
-            result.forEach((value, index) => {
-                value.forEach(innerVal => {
-                    console.log(innerVal);
-                    console.log(innerVal.modelName, "name of model");
-                })
-            });
-            //console.log(result);
+            // result.forEach((value, index) => {
+            //     value.forEach(innerVal => {
+            //         console.log(innerVal);
+            //         console.log(innerVal.modelName, "name of model");
+            //     })
+            // });
+            console.log(result);
+            content = { html: './list/search', data: result};
+            res.render('subpage', { title: "Search", menu: result.menu, content, logged, username});
         })
         .catch(err => {
             console.error(err);
