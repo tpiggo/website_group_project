@@ -6,6 +6,7 @@
     <link rel="shortcut icon" href="https://www.cs.mcgill.ca/static/base/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="/css/general.css">
     <link rel="stylesheet" href="/css/dashboard.css">
+    <script src="/js/navbar.js"></script>
 
     <title>CS Dasboard</title>
 
@@ -13,7 +14,7 @@
 </head>
 
 <body>
-    <%- include('partials/navbar', {logged, username : user.username, menuIcon:false}); %>
+    <%- include('partials/navbar', {logged, username : user.username}); %>
 
     <div id="content">
         <div id="center">

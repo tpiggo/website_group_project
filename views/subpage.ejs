@@ -15,7 +15,7 @@
     <span id="title" style="display:none"><%=title%></span>
 
     <!-- Top fixed menu -->
-    <%- include('partials/navbar', {logged, username, menuIcon:true}) %>
+    <%- include('partials/navbar', {logged, username}) %>
     <!-- left side menu-->
     <!-- <div id="menu" class="hidden">
         menu list specifically for the Prospective page
@@ -49,7 +49,7 @@
             <%-content.html %>
 
             <% } if(!content.data && logged) { %>
-            <a href="<%=content.path%>/edit">Edit Source</a>
+            <a href="<%-'/' + content.path +'/edit'%>">Edit Source</a>
             <% } %>
         </div>
         <%- include('partials/footer'); %>

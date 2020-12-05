@@ -54,8 +54,10 @@ router.get('/:pagename', (req, res) => {
 
 router.get('/:pagename/edit', (req, res) => {
     console.log("Loading page " + req.params.pagename + " for editing.");
+    const entry = req.baseUrl.substr(1);
     var pagename = req.params.pagename;
-    Subpage.findOne({ path: pagename }, (err, pagedata) => {
+
+    Subpage.findOne({ path:  entry + '/' + pagename }, (err, pagedata) => {
         if (err) {
             console.log(err);
         } else if (pagedata) {
@@ -73,6 +75,7 @@ router.get('/:pagename/edit', (req, res) => {
             }
         } else {
             console.log("User " + req.session.username + "tried to edit non-existent subpage " + pagename);
+            res.send('404 : this page does not exist');
         }
 
     });
@@ -118,8 +121,9 @@ router.get('/:pagename/:subpage', (req, res) => {
 });
 
 router.post('/:pagename/edit', (req, res) => {
+    const entry = req.baseUrl.substr(1);
     var pagename = req.params.pagename;
-    Subpage.findOne({ path: pagename }, (err, pagedata) => {
+    Subpage.findOne({ path: entry + '/' + pagename }, (err, pagedata) => {
         if (err) {
             console.log(err);
         } else if (pagedata) {
