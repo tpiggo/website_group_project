@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="/css/general.css">
     <link rel="stylesheet" href="/css/subpage.css">
     <link rel="stylesheet" href="/css/lr-layout.css">
+    <script src="/js/navbar.js"></script>
     <title>McGill School of Computer Science</title>
 </head>
 
@@ -15,7 +16,7 @@
     <span id="title" style="display:none"><%=title%></span>
     
     <!-- Top fixed menu -->
-    <%- include('partials/navbar', {logged, username, menuIcon:false}); %>
+    <%- include('partials/navbar', {logged, username}); %>
 
     <div id="content">
     <form id="subpage-editor" method="POST">
