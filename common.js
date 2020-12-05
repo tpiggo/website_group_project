@@ -1,3 +1,5 @@
+const {connection} = require('mongoose');
+const { resolve } = require('path');
 var common = {};
 
 /**
@@ -107,6 +109,33 @@ common.getPagesMenu = (page) => {
 
             });
 
+    });
+}
+
+
+common.getModelNames = (modelName) =>{
+    return new Promise((resolve, reject) =>{
+        connection.db.listCollections().toArray(function(err, names){
+            if (err)
+                reject(err);
+            resolve(names);
+        });
+    });
+}
+
+common.searchModelNames = (search) => {
+    return new Promise((resolve, reject)=>{
+        common.getModelNames()
+            .then(results => {
+                var matchSearch = [];
+                results.forEach(value=> {
+                    if (value.name == search){
+                        matchSearch.push(value);
+                    }
+                });
+                resolve(matchSearch);
+            })
+            .catch(err=>reject(err));
     });
 }
 

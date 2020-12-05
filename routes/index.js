@@ -11,7 +11,7 @@ const TechnicalReport = require('../models/TechnicalReport');
 const Posting = require('../models/Posting');
 const TAPosting = require('../models/TAPosting');
 const Award = require('../models/Award');
-const { Model } = require('mongoose');
+const { Model, connection } = require('mongoose');
 const bcrypt = require('bcrypt');
 const Page = require('../models/Page');
 
@@ -160,8 +160,11 @@ router.get('/search', (req, res) => {
     let searchQuery = {'$regex': req.query.searched, '$options': 'i'};
     const logged = req.session.authenticated;
     const username = req.session.username;
-    //functions which search each table within the database
-     
+    // Need to create a regex in order to match a query with a modelname, using first 2 words
+    const query = req.query.searched;
+
+
+    //functions which search each table within the database 
     const searchCourses = () =>common.getAllDataWith(Course, {$or: [
         {title: searchQuery},
         {description: searchQuery},
@@ -223,7 +226,6 @@ router.get('/search', (req, res) => {
         .then(result => {
             result.forEach((value) => {
                 value.forEach(innerVal => {
-                    console.log(innerVal);
                     if (innerVal.modelName == "courses"){
                         let strSplit = innerVal.title.split(' ');
                         innerVal.href = 'academic/courses?query=' + strSplit[0] + '+' + strSplit[1];
@@ -244,11 +246,15 @@ router.get('/search', (req, res) => {
                         innerVal.href = '/news/events';
                     } else if (innerVal.modelName == 'subpages')
                         innerVal.href = '/' + innerVal.path;
-                    console.log(innerVal.modelName, "href =", innerVal.href );
+                    console.log(JSON.stringify(innerVal));
                 });
             });
-            //console.log(result);
-            content = { html: './list/search', data: result, script: "<script src='/js/search.js'></script>"};
+            // Providing all the necessary elements to render to searched page
+            content = {
+                html: './list/search',
+                data: result, script: "<script src='/js/search.js'></script>",
+                searchQuery: "https://www.google.com/search?q=mcgill+"+req.query.searched.replace(" ","+")
+            };
             res.render('subpage', { title: "Search", menu: result.menu, content, logged, username});
         })
         .catch(err => {
@@ -257,5 +263,20 @@ router.get('/search', (req, res) => {
 
 
 });
+
+router.get('/searchingTest', (req, res) => {
+    // Need to create a regex in order to match a query with a modelname, using first 2 words
+    const query = req.query.searched.toLowerCase();
+    common.searchModelNames('events')
+        .then(results=>{
+            console.log(results);
+        })
+        .catch(err => {
+            console.error(err);
+        })
+    res.send("TESTING");
+});
+
+
 
 module.exports = router;
