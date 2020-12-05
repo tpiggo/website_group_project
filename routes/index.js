@@ -167,7 +167,6 @@ router.get('/search', (req, res) => {
         {description: searchQuery},
         {termsOffered: searchQuery}
     ]});
-    const searchPages = () => common.getAllDataWith(Page, { title: searchQuery });
     const searchSubpages = () =>common.getAllDataWith(Subpage, {$or: [
         {name: searchQuery},
         {html: searchQuery},
@@ -209,11 +208,10 @@ router.get('/search', (req, res) => {
         {creator: searchQuery},
         {description: searchQuery}
     ]});
+    
     // Execute all the promises, receiving an array of responses.
-    const mapping = ['course', 'pages', 'subpages', 'news', 'awards', 'events', 'taposting', 'posting', 'techreport'];
     Promise.all([
         searchCourses(),
-        searchPages(),
         searchSubpages(),
         searchNews(),
         searchAwards(),
@@ -223,14 +221,34 @@ router.get('/search', (req, res) => {
         searchTechRep()
     ])
         .then(result => {
-            // result.forEach((value, index) => {
-            //     value.forEach(innerVal => {
-            //         console.log(innerVal);
-            //         console.log(innerVal.modelName, "name of model");
-            //     })
-            // });
-            console.log(result);
-            content = { html: './list/search', data: result};
+            result.forEach((value) => {
+                value.forEach(innerVal => {
+                    console.log(innerVal);
+                    if (innerVal.modelName == "courses"){
+                        let strSplit = innerVal.title.split(' ');
+                        innerVal.href = 'academic/courses?query=' + strSplit[0] + '+' + strSplit[1];
+                    } else if (innerVal.modelName == 'news'){
+                        // Sending to the news page, but we need to have a way to smooth scroll to the proper article.
+                        innerVal.href = '/news/all';
+                    } else if (innerVal.modelName == 'awards') {
+                        // Sending to the awards page, but we need to have a way to smooth scroll to the proper award.
+                        innerVal.href = '/news/awards';
+                    } else if (innerVal.modelName == 'events') {
+                        // Sending to the events page, but we need to have a way to smooth scroll to the proper event.
+                        innerVal.href = '/news/events';
+                    } else if (innerVal.modelName == 'taposting') {
+                        // Sending to the events page, but we need to have a way to smooth scroll to the proper event.
+                        innerVal.href = '/news/taposting';
+                    } else if (innerVal.modelName == 'taposting') {
+                        // Sending to the events page, but we need to have a way to smooth scroll to the proper event.
+                        innerVal.href = '/news/events';
+                    } else if (innerVal.modelName == 'subpages')
+                        innerVal.href = '/' + innerVal.path;
+                    console.log(innerVal.modelName, "href =", innerVal.href );
+                });
+            });
+            //console.log(result);
+            content = { html: './list/search', data: result, script: "<script src='/js/search.js'></script>"};
             res.render('subpage', { title: "Search", menu: result.menu, content, logged, username});
         })
         .catch(err => {

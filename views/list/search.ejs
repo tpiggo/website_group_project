@@ -5,9 +5,9 @@
             <% if (result.length > 0 ) {%>
                 <% for (let searched of result) {%>
                     <% if (searched.title != undefined ) {%>
-                        <li class="list-group-item"><%=searched.title%></li>
+                        <li class="list-group-item" href=<%=searched.href%> onclick="clickableBlock($(this)[0])"><%=searched.title%></li>
                     <% } else { %>
-                        <li class="list-group-item"><%=searched.name%></li>
+                        <li class="list-group-item" href=<%=searched.href%> onclick="clickableBlock($(this)[0])" ><%=searched.name%></li>
                     <% } %>
                 <% } %>
             <% } %>
