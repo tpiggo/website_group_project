@@ -69,10 +69,10 @@ function createElementsOnLoad(id, newElements) {
     newElements.forEach(value => {
         const newDiv = document.createElement("div");
         newDiv.id = value._id;
-        newDiv.classList.add("card", "bg-light");
+        newDiv.classList.add("card", "bg-light", "card-content");
 
         newDiv.innerHTML = `
-        <div class="card-header"><h5 class="card-title"> ${value.title}</h5></div></div>
+        <div class="card-header"><h3 class="card-title"> ${value.title}</h3></div></div>
         <div class="card-body">
         <p class="card-text"><small class="text-muted">${value.creationDate.substr(0, 9)}</small></p>
             <p class="card-text">${value.description}</p>
