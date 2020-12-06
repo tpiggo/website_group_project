@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const app = express();
 const session = require('express-session');
+const { canEdit} = require('../middleware/index.js');
 const markdown = require('markdown-it')('commonmark');
 const Page = require('../models/Page.js');
 const Subpage = require('../models/Subpage.js');
@@ -21,12 +22,12 @@ router.get('/:pagename', (req, res) => {
                 console.logor(err);
             }
             else if (data == null) {
-                res.send("404 : this page doesn't exist");
+                res.redirect('/unknown');
             }
             else {
                 var content = data.subpages.find(e => e.path == req.params.pagename);
                 if (content == undefined) {
-                    res.send("404 : this subpage doesn't exist");
+                    res.redirect('/unknown');
                 }
                 else {
                     var menu = []
@@ -46,7 +47,7 @@ router.get('/:pagename', (req, res) => {
         }
         );
 });
-router.get('/:pagename/edit', (req, res) => {
+router.get('/:pagename/edit', canEdit, (req, res) => {
     console.log("Loading page " + req.params.pagename + " for editing.");
     var pagename = req.params.pagename;
     var page = Subpage.findOne({path: pagename}, (err,pagedata) => {
@@ -57,23 +58,22 @@ router.get('/:pagename/edit', (req, res) => {
             var logged=req.session.authenticated;
             var user=req.session.username;
             var content=pagedata.markdown;
-            if(logged){ //TODO: Integrate proper permissions here
-                res.render('editor.ejs',{
+            res.render('editor.ejs',{
                     title,
                     content,
                     logged,
                     user
-                });
-             }
+            });
         }else {
             console.log("User " + req.session.username + "tried to edit non-existent subpage "+ pagename);
+            res.redirect('/unknown');
         }
 
     });
     
 });
 
-router.post('/:pagename/edit',(req, res) => {
+router.post('/:pagename/edit', canEdit, (req, res) => {
     var pagename = req.params.pagename;
     var page = Subpage.findOne({path: pagename}, (err,pagedata) => {
         if(err){
@@ -95,6 +95,7 @@ router.post('/:pagename/edit',(req, res) => {
             });
         }else {
             console.log("User " + req.session.username + "tried to edit non-existent subpage "+ pagename);
+            res.redirect('/unknown');
         }
 
     });
