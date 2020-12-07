@@ -74,6 +74,7 @@ function callBackEnd(pOpts) {
         // different content types means sending different things
         if (pOpts.contentType == 'JSON'){
             aXML.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            console.log(pOpts.request);
             aXML.send(JSON.stringify(pOpts.request));
         } else if (pOpts.contentType == 'FormData'){
             aXML.send(pOpts.request);
