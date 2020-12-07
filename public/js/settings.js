@@ -1,4 +1,4 @@
-var errors = [false, false, false, false, true];
+var errors = [false, false, false, false, true, false];
 var errorBox = [];
 const isEmailRegex = /\S+@\S+\.\S+/;
 // User defined Error object
@@ -34,8 +34,8 @@ function initErrorBoxes(){
     });
 }  
 
-window.onload = initErrorBoxes();
 
+initErrorBoxes();
 
 /**
  * @param {Object} pFormEntry 
@@ -71,9 +71,11 @@ function matchPass(pass, confPass){
  */
 function checkPass(isPass, pFormEntry){
     // Checking password or confirmation password
+    var pass;
+    var confPass;
     if (isPass){
-        var pass = pFormEntry.value;
-        var confPass = document.getElementById("confirm-password");
+        pass = pFormEntry.value;
+        confPass = document.getElementById("confirm-password");
         // Making sure the password is proper length and does not have spaces
         if (pass != ''){
             console.log(pass);
@@ -103,8 +105,8 @@ function checkPass(isPass, pFormEntry){
         }
     } else {
         // Check confirmation pass with the true pass.
-        var pass = document.getElementById('password').value;
-        var confPass = pFormEntry.value
+        pass = document.getElementById('password').value;
+        confPass = pFormEntry.value
         if(matchPass(pass, confPass)){
             errorBox[2].getElement().innerHTML = '';
             errors[2] = false;
@@ -137,6 +139,14 @@ function checkEmail(pFormEntry){
     }
 }
 
+function themeChange(element){
+    let selected = element.value;
+    if (document.body.className != selected){
+        document.body.className = selected;
+    }
+}
+
+
 function currentPass(pFormEntry){
     if (pFormEntry.value == ''){
         errorBox[4].getElement().innerHTML = errorBox[4].getErrorMsg();
@@ -165,7 +175,7 @@ function checkErrors(){
 
 function onSubmit(event){
     if (currentPass(document.getElementById('current-password')) || checkErrors() ){
-        console.log("Error on the page", errors);
+        console.log("Error on the page");
         addErrors()
         event.preventDefault();
     } else {

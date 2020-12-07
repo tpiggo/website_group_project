@@ -1,5 +1,5 @@
 <h1>Settings</h1>
-<%- include("partials/messages"); %>
+<%- include("./messages"); %>
 <form onsubmit="onSubmit(event, $(this)[0])" id='lr-form' method="POST">
     <div> Change username: Please enter my new email! </div>
     <div class="form-item" id="username-box">
@@ -24,7 +24,14 @@
         <input type="email" id="email" name="email" <% %> value=<%- email %> <% %> onblur="checkEmail($(this)[0])">
         <div class='error'></div>
     </div>
-    <div> Please enter my new current password! </div>
+    <div class="form-item" id="theme-box">
+        <label for="userTheme">Theme: </label>
+        <select name="userTheme" id="user-theme" onchange="themeChange($(this)[0])">
+            <%- content.dropdown %>
+        </select>
+        
+    </div>
+    <div> Please enter my current password! </div>
     <div class="form-item" id="current-pass-box">
         <label for="password">Current Password:</label>
         <input type="password" id="current-password" name="curPassword" placeholder="Password" onblur="currentPass($(this)[0])">

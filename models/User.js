@@ -17,6 +17,10 @@ const UserSchema = new mongoose.Schema({
     userType: {
         type: Number,
         required: true
+    },
+    userTheme: {
+        type:String,
+        default: "default"
     }
 });
 

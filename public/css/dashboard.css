@@ -10,7 +10,7 @@ h3 {
 }
 
 #content{
-    background-color:var(--mcgill-burgundy);
+    background-color:var(--secondary);
     padding: 3em;
 }
 
@@ -63,16 +63,16 @@ form img {
 }
 button{
     background-color: transparent;
-    color: var(--mcgill-burgundy);
+    color: var(--secondary);
     border-radius: 5px;
-    border: 0.1em solid var(--mcgill-burgundy);
+    border: 0.1em solid var(--secondary);
     padding: 0.5em 1em;
     transition-duration: 0.5s;
     margin : 1em 0.2em;
 }
 
 button.general:hover{
-    background-color:var(--mcgill-burgundy);
+    background-color:var(--secondary);
     color: white;
     transition-duration: 0.5s;
 }

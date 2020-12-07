@@ -7,107 +7,170 @@
     <link rel="shortcut icon" href="https://www.cs.mcgill.ca/static/base/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="/css/homepage.css">
     <link rel="stylesheet" href="/css/general.css">
-    <script src="/js/frontendAPI.js"></script>
-    <script src="/js/homepage.js"></script>
+    <link rel="stylesheet" href="/css/themes.css">
     <!-- Add icon -->
 </head>
 
-<body>
+<body class=<%=theme %>>
     <!-- Top ofthe page, appears with school logo middle
             Search logo on the right-->
-    <div id="header" class="fixed-top scrolled">
-        <div id='logo-header'>
-            <img src="images/coat-of-arms.png" alt="Coat of arms">
-            <img src="images/McGill.png" alt="McGill">
-            <img src="images/school-of-computer-science.png" alt="school of CS">
-        </div>
-    </div>
-
-    <!-- Background video that appears and take the whole page on load 
-            Slide down and content appears-->
-    <div id="background-video" class="container-fluid">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Lorne_M._Trottier_Engineering_Building.jpg"
-            alt="Trottier Building">
-    </div>
-
-    <!-- Appears When scrolling down, once reach top of the page, collapse to the side with hamburger icon statically on the side-->
-    <%- include('partials/navbar', {logged, username}); %>
-
-    <div id="teaching" class="content container-fluid">
-        <h2>teaching@cs</h2>
-        <!-- Slideshow image with title that appears on transition, using bootstrap -->
-        <div id="teachingCarousel" class="carousel slide" data-ride="carousel" data-interval="7500">
-            <ol class="carousel-indicators">
-                <li data-target="#teachingCarousel" data-slide-to="0" class="active"></li>
-                <li data-target="#teachingCarousel" data-slide-to="1"></li>
-            </ol>
-            <div class="carousel-inner">
-                <div class="carousel-item active teaching-slide">
-                    <img class="d-block" src="images/29_Remote_Learning_Resources...._Xj4iyVJ.png" alt="First slide">
-                    <div class="carousel-caption d-none d-md-block" style="color:black">  
-                        <p>Teaching stuff!</p>
-                    </div>
-                </div>
-                <div class="carousel-item teaching-slide">
-                    <img class="d-block" src="images/CSUS-logo.png" alt="Second slide">
-                    <div class="carousel-caption d-none d-md-block" style="color:black">  
-                        <p>Get some help with homework!</p>
-                    </div>
-                </div>
+    <div id='body-content'>
+        <div id="header" class="fixed-top scrolled">
+            <div id='logo-header'>
+                <img src="images/coat-of-arms.png" alt="Coat of arms">
+                <img src="images/McGill.png" alt="McGill">
+                <img src="images/school-of-computer-science.png" alt="school of CS">
             </div>
-            <div id="carousel-controller">
-                <a class="carousel-control-prev" href="#teachingCarousel" role="button" data-slide="prev">
+
+            <span> <img style="width:1.5em;" src="images/icons/down-arrow.png" alt="arrow"> &emsp;&emsp; scroll</span>
+        </div>
+
+        <!-- Background video that appears and take the whole page on load 
+                    Slide down and content appears-->
+        <div id="background-video" class="container-fluid">
+            <!-- <img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Lorne_M._Trottier_Engineering_Building.jpg"
+                    alt="Trottier Building"> -->
+
+            <!-- I didn't find an appropriate video so I build this carousel instead -->
+            <!-- Temporary until better solution -->
+            <div id="backgroundCarousel" class="carousel slide carousel-fade" data-ride="carousel" data-interval="3000"
+                data-pause="false">
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <img class="d-block" src="../images/scene/students.jpg" alt="First slide">
+                    </div>
+                    <div class="carousel-item">
+                        <img class="d-block" src="../images/scene/trottier-computers.png" alt="Second slide">
+                    </div>
+                    <div class="carousel-item">
+                        <img class="d-block" src="../images/scene/trottier-vue.jpg" alt="Third slide">
+                    </div>
+                </div>
+                <a class="carousel-control-prev" href="#backgroundCarousel" role="button" data-slide="prev"
+                    style="display:none;">
                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                     <span class="sr-only">Previous</span>
                 </a>
-                <a class="carousel-control-next" href="#teachingCarousel" role="button" data-slide="next">
+                <a class="carousel-control-next" href="#backgroundCarousel" role="button" data-slide="next"
+                    style="display:none;">
                     <span class="carousel-control-next-icon" aria-hidden="true"></span>
                     <span class="sr-only">Next</span>
                 </a>
-                <ol class="carousel-indicators">
-                    <li data-target="#teachingCarousel" data-slide-to="0" class="active"></li>
-                    <li data-target="#teachingCarousel" data-slide-to="1"></li>
-                </ol>
             </div>
         </div>
 
+        <!-- Appears When scrolling down, once reach top of the page, collapse to the side with hamburger icon statically on the side-->
+        <%- include('partials/navbar', {logged, username}); %>
+
+        <div id="teaching" class="content d-flex justify-content-center flex-wrap">
+            <div style="margin: auto; flex: 1 1 30rem" class="container">
+                <h2 style="text-align: center;"> Welcome to the CS Website !</h2>
+                <p> Lorem, ipsum dolor sit amet consectetur adipisicing elit.
+                    Eligendi a, tempore odio unde eius, earum labore omnis facilis
+                    porro atque corporis quos beatae hic dolores modi pariatur quae nihil temporibus. </p>
+
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                    Quaerat, facilis assumenda, laboriosam a est eligendi voluptatem,
+                    et voluptatum exercitationem molestias soluta laudantium quis at deleniti itaque.
+                    Et debitis est eligendi?</p>
+
+            </div>
+            <div style="margin: auto; flex: 1 1 30rem" class="container">
+                <h2>Teaching@cs</h2>
+                <!-- Slideshow image with title that appears on transition, using bootstrap -->
+                <div id="teachingCarousel" class="carousel slide" data-ride="carousel" data-interval="7500">
+                    <div class="carousel-inner">
+                        <div class="carousel-item active teaching-slide">
+                            <img class="d-block" src="images/scene/remote-learning.jpg"
+                                alt="First slide">
+                            <div class="carousel-caption d-none d-md-block" style="color:rgb(24, 24, 24); bottom: 70%; left: unset; right: 15%; ">
+                                <p>Remote Learning Ressources</p>
+                            </div>
+                        </div>
+                        <div class="carousel-item teaching-slide">
+                            <img class="d-block" src="images/scene/remote-teaching.png" alt="Second slide">
+                            <div class="carousel-caption d-none d-md-block" style="color:white">
+                                <p>Remote Teaching This fall </p>
+                            </div>
+                        </div>
+                        <div class="carousel-item teaching-slide">
+                            <img class="d-block" src="images/scene/CSUS-logo.png" alt="Third slide">
+                            <div class="carousel-caption d-none d-md-block" style="color:black">
+                                <p>Get some help with homework!</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="carousel-controller">
+                        <a class="carousel-control-prev" href="#teachingCarousel" role="button" data-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="carousel-control-next" href="#teachingCarousel" role="button" data-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Events and latest should be side to side -->
+        <div id="events" class="content container-fluid">
+            <div id="events-cards" class="card-deck p-5">
+                <!-- events 
+                        Listing of evetns with logo of date and time-->
+                <div class="card title card-head">
+                    <!-- <div class="card-body"> -->
+                    <h1 class="card-title">Events@cs</h1>
+                    <button id='events-btn' class="btn">See Full Events Page</button>
+                    <!-- </div> -->
+                </div>
+            </div>
+            <hr>
+
+        </div>
+
+        <div id="latest" class="content container-fluid">
+            <!-- <h2 id="latestHeader">latest@cs</h2> -->
+            <div id="news-cards" class="card-deck p-5">
+                <!-- latest 
+                        Also slideshow images that appears with title of informations
+                    on hover, image blurs out and info listing appears-->
+                <div class="card title card-head">
+                    <!-- <div class="card-body"> -->
+                    <h1 class="card-title">Latest@cs</h1>
+                    <button id='news-btn' class="btn">See Full News Page</button> <!-- </div> -->
+                </div>
+            </div>
+            <hr>
+
+        </div>
+        <div id="posting" class="content container-fluid">
+            <!-- <h2 id="postingHeader">posting@cs</h2> -->
+            <div id="postings-cards" class="card-deck p-5">
+                <!--Posting of latest jobs on the cs website-->
+                <div class="card title card-head">
+                    <!-- <div class="card-body"> -->
+                    <h1 class="card-title">Posting@cs</h1>
+                    <button id='postings-btn' class="btn">Learn more about Job Posting</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Extra to maybe include -->
+        <!-- <div id="first year tips">
+                <h3>Tips to Navigate Mcgill website for first year students</h3>
+                <p> Important websites for classes.
+                        Questions about your carreer ? Here is the help you need
+                        International student : everything you need to know about immigration
+                        Still confused : here who you can contact
+                        About to graduate ? don't freak out, some help click here
+                    </p>
+            </div> -->
+
+        <%- include('partials/footer'); %>
+
+
     </div>
-
-    <!-- Events and latest should be side to side -->
-    <div id="events" class="content container-fluid">
-        <h2 id="eventsHeader">events@cs</h2>
-        <!-- events 
-                Listing of evetns with logo of date and time-->
-        <button id='events-btn' class="btn">Learn more about Events</button>
-    </div>
-
-    <div id="latest" class="content container-fluid">
-        <h2 id="latestHeader">latest@cs</h2>
-        <!-- latest 
-                Also slideshow images that appears with title of informations
-            on hover, image blurs out and info listing appears-->
-        <button id='news-btn' class="btn">See more!</button>
-    </div>
-
-    <div id="posting" class="content container-fluid">
-        <h2 id="postingHeader">posting@cs</h2>
-        <!--Posting of latest jobs on the cs website-->
-        <button id='postings-btn' class="btn">Learn more about Job Posting</button>
-    </div>
-
-    <!-- Extra to maybe include -->
-    <!-- <div id="first year tips">
-        <h3>Tips to Navigate Mcgill website for first year students</h3>
-        <p> Important websites for classes.
-                Questions about your carreer ? Here is the help you need
-                International student : everything you need to know about immigration
-                Still confused : here who you can contact
-                About to graduate ? don't freak out, some help click here
-            </p>
-    </div> -->
-
-    <%- include('partials/footer'); %>
-
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
         integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
         crossorigin="anonymous"></script>
@@ -117,4 +180,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js"
         integrity="sha384-w1Q4orYjBQndcko6MimVbzY0tgp4pWB4lZ7lr30WKz0vr/aWKhXdBNmNb5D92v7s"
         crossorigin="anonymous"></script>
+        
+    <script src="/js/frontendAPI.js"></script>
+    <script src="/js/navbar.js"></script>
+    <script src="/js/homepage.js"></script>
 </body>

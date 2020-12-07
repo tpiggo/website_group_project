@@ -1,0 +1,15 @@
+.custom-list{
+    list-style-type: none;
+}
+.custom-list-group-item{
+    text-decoration: none;
+    border: solid 1px var(--secondary);
+    border-radius: 1em;
+    padding: 0.5em 0.75em;
+    margin: 0.5em;
+}
+.custom-list-group-item:hover{
+    border-color: var(--main);
+    transform: scale(1.25);
+    margin: 50px;
+}

@@ -10,16 +10,27 @@ app.use(express.urlencoded({extended: true}));
 
 router.get('/login', canUseRoute, (req, res)=>{
     const title = "Login";
-    const content = {"html": 'login.ejs', "script":""};
+    const content = {"html": 'partials/login.ejs', "script":""};
     const menu = [];
-    return res.render('user-layout', {title, menu, content, logged: req.session.authenticated, user: req.session.username});
-    
-    
+    return res.render('user-layout', {
+        title,
+        menu,
+        content,
+        logged: req.session.authenticated,
+        user: req.session.username,
+        theme: req.session.them
+    });
 });
 router.get('/register', canUseRoute, (req, res)=>{
     const title = "Register";
-    const content = {"html": 'register.ejs', "script": "<script src='/js/register.js'></script>"};
-    return res.render('user-layout', {title, content, logged: req.session.authenticated, user: req.session.username});
+    const content = {"html": 'partials/register.ejs', "script": "<script src='/js/register.js'></script>"};
+    return res.render('user-layout', {
+        title,
+        content,
+        logged: req.session.authenticated,
+        user: req.session.username,
+        theme: req.session.theme
+    });
 });
 
 router.post('/login', canUseRoute, (req, res)=> {
@@ -27,7 +38,7 @@ router.post('/login', canUseRoute, (req, res)=> {
     var password = req.body.password;
     var errors = [];
     const title = "Login";
-    const content = {"html": 'login.ejs', "script":""};
+    const content = {"html": 'partials/login.ejs', "script":""};
     User.findOne({username: username}, (err,user) => {
         if(err){ 
             console.log(err);
@@ -38,6 +49,8 @@ router.post('/login', canUseRoute, (req, res)=> {
                 // Saving the username into the session, potentially not the greatest solution, but works for now
                 req.session.username = username;
                 req.session.authenticated = true;
+                req.session.theme = user.userTheme;
+                console.log(req.session.theme);
                 return res.redirect("/dashboard");
             } else {
                 console.log("User "+username + " failed to log in.");
@@ -53,6 +66,7 @@ router.post('/login', canUseRoute, (req, res)=> {
             content,
             logged: req.session.authenticated,
             user: req.session.username,
+            theme: req.session.theme,
             errors
         });
     }).catch(err=>console.log(err));
@@ -68,7 +82,7 @@ router.post('/register', canUseRoute, (req, res)=> {
     const email = req.body.email;
     const title = "Register";
     var content = {
-            "html": 'register.ejs', 
+            "html": 'partials/register.ejs', 
             "script": "<script src='/js/register.js'></script>"
         };
     /**
@@ -114,11 +128,11 @@ router.post('/register', canUseRoute, (req, res)=> {
                     email: req.body.email,
                     password: password,
                     userType: 0
-                }, (err) => {
+                }, (err, user) => {
                     if (err) {
                         errors.push({msg: "Error during creation"});
                         reject(errors);
-                    }
+                    } else resolve(user)
                 });
             }
         });
@@ -130,6 +144,7 @@ router.post('/register', canUseRoute, (req, res)=> {
             return createNewUser(users);
         })
         .then(user => {
+            console.log("Done creating! Redirecting back to register")
             /**
              * @todo: Should get a success message that user was created 
              */
@@ -142,6 +157,7 @@ router.post('/register', canUseRoute, (req, res)=> {
                 content,
                 logged: req.session.authenticated,
                 user: req.session.user,
+                theme: req.session.theme,
                 errors
             });
         })
