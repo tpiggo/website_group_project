@@ -126,17 +126,38 @@ function displayError(err, targetHeader){
 
 /**
  * @description Finds a course within the list of deleted courses.
+ * @param {Array} array
  * @param {String} course
  * @returns {HTMLElement} or null 
  */
-function findCourseInHeld(course){
-    heldCourses.forEach(value =>{
-        console.log(value);
+function findInArray(array, course){
+    for (let value of array){
         if (value.firstChild.innerHTML == course){
             return value;
         }
-    }); 
+    }
     return null;
+}
+
+function findCoursesInBox(course){
+    var courses = [];
+    console.log(courseBox.children);
+    for (let i = 0; i < courseBox.children.length; i++ ){
+        courses.push(courseBox.children[i]);
+    }
+    if (courses.length > 0 )
+        return findInArray(courses, course);
+    return null;
+}
+
+function removeFromArray(array, remVal){
+    let newArr = [];
+    for (let value of array){
+        if (value != remVal){
+            newArr.push(value);
+        }
+    }
+    return newArr;
 }
 
 /**
@@ -144,25 +165,38 @@ function findCourseInHeld(course){
  */
 function getClass() {
     // check if the element exists within the list of elements
-    var course;
-    if (null != (course = findCourseInHeld(aClass))){
-        courseBox.insertBefore(course, courseBox.firstChild);
-    }
-    const pOpts = {type: "GET", url: '/api/getCourse?class='+aClass, contentType: "None"}
-    callBackEnd(pOpts)
-        .then( response => {
-            if (response.status == 0){
-                console.log(response);
-                createCourse(response.response, courseBox);
-            } else {
+    let heldCourse = findInArray(heldCourses, aClass);
+    let courseInBox = findCoursesInBox(aClass);
+    if (heldCourse != null){
+        courseBox.insertBefore(heldCourse, courseBox.firstChild);
+        heldCourses = removeFromArray(heldCourses, heldCourse);
+        console.log(heldCourses)
+    } else if (courseInBox != null) {
+        courseBox.removeChild(courseInBox);
+        if (courseBox.firstChild != null){
+            console.log('here1', courseBox.firstChild);
+            courseBox.insertBefore(courseInBox, courseBox.firstChild);
+        }else{
+            console.log("here2");
+            courseBox.appendChild(courseInBox);
+        }
+    } else {
+        const pOpts = {type: "GET", url: '/api/getCourse?class='+aClass, contentType: "None"}
+        callBackEnd(pOpts)
+            .then( response => {
+                if (response.status == 0){
+                    console.log(response);
+                    createCourse(response.response, courseBox);
+                } else {
+                    displayError(response.response, 'coursesHeader');
+                }
+                
+            })
+            .catch( err => {
+                console.error(err);
                 displayError(response.response, 'coursesHeader');
-            }
-            
-        })
-        .catch( err => {
-            console.error(err);
-            displayError(response.response, 'coursesHeader');
-        });
+            });
+    }
 }
 /**
  * @description Removes an element from the page and places it into a list of deleted courses
@@ -173,5 +207,5 @@ function clickClose(element){
     let card = element.parentNode;
     courseBox.removeChild(card);
     // push the card to the held elements
-    console.log(heldCourses);
+    heldCourses.push(card);
 }
