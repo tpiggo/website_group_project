@@ -90,6 +90,7 @@ function toggleForm(name, method, hasFile) {
         while (total > 0) {
             removeField(pointer);
         }
+        console.log($( "#syllabus-choice" ).val());
     }
     var content = document.getElementById("center");
     content.classList.toggle("hidden");
@@ -102,8 +103,7 @@ function toggleForm(name, method, hasFile) {
     for (var j = 0; j < selects.length; j++) {
         selects[j].disabled = !selects[j].disabled;
     }
-
-    if (method) form.setAttribute('onsubmit', "handleRequest(event, $(this), '" + method + "', "+ hasFile +")");
+    if (method) form.setAttribute('onsubmit', `handleRequest(event, $(this), '${method}', ${hasFile})`);
 
 }
 

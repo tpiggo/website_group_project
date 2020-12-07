@@ -128,11 +128,11 @@ router.post('/register', canUseRoute, (req, res)=> {
                     email: req.body.email,
                     password: password,
                     userType: 0
-                }, (err) => {
+                }, (err, user) => {
                     if (err) {
                         errors.push({msg: "Error during creation"});
                         reject(errors);
-                    }
+                    } else resolve(user)
                 });
             }
         });
@@ -144,6 +144,7 @@ router.post('/register', canUseRoute, (req, res)=> {
             return createNewUser(users);
         })
         .then(user => {
+            console.log("Done creating! Redirecting back to register")
             /**
              * @todo: Should get a success message that user was created 
              */

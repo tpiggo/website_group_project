@@ -71,7 +71,8 @@ function dropDown(type, id) {
 }
 
 //navbar controller
-$( "#searchbar-controller" ).on('click',(event)=>{
+document.getElementById("searchbar-controller").addEventListener('click', (event)=>{
     // toggle visibility of the navbar
-    $("#searchbar")[0].style.visibility = $("#searchbar")[0].style.visibility == "hidden"?"visible":"hidden";
+    let sb = document.getElementById("searchbar")
+    sb.style.visibility = sb.style.visibility == "hidden"?"visible":"hidden";
 });

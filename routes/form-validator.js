@@ -626,7 +626,6 @@ router.get('/Posting', middleware.isAuthenticated, (req, res) => {
 
 //  ********************************* COURSE REQUESTS *********************************
 router.post('/Course', upload.single("syllabus"), middleware.isAuthenticated, (req, res) => {
-    console.log("Req body", req.body);
     // Fix syllabus, add its path rather than its name
     req.body.syllabus = req.file.filename;
     Course.create(req.body, (err, content) => {
@@ -642,10 +641,10 @@ router.post('/Course', upload.single("syllabus"), middleware.isAuthenticated, (r
     });
 });
 
-router.put('/Course', middleware.isAuthenticated, (req, res) => {
+router.put('/Course', upload.single("syllabus"), middleware.isAuthenticated, (req, res) => {
     var id = req.body._id;
     delete req.body._id;
-
+    req.body.syllabus = req.file.filename;
     Course.findByIdAndUpdate(id, req.body, (err, update)=> {
         if(err){
             console.error(err);
@@ -686,17 +685,6 @@ router.get('/Course', (req, res) => {
         }
     });
 
-});
-
-/**
- * Testing forms
- */
-router.post("/fileUploader", middleware.isAuthenticated,  (req, res) => {
-    console.log(req.body);
-    const {string} = req.body;
-    console.log(string);
-    console.log(JSON.stringify(req.headers));
-    res.json({response: "I got your file upload!"});
 });
 
 

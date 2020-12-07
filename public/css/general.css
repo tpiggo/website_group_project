@@ -43,6 +43,10 @@ body {
 
 }
 
+#searchbar{
+    padding:0;
+}
+
 #navbar img{
     position: fixed;
     top: 2rem;
@@ -222,6 +226,7 @@ nav ul {
 #user-wrap {
     margin: auto 0;
     margin-right: 2rem;
+    overflow:hidden;
 }
 
 /* user-bar CSS */
