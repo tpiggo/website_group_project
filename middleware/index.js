@@ -18,15 +18,7 @@ middleware.canUseRoute = (req, res, next) =>{
     return res.redirect('/denied');
 }
 
-middleware.canEdit = (req, res, next) => {
-    return this.isAuthorized(req,res,next,1);
-}
-
-middleware.canCreateOrDestroy = (req, res, next) => {
-    return this.isAuthorized(req,res,next,2);
-}
-
-middleware.isAuthorized = (req, res, next, level) =>{
+function isAuthorized(req, res, next, level) {
     if(req.session.authenticated){
         User.findOne({username: req.session.username}, (err,user) => {
             if(err){
@@ -35,11 +27,21 @@ middleware.isAuthorized = (req, res, next, level) =>{
             if(user){
                 if(user.userType >= level){
                     return next();
+                }else {
+                    return res.redirect('/denied');
                 }
             }
         });
+    }else{
+        return res.redirect('/denied');
     }
-    return res.redirect('/denied')
 }
 
+middleware.canEdit = (req, res, next) => {
+    return isAuthorized(req,res,next,1);
+}
+
+middleware.canCreateOrDestroy = (req, res, next) => {
+    return isAuthorized(req,res,next,2);
+}
 module.exports = middleware;

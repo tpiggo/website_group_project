@@ -15,21 +15,21 @@ router.get('/', (req, res) => {
 });
 
 router.get('/denied', (req,res) => {
-    var title = "403: Forbidden"
+    var error_code = 403;
     var menu = [];
     var logged = req.session.authenticated;
-    var user = req.session.username;
-    var rendered_html = "<h1>Error 403:</h1> <h3>You do not have permission to do that.</h3> <br> <br> If you believe this message to be in error please contact the website administrator."
-    res.render(403, 'subpage', {title, menu, rendered_html, logged, user})
+    var username = req.session.username;
+    var error_message = "You do not have permission to do that. If you believe this message to be in error please contact the website administrator.";
+    res.render('user-error', {error_code, menu, error_message, logged, username});
 });
 
 router.get('/unknown', (req,res) => {
-    var title = "404: Not Found"
+    var error_code = 404;
     var menu = [];
     var logged = req.session.authenticated;
-    var user = req.session.username;
-    var rendered_html = "<h1>Error 404:</h1> <h3>The page you are looking for was not found</h3>"
-    res.render(404, 'subpage', {title, menu, rendered_html, logged, user})
+    var username = req.session.username;
+    var error_message = "The page you are looking for was not found";
+    res.render('user-error', {error_code, menu, error_message, logged, username});
 });
 
 router.get('/dashboard', middleware.isAuthenticated, (req, res) => {

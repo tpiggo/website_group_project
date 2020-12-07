@@ -33,7 +33,7 @@
         <!--Get the content from the database and render it here -->
         <%-rendered_html %>
         <% if(logged) { %>
-            <a href="<%=content.path%>/edit">Edit Source</a>
+            <a href="/<%=content.path%>/edit">Edit Source</a>
         <% } %>
     </div>
     <%- include('partials/footer'); %>

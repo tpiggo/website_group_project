@@ -25,7 +25,7 @@ router.get('/:pagename', (req, res) => {
                 res.redirect('/unknown');
             }
             else {
-                var content = data.subpages.find(e => e.path == req.params.pagename);
+                var content = data.subpages.find(e => e.path == (entry + "/" + req.params.pagename));
                 if (content == undefined) {
                     res.redirect('/unknown');
                 }
@@ -37,9 +37,9 @@ router.get('/:pagename', (req, res) => {
                     var title = data.title;
                     const logged = req.session.authenticated;
 
-                    const user = req.session.username;
+                    const username = req.session.username;
                     const rendered_html = content.markdown ? markdown.render(content.markdown) : content.html;
-                    res.render('subpage.ejs', { title, menu, content, rendered_html, logged, user });
+                    res.render('subpage.ejs', { title, menu, content, rendered_html, logged, username });
 
                 }
 
@@ -50,19 +50,21 @@ router.get('/:pagename', (req, res) => {
 router.get('/:pagename/edit', canEdit, (req, res) => {
     console.log("Loading page " + req.params.pagename + " for editing.");
     var pagename = req.params.pagename;
-    var page = Subpage.findOne({path: pagename}, (err,pagedata) => {
+    const entry = req.baseUrl.replace("/", '');
+    var path = entry+"/"+pagename;
+    var page = Subpage.findOne({path}, (err,pagedata) => {
         if(err){
             console.log(err);
         }else if(pagedata){
             var title=pagedata.name;
             var logged=req.session.authenticated;
-            var user=req.session.username;
+            var username=req.session.username;
             var content=pagedata.markdown;
             res.render('editor.ejs',{
                     title,
                     content,
                     logged,
-                    user
+                    username
             });
         }else {
             console.log("User " + req.session.username + "tried to edit non-existent subpage "+ pagename);
@@ -75,7 +77,9 @@ router.get('/:pagename/edit', canEdit, (req, res) => {
 
 router.post('/:pagename/edit', canEdit, (req, res) => {
     var pagename = req.params.pagename;
-    var page = Subpage.findOne({path: pagename}, (err,pagedata) => {
+    const entry = req.baseUrl.replace("/", '');
+    var path = entry+"/"+pagename;
+    var page = Subpage.findOne({path}, (err,pagedata) => {
         if(err){
             console.log(err);
         }else if(pagedata){
@@ -85,13 +89,13 @@ router.post('/:pagename/edit', canEdit, (req, res) => {
             });
             var title=pagedata.name;
             var logged=req.session.authenticated;
-            var user=req.session.username;
+            var username=req.session.username;
             var content=pagedata.markdown;
             res.render('editor.ejs',{
                 title,
                 content,
                 logged,
-                user
+                username
             });
         }else {
             console.log("User " + req.session.username + "tried to edit non-existent subpage "+ pagename);
