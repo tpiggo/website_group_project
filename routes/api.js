@@ -14,6 +14,7 @@ const fs = require('fs');
 const path = require('path');
 const Courses = require('../models/Courses');
 const bodyParser = require('body-parser');
+const markdown = require('markdown-it')('commonmark');
 
 router.get('/index-info', (req, res) => {
     // Get the events, latest , and postings. Get first 10, and then rest will be on the  
@@ -142,5 +143,19 @@ router.get('/getCourse', (req, res) => {
         });
 });
 
+// Giving access to bodyparser from this moment on
+router.use(bodyParser.json());
+
+router.post('/render-markdown', (req, res) => {
+    console.log("Hello", req.body.markdown);
+    Promise.resolve(markdown.render(req.body.markdown))
+    .then(data => {
+        console.log('sending rendered html to editor');
+        res.json({ status: 0, data });
+    }).catch(err => {
+        console.error(err);
+        res.json({ status: 2, response:"error while rendering markdown"});
+    });
+});
 
 module.exports = router;

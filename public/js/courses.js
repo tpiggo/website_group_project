@@ -131,7 +131,9 @@ function displayError(err, targetHeader){
  * @returns {HTMLElement} or null 
  */
 function findInArray(array, course){
+    console.log(array);
     for (let value of array){
+        console.log(value.firstChild);
         if (value.firstChild.innerHTML == course){
             return value;
         }
@@ -141,7 +143,6 @@ function findInArray(array, course){
 
 function findCoursesInBox(course){
     var courses = [];
-    console.log(courseBox.children);
     for (let i = 0; i < courseBox.children.length; i++ ){
         courses.push(courseBox.children[i]);
     }

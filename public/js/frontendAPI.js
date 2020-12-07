@@ -56,6 +56,7 @@ function callBackEnd(pOpts) {
         // On the load call for the data.
         aXML.onload = function () {
             if (this.status >= 200 && this.status < 300) {
+                console.log("returned", aXML.response)
                 resolve(JSON.parse(aXML.response));
             } else {
                 reject(JSON.parse({
@@ -75,12 +76,14 @@ function callBackEnd(pOpts) {
         if (pOpts.contentType == 'JSON'){
             aXML.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
             aXML.send(JSON.stringify(pOpts.request));
+            console.log("sent json");
         } else if (pOpts.contentType == 'FormData'){
             aXML.send(pOpts.request);
+            console.log("sent formdata");
         } else {
             aXML.send();
+            console.log("sent get");
         }
-        
     })
 }
 /**
