@@ -4,28 +4,33 @@
     --tertiary: #8f9ba5;
     --scroll:0;
     --nav-height:'';
+    --text-color: black;
 }
 
 body.blue{
     --main: #1b41ed;
     --secondary: #0b099e;
     --tertiary: #918fa5;
+    --text-color: white;
 }
 
 body.green{
     --main: #22ed1b;
     --secondary: #279e09;
     --tertiary: #8fa590;
+    --text-color: black;
 }
 
 body.yellow{
     --main: #edcd1b;
     --secondary: #9e9c09;
     --tertiary: #a2a58f;
+    --text-color: black;
 }
 
 body.dark{
     --main: #000000;
     --secondary: #240c0c;
     --tertiary: #343738;
+    --text-color: white;
 }

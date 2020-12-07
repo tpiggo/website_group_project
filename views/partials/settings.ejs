@@ -25,12 +25,9 @@
         <div class='error'></div>
     </div>
     <div class="form-item" id="theme-box">
-        <select name="userTheme" id="user-theme">
-            <option value="default">Default</option>
-            <option value="dark">Dark</option>
-            <option value="blue">Blue</option>
-            <option value="green">Green</option>
-            <option value="yellow">Yellow</option>
+        <label for="userTheme">Theme: </label>
+        <select name="userTheme" id="user-theme" onchange="themeChange($(this)[0])">
+            <%- content.dropdown %>
         </select>
         
     </div>

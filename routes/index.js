@@ -42,14 +42,16 @@ router.get('/settings', middleware.isAuthenticated,  (req, res)=>{
         .then(user=>{
             if (user){
                 // Evidently if the user is logged in, this path should be the only one to be executed
-                const {username, email} = user;
+                const {username, email, userTheme} = user;
                 const title = "Settings";
-                let dropdown =  `<option value="default">Default</option>
-                <option value="dark">Dark</option>
-                <option value="blue">Blue</option>
-                <option value="green">Green</option>
-                <option value="yellow">Yellow</option>`;
-                content = {"html": "./partials/settings",  "script": "<script src='/js/settings.js'></script>"}
+                let dropDownTotal = "";
+                let selected = "selected"
+                dropDownTotal += userTheme!="default"?`<option value="default">Default</option>`:`<option value="default" selected=${selected}>Default</option>`;
+                dropDownTotal += userTheme!="dark"?`<option value="dark">Dark</option>`:`<option value="dark" selected=${selected}>Dark</option>`;
+                dropDownTotal += userTheme!="blue"?`<option value="blue">Blue</option>`:`<option value="blue" selected=${selected}>Blue</option>`;
+                dropDownTotal += userTheme!="green"?`<option value="green">Green</option>`:`<option value="green" selected=${selected}>Green</option>`;
+                dropDownTotal += userTheme!="yellow"?`<option value="yellow">Yellow</option>`:`<option value="yellow" selected=${selected}>Yellow</option>`;
+                content = {"html": "./partials/settings",  "script": "<script src='/js/settings.js'></script>", dropdown: dropDownTotal};
                 
                 res.render('user-layout', {
                     title,
@@ -58,7 +60,7 @@ router.get('/settings', middleware.isAuthenticated,  (req, res)=>{
                     logged: req.session.authenticated,
                     user: req.session.username,
                     email: email,
-                    theme: req.session.theme
+                    theme: req.session.theme,
                 })
             } else {
                 // This shouldn't occur if the user is logged in, but protecting against errors
@@ -98,7 +100,7 @@ router.post('/settings', middleware.isAuthenticated, (req, res)=>{
     // This shouldn't occur if the user is logged in, but protecting against errors
     console.log(req.body);
     const mUser = req.session.username;
-    const {username, password, confPassword, curPassword, email } = req.body;
+    const {username, password, confPassword, curPassword, email, userTheme} = req.body;
     /**
      * @description Finds a user within the database
      * @param {String} username
@@ -138,6 +140,10 @@ router.post('/settings', middleware.isAuthenticated, (req, res)=>{
                     const mPass = bcrypt.hashSync(req.body.password,10);
                     user.password = mPass;
                 }
+                if (user.userTheme != userTheme){
+                    user.userTheme = userTheme;
+                    req.session.theme = userTheme;
+                }
                 // Saving the username into the session, potentially not the greatest solution, but works for now
                 req.session.authenticated = true;
                 user.save((err) =>{
@@ -163,9 +169,16 @@ router.post('/settings', middleware.isAuthenticated, (req, res)=>{
         .then(result => {
             // Success messages in success.msg
             const title = "Settings";
-            content = {"html": "./partials/settings",  "script": "<script src='/js/settings.js'></script>"}
             // Render a settings page with the error
             const user = result.user;
+            let dropDownTotal = "";
+            let selected = "selected"
+            dropDownTotal += user.userTheme!="default"?`<option value="default">Default</option>`:`<option value="default" selected=${selected}>Default</option>`;
+            dropDownTotal += user.userTheme!="dark"?`<option value="dark">Dark</option>`:`<option value="dark" selected=${selected}>Dark</option>`;
+            dropDownTotal += user.userTheme!="blue"?`<option value="blue">Blue</option>`:`<option value="blue" selected=${selected}>Blue</option>`;
+            dropDownTotal += user.userTheme!="green"?`<option value="green">Green</option>`:`<option value="green" selected=${selected}>Green</option>`;
+            dropDownTotal += user.userTheme!="yellow"?`<option value="yellow">Yellow</option>`:`<option value="yellow" selected=${selected}>Yellow</option>`;
+            content = {"html": "./partials/settings",  "script": "<script src='/js/settings.js'></script>", dropdown: dropDownTotal}
             return res.render('user-layout', {
                 title, 
                 content, 
@@ -201,14 +214,23 @@ router.post('/settings', middleware.isAuthenticated, (req, res)=>{
  */
 router.get('/search', (req, res) => {
     // Building Generic search of the site
-    let searchQuery = {'$regex': req.query.searched, '$options': 'i'};
+    let searchQuery = {'$regex': req.query.q, '$options': 'i'};
     const logged = req.session.authenticated;
     const username = req.session.username;
     let theme = req.session.theme;
     // Need to create a regex in order to match a query with a modelname, using first 2 words
-    const query = req.query.searched;
-
-
+    const query = req.query.q;
+    console.log(searchQuery);
+    if (query.length < 1 || query == undefined ){
+        let result = [];
+        content = {
+            html: './list/search',
+            query: req.query.q,
+            data: result, script: "<script src='/js/search.js'></script>",
+            searchQuery: "https://www.google.com/search?q=mcgill+computer+science+"+req.query.q.replace(" ","+")
+        };
+        return res.render('subpage', { title: "Search", menu: result.menu, content, logged, username, theme});
+    }
     //functions which search each table within the database 
     const searchCourses = () =>common.getAllDataWithModel(Course, {$or: [
         {title: searchQuery},
@@ -313,21 +335,28 @@ router.get('/search', (req, res) => {
                             innerVal.description = parseMarkdown(innerVal.markdown);
                         innerVal.description.concat([innerVal.name]);
                     }
-                    innerVal.matchedString += getMatchedDesc(innerVal.description, req.query.searched);
+                    innerVal.matchedString += getMatchedDesc(innerVal.description, req.query.q);
                 });
             });
             // Providing all the necessary elements to render to searched page
             console.log(result);
             content = {
                 html: './list/search',
-                query: req.query.searched,
+                query: req.query.q,
                 data: result, script: "<script src='/js/search.js'></script>",
-                searchQuery: "https://www.google.com/search?q=mcgill+computer+science+"+req.query.searched.replace(" ","+")
+                searchQuery: "https://www.google.com/search?q=mcgill+computer+science+"+req.query.q.replace(" ","+")
             };
             res.render('subpage', { title: "Search", menu: result.menu, content, logged, username, theme});
         })
         .catch(err => {
             console.error(err);
+            content = {
+                html: './list/search',
+                query: req.query.q,
+                data: result, script: "<script src='/js/search.js'></script>",
+                searchQuery: "https://www.google.com/search?q=mcgill+computer+science+"+req.query.q.replace(" ","+")
+            };
+            res.render('subpage', { title: "Search", menu: result.menu, content, logged, username, theme});
         });
 
 

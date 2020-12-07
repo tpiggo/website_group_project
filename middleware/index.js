@@ -7,7 +7,7 @@ middleware.isAuthenticated = (req, res, next) => {
     const title = "Error!";
     var content = { "html": "<h1>You do not have access to this page! Please <a href='/users/login'>Login</a> to view this content</h1>" }
     // Render a subpage with the error
-    res.render('subpage', { title, rendered_html: content.html, menu: [], logged: req.session.authenticated, username: req.session.username });
+    res.render('subpage', { title, content, menu: [], logged: req.session.authenticated, username: req.session.username, theme: req.session.theme});
 }
 
 middleware.canUseRoute = (req, res, next) =>{

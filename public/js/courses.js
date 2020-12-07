@@ -2,6 +2,7 @@
 var aClass;
 const courseSelector = document.getElementById('course-select');
 const courseBox = document.getElementById('response-container');
+var heldCourses = [];
 
 window.onload = () => {
     aClass = courseSelector.value;
@@ -96,11 +97,18 @@ function createCourse(content, target){
         } else if (key == 'description'){
             contentDiv = createAnElement({type: 'p', content: content[key], class:'card-text', level: 1});
         }
-        let newDiv = document.createElement('div');
         
 
         if (contentDiv != undefined) buildCourseLayout(aCardDiv, contentDiv);
     }
+    // Builds close button
+    let closeBtn = document.createElement('button');
+    closeBtn.className = "close";
+    closeBtn.setAttribute('type', 'button');
+    closeBtn.setAttribute('aria-label', 'Close');
+    closeBtn.innerHTML = `<span aria-hidden="true">&times;</span>`
+    closeBtn.setAttribute('onclick', "clickClose($(this)[0])");
+    aCardDiv.appendChild(closeBtn);
     if (target.firstChild == null){
         target.appendChild(aCardDiv);
     } else {
@@ -117,9 +125,29 @@ function displayError(err, targetHeader){
 }
 
 /**
+ * @description Finds a course within the list of deleted courses.
+ * @param {String} course
+ * @returns {HTMLElement} or null 
+ */
+function findCourseInHeld(course){
+    heldCourses.forEach(value =>{
+        console.log(value);
+        if (value.firstChild.innerHTML == course){
+            return value;
+        }
+    }); 
+    return null;
+}
+
+/**
  * @description Function call to the API on the backend to get the course element. Adds the course to the page or displays error
  */
 function getClass() {
+    // check if the element exists within the list of elements
+    var course;
+    if (null != (course = findCourseInHeld(aClass))){
+        courseBox.insertBefore(course, courseBox.firstChild);
+    }
     const pOpts = {type: "GET", url: '/api/getCourse?class='+aClass, contentType: "None"}
     callBackEnd(pOpts)
         .then( response => {
@@ -135,4 +163,15 @@ function getClass() {
             console.error(err);
             displayError(response.response, 'coursesHeader');
         });
+}
+/**
+ * @description Removes an element from the page and places it into a list of deleted courses
+ * @param {HTMLElement} element 
+ */
+function clickClose(element){
+    // In order to reduce the amount of backend calls, when removing an element
+    let card = element.parentNode;
+    courseBox.removeChild(card);
+    // push the card to the held elements
+    console.log(heldCourses);
 }

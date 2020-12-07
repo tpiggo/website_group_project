@@ -1,4 +1,4 @@
-var errors = [false, false, false, false, true];
+var errors = [false, false, false, false, true, false];
 var errorBox = [];
 const isEmailRegex = /\S+@\S+\.\S+/;
 // User defined Error object
@@ -139,6 +139,14 @@ function checkEmail(pFormEntry){
     }
 }
 
+function themeChange(element){
+    let selected = element.value;
+    if (document.body.className != selected){
+        document.body.className = selected;
+    }
+}
+
+
 function currentPass(pFormEntry){
     if (pFormEntry.value == ''){
         errorBox[4].getElement().innerHTML = errorBox[4].getErrorMsg();
@@ -167,7 +175,7 @@ function checkErrors(){
 
 function onSubmit(event){
     if (currentPass(document.getElementById('current-password')) || checkErrors() ){
-        console.log("Error on the page", errors);
+        console.log("Error on the page");
         addErrors()
         event.preventDefault();
     } else {

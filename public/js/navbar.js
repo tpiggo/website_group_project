@@ -69,3 +69,9 @@ function dropDown(type, id) {
     dropDown.classList.toggle('collapsed');
 
 }
+
+//navbar controller
+$( "#searchbar-controller" ).on('click',(event)=>{
+    // toggle visibility of the navbar
+    $("#searchbar")[0].style.visibility = $("#searchbar")[0].style.visibility == "hidden"?"visible":"hidden";
+});

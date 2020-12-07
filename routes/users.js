@@ -49,6 +49,8 @@ router.post('/login', canUseRoute, (req, res)=> {
                 // Saving the username into the session, potentially not the greatest solution, but works for now
                 req.session.username = username;
                 req.session.authenticated = true;
+                req.session.theme = user.userTheme;
+                console.log(req.session.theme);
                 return res.redirect("/dashboard");
             } else {
                 console.log("User "+username + " failed to log in.");

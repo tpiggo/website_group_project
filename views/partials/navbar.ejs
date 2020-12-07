@@ -116,8 +116,12 @@
             </ul>
         </div>
         <div id="user-wrap" class="d-inline-flex">
-
-            <svg style='color:white;font-size: 1.9em; margin:auto 0;' width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-search"
+            <!-- Search bar column -->
+            <form id="searchbar" action="/search" method="GET" style="display:block; visibility: hidden;">
+                <input name="q" placeholder="Type here and press enter!">
+            </form>
+            <!-- search bar controller -->
+            <svg id="searchbar-controller" style='color:white;font-size: 1.9em; margin:auto 0;' width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-search"
                 fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                 <path fill-rule="evenodd"
                     d="M10.442 10.442a1 1 0 0 1 1.415 0l3.85 3.85a1 1 0 0 1-1.414 1.415l-3.85-3.85a1 1 0 0 1 0-1.415z" />
@@ -127,7 +131,7 @@
 
             <div id="user-bar" class="dropdown show">
                 <a class="dropdown-toggle" href="#" role="button" id="UserMenu" data-toggle="dropdown"
-                    <% if (logged) {%> style='color: var(--mcgill-burgundy);' <%}%>
+                    <% if (logged) {%> style='color: var(--secondary);' <%}%>
                     aria-haspopup="true" aria-expanded="false">
                     <% if (logged) {%> <img style="width:2em;" src="/images/icons/signed-in.png">
                     <% } else { %>
