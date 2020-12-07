@@ -1,7 +1,7 @@
 function loadPreview() {
     markdown = document.getElementById("markdown").value;
-    const method = "POST";
-    var opts = { type: method, url: '/api/render-markdown', contentType: "JSON", request: {"markdown": markdown}};
+    const method = "GET";
+    var opts = { type: method, url: '/api/render-markdown', request: {markdown}};
     const aPromise = callBackEnd(opts);
     aPromise
         .then((response) => {
