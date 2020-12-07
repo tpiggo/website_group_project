@@ -12,7 +12,7 @@
 }
 
 #content h2 {
-    color : var(--mcgill-burgundy);
+    color : var(--secondary);
 }
 #content h3{
     font-style:italic;
@@ -54,7 +54,7 @@
 
 .menu-item:hover {
     cursor: pointer;
-    background-color: var(--mcgill-burgundy);
+    background-color: var(--secondary);
 }
 .menu-item {
     padding:1.5rem 0;

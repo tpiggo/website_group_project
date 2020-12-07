@@ -12,7 +12,7 @@ router.get('/all', (req, res) => {
 
     common.getAllDataFrom(News).then(allNews => {
         var content = { html: './list/news', data: allNews };
-        res.render('subpage.ejs', { title, menu, content, logged, username });
+        res.render('subpage.ejs', { title, menu, content, logged, username, theme: req.session.theme});
     }).catch(err => {
         console.error(err);
         res.send(err);
@@ -28,7 +28,7 @@ router.get('/awards', (req, res) => {
 
     common.getAllDataFrom(Award).then(awards => {
         var content = { html: './list/awards', data: awards };
-        res.render('subpage.ejs', { title, menu, content, logged, username });
+        res.render('subpage.ejs', { title, menu, content, logged, username, theme: req.session.theme});
     }).catch(err => {
         console.error(err);
         res.send(err);
@@ -44,7 +44,7 @@ router.get('/announcements', (req, res) => {
 
     common.getAllDataWith(News, {type:'announcements'}).then(news => {
         var content = { html: './list/news', data: news };
-        res.render('subpage.ejs', { title, menu, content, logged, username });
+        res.render('subpage.ejs', { title, menu, content, logged, username, theme:req.session.theme });
     }).catch(err => {
         console.error(err);
         res.send(err);

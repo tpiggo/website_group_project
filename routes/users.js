@@ -12,14 +12,25 @@ router.get('/login', canUseRoute, (req, res)=>{
     const title = "Login";
     const content = {"html": 'partials/login.ejs', "script":""};
     const menu = [];
-    return res.render('user-layout', {title, menu, content, logged: req.session.authenticated, user: req.session.username});
-    
-    
+    return res.render('user-layout', {
+        title,
+        menu,
+        content,
+        logged: req.session.authenticated,
+        user: req.session.username,
+        theme: req.session.them
+    });
 });
 router.get('/register', canUseRoute, (req, res)=>{
     const title = "Register";
     const content = {"html": 'partials/register.ejs', "script": "<script src='/js/register.js'></script>"};
-    return res.render('user-layout', {title, content, logged: req.session.authenticated, user: req.session.username});
+    return res.render('user-layout', {
+        title,
+        content,
+        logged: req.session.authenticated,
+        user: req.session.username,
+        theme: req.session.theme
+    });
 });
 
 router.post('/login', canUseRoute, (req, res)=> {
@@ -53,6 +64,7 @@ router.post('/login', canUseRoute, (req, res)=> {
             content,
             logged: req.session.authenticated,
             user: req.session.username,
+            theme: req.session.theme,
             errors
         });
     }).catch(err=>console.log(err));
@@ -142,6 +154,7 @@ router.post('/register', canUseRoute, (req, res)=> {
                 content,
                 logged: req.session.authenticated,
                 user: req.session.user,
+                theme: req.session.theme,
                 errors
             });
         })

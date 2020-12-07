@@ -16,7 +16,7 @@ const bcrypt = require('bcrypt');
 const Page = require('../models/Page');
 
 router.get('/', (req, res) => {
-    res.render('homepage', { logged: req.session.authenticated, username: req.session.username });
+    res.render('homepage', { logged: req.session.authenticated, username: req.session.username, theme: req.session.theme});
 });
 
 router.get('/dashboard', middleware.isAuthenticated, (req, res) => {
@@ -27,7 +27,7 @@ router.get('/dashboard', middleware.isAuthenticated, (req, res) => {
             console.error(err);
             res.send("error when accessing the User Database");
         } else {
-            res.render('dashboard', { logged: req.session.authenticated, user: user })
+            res.render('dashboard', { logged: req.session.authenticated, user: user, theme: req.session.theme})
         }
     });
 
@@ -44,15 +44,35 @@ router.get('/settings', middleware.isAuthenticated,  (req, res)=>{
                 // Evidently if the user is logged in, this path should be the only one to be executed
                 const {username, email} = user;
                 const title = "Settings";
+                let dropdown =  `<option value="default">Default</option>
+                <option value="dark">Dark</option>
+                <option value="blue">Blue</option>
+                <option value="green">Green</option>
+                <option value="yellow">Yellow</option>`;
                 content = {"html": "./partials/settings",  "script": "<script src='/js/settings.js'></script>"}
-                // Render a subpage with the error
-                res.render('user-layout', {title, content, menu: [], logged: req.session.authenticated, user: req.session.username, email: email})
+                
+                res.render('user-layout', {
+                    title,
+                    content,
+                    menu: [],
+                    logged: req.session.authenticated,
+                    user: req.session.username,
+                    email: email,
+                    theme: req.session.theme
+                })
             } else {
                 // This shouldn't occur if the user is logged in, but protecting against errors
                 const title = "Error!";
                 content = {"html": "./partials/user-error"}
                 // Render a subpage with the error
-                res.render('user-layout', {title, content, menu: [], logged: req.session.authenticated, user: req.session.username})
+                res.render('user-layout', {
+                    title, 
+                    content, 
+                    menu: [],
+                    logged: req.session.authenticated,
+                    user: req.session.username,
+                    theme: req.session.theme
+                })
             }
         })
         .catch(err=>{
@@ -60,7 +80,14 @@ router.get('/settings', middleware.isAuthenticated,  (req, res)=>{
             const title = "Error!";
             content = {"html": "./partials/user-error"}
             // Render a subpage with the error
-            res.render('user-layout', {title, content, menu: [], logged: req.session.authenticated, user: req.session.username})
+            res.render('user-layout', {
+                title,
+                content,
+                menu: [],
+                logged: req.session.authenticated,
+                user: req.session.username,
+                theme: req.session.theme
+            });
         });
 });
 
@@ -139,7 +166,15 @@ router.post('/settings', middleware.isAuthenticated, (req, res)=>{
             content = {"html": "./partials/settings",  "script": "<script src='/js/settings.js'></script>"}
             // Render a settings page with the error
             const user = result.user;
-            return res.render('user-layout', {title, content, menu: [], logged: req.session.authenticated, user: req.session.username, email: user.email});
+            return res.render('user-layout', {
+                title, 
+                content, 
+                menu: [], 
+                logged: req.session.authenticated, 
+                theme: req.session.theme, 
+                user: req.session.username, 
+                email: user.email
+            });
         })
         .catch(result => {
             const title = "Settings";
@@ -148,7 +183,16 @@ router.post('/settings', middleware.isAuthenticated, (req, res)=>{
             const user = result.user;
             console.log(result);
             const errors = result.errors;
-            return res.render('user-layout', {title, content, menu: [], logged: req.session.authenticated, user: req.session.username, email: user.email, errors});
+            return res.render('user-layout', {
+                title,
+                content,
+                menu: [],
+                logged: req.session.authenticated, 
+                theme: req.session.theme, 
+                user: req.session.username, 
+                email: user.email, 
+                errors
+            });
         });
 });
 
@@ -160,52 +204,54 @@ router.get('/search', (req, res) => {
     let searchQuery = {'$regex': req.query.searched, '$options': 'i'};
     const logged = req.session.authenticated;
     const username = req.session.username;
+    let theme = req.session.theme;
     // Need to create a regex in order to match a query with a modelname, using first 2 words
     const query = req.query.searched;
 
 
     //functions which search each table within the database 
-    const searchCourses = () =>common.getAllDataWith(Course, {$or: [
+    const searchCourses = () =>common.getAllDataWithModel(Course, {$or: [
         {title: searchQuery},
         {description: searchQuery},
-        {termsOffered: searchQuery}
+        {termsOffered: searchQuery},
+        {instructor: searchQuery}
     ]});
-    const searchSubpages = () =>common.getAllDataWith(Subpage, {$or: [
+    const searchSubpages = () =>common.getAllDataWithModel(Subpage, {$or: [
         {name: searchQuery},
         {html: searchQuery},
         {markdown: searchQuery}
     ]});
-    const searchNews = () => common.getAllDataWith(News, {$or: [
+    const searchNews = () => common.getAllDataWithModel(News, {$or: [
         {type: searchQuery},
         {title: searchQuery},
         {contact: searchQuery},
         {description: searchQuery}
     ]});
-    const searchAwards = () => common.getAllDataWith(Award, {$or: [
+    const searchAwards = () => common.getAllDataWithModel(Award, {$or: [
         {title: searchQuery},
         {contact: searchQuery},
         {recipient: searchQuery},
         {description: searchQuery}
     ]});
-    const searchEvents = () => common.getAllDataWith(Event, {$or: [
+    const searchEvents = () => common.getAllDataWithModel(Event, {$or: [
         {title: searchQuery},
         {hostedBy: searchQuery},
         {eventType: searchQuery},
         {description: searchQuery}
     ]});
-    const searchTAPosting = () => common.getAllDataWith(TAPosting, {$or: [
+    const searchTAPosting = () => common.getAllDataWithModel(TAPosting, {$or: [
         {title: searchQuery},
         {contact: searchQuery},
         {semester: searchQuery},
         {description: searchQuery}
     ]});
-    const searchPosting = () => common.getAllDataWith(Posting, {$or: [
+    const searchPosting = () => common.getAllDataWithModel(Posting, {$or: [
         {title: searchQuery},
         {contact: searchQuery},
         {type: searchQuery},
         {description: searchQuery}
     ]});
-    const searchTechRep = () => common.getAllDataWith(TechnicalReport, {$or: [
+    const searchTechRep = () => common.getAllDataWithModel(TechnicalReport, {$or: [
         {title: searchQuery},
         {contact: searchQuery},
         {creator: searchQuery},
@@ -225,37 +271,60 @@ router.get('/search', (req, res) => {
     ])
         .then(result => {
             result.forEach((value) => {
-                value.forEach(innerVal => {
-                    if (innerVal.modelName == "courses"){
+                value.data.forEach(innerVal => {
+                    innerVal.matchedString = ""
+                    if (value.modelName == "courses"){
                         let strSplit = innerVal.title.split(' ');
                         innerVal.href = 'academic/courses?query=' + strSplit[0] + '+' + strSplit[1];
-                    } else if (innerVal.modelName == 'news'){
-                        // Sending to the news page, but we need to have a way to smooth scroll to the proper article.
+                        // Adding the necessary information to the description string
+                        let desc = innerVal.title.concat([innerVal.termsOffered.toString(), innerVal.description, innerVal.instructor.toString()])
+                        innerVal.description = desc;
+                    } else if (value.modelName == 'news'){
                         innerVal.href = '/news/all';
-                    } else if (innerVal.modelName == 'awards') {
-                        // Sending to the awards page, but we need to have a way to smooth scroll to the proper award.
+                        let desc = innerVal.title.concat([ innerVal.contact, innerVal.type, innerVal.description])
+                        innerVal.description = desc;
+                    } else if (value.modelName == 'awards') {
                         innerVal.href = '/news/awards';
-                    } else if (innerVal.modelName == 'events') {
-                        // Sending to the events page, but we need to have a way to smooth scroll to the proper event.
+                        let desc = innerVal.title.concat([innerVal.contact, innerVal.recipient, innerVal.description])
+                        innerVal.description = desc;
+                    } else if (value.modelName == 'events') {
                         innerVal.href = '/news/events';
-                    } else if (innerVal.modelName == 'taposting') {
-                        // Sending to the events page, but we need to have a way to smooth scroll to the proper event.
-                        innerVal.href = '/news/taposting';
-                    } else if (innerVal.modelName == 'taposting') {
-                        // Sending to the events page, but we need to have a way to smooth scroll to the proper event.
-                        innerVal.href = '/news/events';
-                    } else if (innerVal.modelName == 'subpages')
+                        let desc = innerVal.title.concat([innerVal.hostedBy, innerVal.eventType, innerVal.description])
+                        innerVal.description = desc;
+                    } else if (value.modelName == 'taposting') {
+                        innerVal.href = '/employment/student';
+                        let desc = innerVal.title.concat([innerVal.contact, innerVal.creator, innerVal.description])
+                        innerVal.description = desc;
+                    } else if (value.modelName == 'posting') {
+                        innerVal.href = '/employment/faculty';
+                        let desc = innerVal.title.concat([ innerVal.contact, innerVal.type, innerVal.description])
+                        innerVal.description = desc;
+                    } else if (value.modelName == 'technicalreports') {
+                        // Need t
+                        innerVal.href = '/research/technicalreports';
+                        let desc = innerVal.title.concat([ innerVal.contact, innerVal.creator, innerVal.description])
+                        innerVal.description = desc;
+                    } else if (value.modelName == 'subpages'){
                         innerVal.href = '/' + innerVal.path;
-                    console.log(JSON.stringify(innerVal));
+                        // Parse the HTML to create a description
+                        if (innerVal.markdown == "")
+                            innerVal.description = parseHTML(innerVal.html);
+                        else
+                            innerVal.description = parseMarkdown(innerVal.markdown);
+                        innerVal.description.concat([innerVal.name]);
+                    }
+                    innerVal.matchedString += getMatchedDesc(innerVal.description, req.query.searched);
                 });
             });
             // Providing all the necessary elements to render to searched page
+            console.log(result);
             content = {
                 html: './list/search',
+                query: req.query.searched,
                 data: result, script: "<script src='/js/search.js'></script>",
-                searchQuery: "https://www.google.com/search?q=mcgill+"+req.query.searched.replace(" ","+")
+                searchQuery: "https://www.google.com/search?q=mcgill+computer+science+"+req.query.searched.replace(" ","+")
             };
-            res.render('subpage', { title: "Search", menu: result.menu, content, logged, username});
+            res.render('subpage', { title: "Search", menu: result.menu, content, logged, username, theme});
         })
         .catch(err => {
             console.error(err);
@@ -264,19 +333,123 @@ router.get('/search', (req, res) => {
 
 });
 
-router.get('/searchingTest', (req, res) => {
-    // Need to create a regex in order to match a query with a modelname, using first 2 words
-    const query = req.query.searched.toLowerCase();
-    common.searchModelNames('events')
-        .then(results=>{
-            console.log(results);
-        })
-        .catch(err => {
-            console.error(err);
-        })
-    res.send("TESTING");
-});
+
+/**
+ * 
+ * @param {String} descString
+ * @param {String} expr
+ */
+function getMatchedDesc(descString, expr){
+    console.log(descString);
+    let indicies = [];
+    let regex = new RegExp(expr, 'gi');
+    var matched;
+    while (null !=(matched = regex.exec(descString))){
+        indicies.push(matched.index);
+    }
+    console.log(indicies);
+    // Create the string
+    let matchedString = '';
+    for (let i = 0; i < indicies.length; i++){
+        // Get 40 characters + length of expression
+        let start = indicies[i] - 50;
+        let end = indicies[i] + expr.length + 50;
+        let sDots = false;
+        let eDots =  false;
+        if (start < 0)
+            start = 0;
+        else
+            sDots = true;
+        if (end > descString.length)
+            end = descString.length;
+        else
+            eDots = true;
+        if (i > 0 && i+1 < indicies.length){
+            // fix overlapping indicies
+            let prev = indicies[i-1] + expr.length + 50;
+            let next = indicies[i+1] - 50;
+            if ( start < prev ){
+                sDots = false;
+                start = start<indicies[i-1] + expr.length?indicies[i-1]+expr.length:start;
+            }
+            if (end > next){
+                end -= (end - next);
+                end = end<indicies[i]+expr.length?indicies[i]+expr.length:end;
+                eDots = false;
+            }
+        } else if (i > 0){
+            let prev = indicies[i-1] + expr.length + 50;
+            if ( start < prev){
+                sDots = false;
+                start = start<indicies[i-1] + expr.length?indicies[i-1]+expr.length:start;
+            }
+        } else if (i+1 < indicies.length) {
+            let next = indicies[i+1] - 50;
+            if (end > next){
+                end -= (end - next);
+                end = end<indicies[i]+expr.length?indicies[i]+expr.length:end;
+                eDots = false;
+            }
+        }
+        // build strings
+        let startString = sDots?"..."+descString.slice(start, indicies[i]):descString.slice(start, indicies[i]);
+        let matched = descString.slice(indicies[i], indicies[i]+expr.length);
+        let endString = eDots?descString.slice(indicies[i] + expr.length, end)+"...":descString.slice(indicies[i] + expr.length, end);
+        matchedString += startString + "<b>" + matched + "</b>" + endString;
+        console.log(matchedString);
+    }
+    return matchedString;
+}   
 
 
+/**
+ * @description Parse a html string and return the string without the html tags 
+ * @param {String} string HTML code
+ * @returns {String}
+ */
+function parseHTML(string){
+    var inTag = false;
+    let parsedString = '';
+    for (let i  = 0; i < string.length; i++){
+        if (!inTag && string.charAt(i) == '<'){
+            inTag = true;
+        } else if (inTag && string.charAt(i) == '>') {
+            inTag = false;
+        } else if (!inTag){
+            if (string.charAt(i) != '\n' && string.charAt(i) != '\t')
+                parsedString += string.charAt(i);
+        }
+    }
+    // Remove all the extra spaces
+    let regex = new RegExp('\\s+',"gi");
+    parsedString = parsedString.replace(regex, ' ');
+    return parsedString;
+}
+
+function parseMarkdown(markdownText){
+    let parsedString = '';
+    for (let i  = 0; i < markdownText.length; i++){
+        if (!isMarkdownTag(markdownText.charAt(i))){
+            if (markdownText.charAt(i) != '\n' && markdownText.charAt(i) != '\r' && markdownText.charAt(i) != '\r')
+                parsedString += markdownText.charAt(i);
+        }
+    }
+    return parsedString;
+}
+/**
+ * @description Matches markdown tag with characters
+ * @param {String} char
+ * @returns {Boolean}
+ */
+function isMarkdownTag(char){
+    // Need to know markdown tags
+    let tags = ['#'];
+    for (let tag of tags){
+        if (char == tag){
+            return true;
+        }
+    }
+    return false;
+}
 
 module.exports = router;

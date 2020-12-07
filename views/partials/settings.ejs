@@ -24,7 +24,17 @@
         <input type="email" id="email" name="email" <% %> value=<%- email %> <% %> onblur="checkEmail($(this)[0])">
         <div class='error'></div>
     </div>
-    <div> Please enter my new current password! </div>
+    <div class="form-item" id="theme-box">
+        <select name="userTheme" id="user-theme">
+            <option value="default">Default</option>
+            <option value="dark">Dark</option>
+            <option value="blue">Blue</option>
+            <option value="green">Green</option>
+            <option value="yellow">Yellow</option>
+        </select>
+        
+    </div>
+    <div> Please enter my current password! </div>
     <div class="form-item" id="current-pass-box">
         <label for="password">Current Password:</label>
         <input type="password" id="current-password" name="curPassword" placeholder="Password" onblur="currentPass($(this)[0])">

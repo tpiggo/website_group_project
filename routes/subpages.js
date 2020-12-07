@@ -44,7 +44,7 @@ router.get('/:pagename', (req, res) => {
                     const username = req.session.username;
                     content.html = content.markdown ? markdown.render(content.markdown) : content.html;
 
-                    res.render('subpage.ejs', { title, menu, content, logged, username });
+                    res.render('subpage.ejs', { title, menu, content, logged, username, theme: req.session.theme});
 
                 }
 
@@ -70,7 +70,8 @@ router.get('/:pagename/edit', (req, res) => {
                     title,
                     content,
                     logged,
-                    username
+                    username,
+                    theme: req.session.theme
                 });
             }
         } else {
@@ -139,7 +140,8 @@ router.post('/:pagename/edit', (req, res) => {
                 title,
                 content,
                 logged,
-                username
+                username,
+                theme: req.session.theme
             });
         } else {
             console.log("User " + req.session.username + "tried to edit non-existent subpage " + pagename);

@@ -1,5 +1,4 @@
 const {connection} = require('mongoose');
-const { resolve } = require('path');
 var common = {};
 
 /**
@@ -33,14 +32,28 @@ common.getAllDataWith = (Model, attribute) => {
                 console.error(err);
                 reject(err);
             } else {
-                content.forEach(value=> {
-                    value.modelName = Model.collection.collectionName;
-                });
                 resolve(content);
             }
         });
     });
 }
+
+/**
+ * @description Gets all the data using getAllData, and returns teh data with the Collection name, otherwise error
+ * @param {Model} Model indicate the collection to get data from
+ * @param {JSON} attribute indicates the attribute the documents need to have
+ *  @returns {Promise}
+ */
+common.getAllDataWithModel = (Model, query)=>{
+    return new Promise((resolve, reject) => {
+        common.getAllDataWith(Model, query)
+            .then(result => {
+                resolve({modelName: Model.collection.collectionName, data: result})
+            })
+            .catch(err=>reject(err));
+    });
+}
+
 
 /** Get and populate all the subpages of a page and extract the content of a specified subpage
  * @param {String} page indicate the collection to get data from

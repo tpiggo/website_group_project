@@ -1,15 +1,5 @@
-/* Variables */
-
-:root {
-    --mcgill-red: #ed1b2f;
-    --mcgill-burgundy: #9E0918;
-    --mcgill-grey: #8f9ba5;
-    --scroll:0;
-    --nav-height:'';
-}
-
 body {
-    background-color: var(--mcgill-red);
+    background-color: var(--main);
 }
 
 /* Navbar */
@@ -260,14 +250,14 @@ nav ul {
     width:unset;
 }
 #username {
-    color: var(--mcgill-burgundy);
+    color: var(--secondary);
 }
 
 #login,
 #register,
 #logout,
  #settings{
-    color:grey;
+    color:tertiary;
 }
 
 #icon {
@@ -320,7 +310,7 @@ div.collapse {
 }
 
 .target {
-    background-color: var(--mcgill-burgundy);
+    background-color: var(--secondary);
     transform: translateX(-0.89em);
 }
 
@@ -344,7 +334,7 @@ div.collapse {
 /* Footer */
 
 footer {
-    background-color: var(--mcgill-red);
+    background-color: var(--main);
     position: relative;
     bottom: 0;
 }

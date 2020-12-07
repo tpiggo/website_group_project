@@ -24,16 +24,16 @@ router.get('/courses', (req, res) => {
                 if (query=='all'){
                     queryCourses = courses;
                 } else {
-                    queryCourses = findCourse(query, courses);
+                    queryCourses = findCourses(query, courses);
                 }
             }
             content = { html: './list/courses', data: courses, query: query, queryCourses: queryCourses};
-            res.render('subpage', { title, menu: result.menu, content, logged, username});
+            res.render('subpage', { title, menu: result.menu, content, logged, username, theme: req.session.theme});
         })
         .catch(err => {
             console.error(err);
             content = {html: 'user-error', data: 'error'};
-            res.render('subpage', { title, menu: result.menu, content, logged, username});
+            res.render('subpage', { title, menu: result.menu, content, logged, username, theme: req.session.theme});
         });
 });
 
@@ -100,7 +100,7 @@ function fixCourses(courses){
     return mArr;
 }
 
-function findCourse(courseTitle, courses){
+function findCourses(courseTitle, courses){
     const regex = new RegExp(courseTitle, "i");
     var found = [];
     courses.forEach((value) => {
