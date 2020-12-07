@@ -139,10 +139,10 @@
                     <% } %>
                 </a>
 
-                <div id="user-info" class="dropdown-menu" aria-labelledby="UserMenu">
+                <div id="user-info" class="dropdown-menu" aria-labelledby="UserMenu" role="menu">
                     <% if (logged) {%>
                     <a class="dropdown-item" id="username"
-                        href="/dashboard"><%- username.charAt(0).toUpperCase() + username.substr(1) %></a>
+                        href="/dashboard"><%- username %></a>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" id='settings' href="/settings">Settings</a>
                     <a class="dropdown-item" id="logout" href="/users/logout">Logout</a>
@@ -250,7 +250,7 @@
                 </div>
                </span> 
 
-                <a href="/academic/Courses" >Courses</a>
+                <a href="/academic/courses" >Courses</a>
                 <span>
                     <a onclick="dropDown('nav-2nd-submenu', 'sb3')">Teaching Assitant</a>
                     <div id="sb3" class="nav-2nd-submenu collapsed">

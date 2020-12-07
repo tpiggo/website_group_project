@@ -71,7 +71,7 @@ function dropDown(type, id) {
 }
 
 //navbar controller
-document.getElementById("searchbar-controller").addEventListener('click', (event)=>{
+document.getElementById("searchbar-controller").addEventListener('click', ()=>{
     // toggle visibility of the navbar
     let sb = document.getElementById("searchbar")
     sb.style.visibility = sb.style.visibility == "hidden"?"visible":"hidden";

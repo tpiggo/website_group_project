@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const middleware = require("../middleware");
+const markdown = require('markdown-it')('commonmark');
 const common = require("../common.js");
 const User = require('../models/User.js');
 const Course = require('../models/Courses');
@@ -17,6 +18,24 @@ const Page = require('../models/Page');
 
 router.get('/', (req, res) => {
     res.render('homepage', { logged: req.session.authenticated, username: req.session.username, theme: req.session.theme});
+});
+
+router.get('/denied', (req,res) => {
+    var error_code = 403;
+    var menu = [];
+    var logged = req.session.authenticated;
+    var username = req.session.username;
+    var error_message = "You do not have permission to do that. If you believe this message to be in error please contact the website administrator.";
+    res.render('user-error', {error_code, menu, error_message, logged, username});
+});
+
+router.get('/unknown', (req,res) => {
+    var error_code = 404;
+    var menu = [];
+    var logged = req.session.authenticated;
+    var username = req.session.username;
+    var error_message = "The page you are looking for was not found";
+    res.render('user-error', {error_code, menu, error_message, logged, username});
 });
 
 router.get('/dashboard', middleware.isAuthenticated, (req, res) => {
@@ -362,6 +381,17 @@ router.get('/search', (req, res) => {
 
 });
 
+router.get('/api/render-markdown', (req, res) => {
+    console.log(req.body);
+    Promise.resolve(markdown.render(req.body.markdown))
+    .then(data => {
+        console.log('sending rendered html to editor');
+        res.json({ status: 0, data });
+    }).catch(err => {
+        console.error(err);
+        res.json({ status: 2, response:"error while rendering markdown"});
+    });
+});
 
 /**
  * 

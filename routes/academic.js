@@ -11,7 +11,6 @@ router.get('/courses', (req, res) => {
     var courses;
     // Check if the query is empty! Only possible matches can be all or a course. 
     const {query} = req.query;
-    console.log(query);
     common.getAllDataFrom(Courses)
         .then(result => {
             courses = mergeSortCourses(result);
