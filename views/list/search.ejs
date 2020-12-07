@@ -1,0 +1,27 @@
+<link href="/css/search.css" rel="stylesheet">
+<h5>Search Results for <%=content.query%>: </h5>
+<ul class="custom-list">
+    <% for (let result of content.data) {%>
+        <% if (result.data.length > 0 ) {%>
+            <% for (let searched of result.data) {%>
+                <% if (searched.title != undefined ) {%>
+                    <li class="custom-list-group-item" href=<%=searched.href%> onclick="clickableBlock($(this)[0])">
+                        <h2><%=searched.title%></h2>
+                        <div class="matchedBox">
+                            <%-searched.matchedString%>
+                        </div>
+                    </li>
+                <% } else { %>
+                    <li class="custom-list-group-item" href=<%=searched.href%> onclick="clickableBlock($(this)[0])">
+                        <h2><%=searched.name%></h2>
+                        <div class="matchedBox">
+                            <%-searched.matchedString%>
+                        </div>
+                    </li>
+                <% } %>
+            <% } %>
+        <% } %>
+    <% } %>
+</ul>   
+
+<div>Didn't find what you're looking for?<a href=<%=content.searchQuery%>>Click here!</a></div>

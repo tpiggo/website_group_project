@@ -13,9 +13,40 @@
 
 #submit-btn{
     margin: 0.5em 1em;
+    border-radius: 0.5em;
+    background-color: var(--main);
+    color: var(--text-color);
 }
 
 .error{
     grid-column: span 2;
     background-color: lightcoral;
+}
+
+@media only screen and (max-width: 625px){
+    #content{
+        padding: 1em;
+    }
+    #lr-form{
+        margin: 1em 2em;
+    }
+}
+@media only screen and (max-width: 450px){
+    #content{
+        padding: 0.5em;
+    }
+    #lr-form{
+        margin: 0.5em 1em;
+    }
+}
+@media only screen and (max-width: 400px){
+    #content{
+        padding: 1em;
+    }
+    #lr-form{
+        margin: 1em 2em;
+    }
+    .form-item{
+        display: block;
+    }
 }

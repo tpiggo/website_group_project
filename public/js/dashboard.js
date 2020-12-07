@@ -32,36 +32,38 @@ function getPageSelected(mId) {
     }
 }
 
+//element declared multiple time
 function fillForm(fId, content) {
-
+    const hasFile = fId=='Course'?true:false;
     var form = document.getElementById(fId);
     for (var key in content) {
 
         if (key == "instructor") {
-            var element = form.querySelector("[name=instructor0]");
-            element.value = content.instructor[0];
+            var instElement = form.querySelector("[name=instructor0]");
+            instElement.value = content.instructor[0];
             for (var i = 1; i < content.instructor.length; i++) {
                 addField();
-                element = form.querySelector("[name=instructor" + i + "]");
-                element.value = content.instructor[i];
+                instElement = form.querySelector("[name=instructor" + i + "]");
+                instElement.value = content.instructor[i];
             }
             continue;
         }
-        if (key == "termsOffered") {
+        else if (key == "termsOffered") {
             if (content[key].includes("Winter 2021")) {
-                var element = form.querySelector("[name=w2021]");
-                element.checked = true;
+                var winter = form.querySelector("[name=w2021]");
+                winter.checked = true;
             }
-            if (content[key].includes("Summer 2021")) {
-                var element = form.querySelector("[name=s2021]");
-                element.checked = true;
+            else if (content[key].includes("Summer 2021")) {
+                var summer = form.querySelector("[name=s2021]");
+                summer.checked = true;
             }
-            if (content[key].includes("Fall 2021")) {
-                var element = form.querySelector("[name=f2021]");
-                element.checked = true;
+            else if (content[key].includes("Fall 2021")) {
+                var fall = form.querySelector("[name=f2021]");
+                fall.checked = true;
             }
             continue;
         }
+        if (key == 'syllabus') continue;
 
         var element = form.querySelector("[name=" + key + "]");
         if (!element) continue;
@@ -71,7 +73,7 @@ function fillForm(fId, content) {
         }
         else element.value = content[key];
     }
-    toggleForm(fId, 'PUT');
+    toggleForm(fId, 'PUT', hasFile);
 }
 
 
@@ -81,13 +83,14 @@ nav.classList.add("fixed-top");
 nav.setAttribute("style", "position:sticky !important");
 
 //Display forms
-function toggleForm(name, method) {
+function toggleForm(name, method, hasFile) {
     var form = document.getElementById(name);
     form.classList.toggle("hidden");
     if (name.includes("Course")) {
         while (total > 0) {
             removeField(pointer);
         }
+        console.log($( "#syllabus-choice" ).val());
     }
     var content = document.getElementById("center");
     content.classList.toggle("hidden");
@@ -97,11 +100,10 @@ function toggleForm(name, method) {
         buttons[i].disabled = !buttons[i].disabled;
     }
     var selects = content.getElementsByTagName("select");
-    for (var i = 0; i < selects.length; i++) {
-        selects[i].disabled = !selects[i].disabled;
+    for (var j = 0; j < selects.length; j++) {
+        selects[j].disabled = !selects[j].disabled;
     }
-
-    if (method) form.setAttribute('onsubmit', "handleRequest(event, $(this), '" + method + "')");
+    if (method) form.setAttribute('onsubmit', `handleRequest(event, $(this), '${method}', ${hasFile})`);
 
 }
 
@@ -118,13 +120,14 @@ function addField() {
     newField.getElementsByTagName('input')[0].id = 'instructor' + pointer;
     newField.getElementsByTagName('input')[0].name = 'instructor' + pointer;
     newField.getElementsByTagName('input')[0].value = '';
-
+    
+    var minus;
     if (pointer == 1) {
-        var minus = document.createElement('img');
-        minus.src = '../images/minus.png'
+        minus = document.createElement('img');
+        minus.src = '../images/icons/minus.png'
         newField.getElementsByTagName('br')[0].parentNode.insertBefore(minus, newField.getElementsByTagName('input')[0].nextSibling);
 
-    } else var minus = newField.getElementsByTagName('img')[0];
+    } else minus = newField.getElementsByTagName('img')[0];
 
     minus.id = 'minus' + pointer;
     minus.alt = 'minus' + pointer;
@@ -260,19 +263,6 @@ function refreshDropdownTech(techSupports) {
     });
 }
 
-
-/**
- * @description Takes a collection and returns an array of objects
- * @param {Collection} pCol
- */
-function collectionToArray(pCol) {
-    var aCol = [];
-    for (var i = 0; i < pCol.length; i++) {
-        aCol.push(pCol[i]);
-    }
-    return aCol;
-}
-
 /**
  * @description Takes an Array of objects and returns a JSON
  * @param {Array} pObject 
@@ -297,7 +287,35 @@ function makeJson(pObject) {
     }
     if (instructors.length > 0) aJson['instructor'] = instructors;
     if (terms.length > 0) aJson['termsOffered'] = terms;
+    console.log(aJson);
     return aJson;
+}
+
+/**
+ * @description Takes an Array of objects and returns FormData object
+ * @param {Array} pObject 
+ */
+function createForm(pObject){
+    var formData = new FormData
+    var terms = [];
+    var instructors = []
+    for (var i = 0; i < pObject.length; i++) {
+        if (pObject[i].id != '' && pObject[i].type != 'submit') {
+            var currId = pObject[i].id;
+
+            if (currId.includes('_id') && pObject[i].value == '') continue;
+            if (pObject[i].type == 'file') formData.append(pObject[i].name, pObject[i].files[0]);
+            else if (currId.includes('instruct')) {
+                instructors.push(pObject[i].value);
+            } else if (currId.includes("w2021c") || currId.includes("s2021c") || currId.includes("f2021c")) {
+                if (document.getElementById(currId).checked) terms.push(pObject[i].value);
+            }
+            else formData.append(pObject[i].name, pObject[i].value)
+        }
+    }
+    if (instructors.length > 0) formData.append('instructor', instructors);
+    if (terms.length > 0) formData.append('termsOffered', terms);
+    return formData;
 }
 
 /**
@@ -317,61 +335,28 @@ function errorCheck(pObject) {
 }
 
 /**
- * @description creates a dynamic collapsable element for the server response.
- * @param {*} type 
- * @param {*} msgText 
- * @todo:   Maybe this should check if a popup exists there already, if it does remove it.
- *          Or create popups which only live for 3 seconds?
- */
-function createPopupMsg(pType, pMsgText, pHeaderId) {
-    const aDiv = document.createElement('div');
-    const aButton = document.createElement('button');
-    if (pType == 'error') {
-        aDiv.className = "alert alert-warning alert-dismissible fade show";
-    } else {
-        aDiv.className = "alert alert-success alert-dismissible fade show";
-    }
-    aDiv.setAttribute('type', 'popup-msg')
-    aDiv.setAttribute('role', 'alert');
-    aButton.className = "close";
-    aButton.style.margin = 0;
-    aButton.setAttribute('data-dismiss', 'alert');
-    aButton.setAttribute('aria-label', 'Close');
-    aButton.setAttribute('type', 'button');
-    aButton.innerHTML = "<span aria-hidden='true'>&times;</span>";
-    const aTextNode = document.createTextNode(pMsgText);
-    aDiv.appendChild(aTextNode);
-    aDiv.appendChild(aButton);
-    const aHeader = document.getElementById(pHeaderId);
-    // Remove an old popup
-    if (aHeader.nextElementSibling.getAttribute('type') == 'popup-msg') {
-        aHeader.parentNode.removeChild(aHeader.nextSibling);
-    }
-    aHeader.parentNode.insertBefore(aDiv, aHeader.nextSibling);
-    fade(aDiv);
-}
-
-function fade(div) {
-    setTimeout(function () {
-        div.remove();
-    }, 4000);
-}
-
-/**
  * 
  * @param {Event} event 
  * @param {HTMLElement} element 
  * @param {String} method 
  */
-function handleRequest(event, element, method) {
+function handleRequest(event, element, method, hasFile) {
     // Do not allow default.
     event.preventDefault();
     // Building the request JSON
-    var mForm = makeJson(element[0]);
+    var mForm, type;
+    if (hasFile){
+        mForm = createForm(element[0]);
+        type = 'FormData';
+    } else {
+        mForm = makeJson(element[0]);
+        type = 'JSON';
+    }
+    
     if (!errorCheck(mForm)) {
         // clear each one!
         // Create the async promise
-        var opts = { type: method, url: '/parse/' + element[0].id, request: mForm };
+        var opts = { type: method, url: '/parse/' + element[0].id, request: mForm , contentType: type};
         var aPromise = callBackEnd(opts);
         // Handle
         aPromise
@@ -388,6 +373,8 @@ function handleRequest(event, element, method) {
                     console.log("Error on submission");
                     // Creating Element to display in the form!
                     createPopupMsg('error', response.response, aId + "Header");
+                } else {
+                    console.log(response)
                 }
             })
             .catch(function (err) { console.log("error", err) });
@@ -401,4 +388,4 @@ collectionToArray(document.getElementsByTagName('input')).forEach(element => {
     element.addEventListener('change', () => {
         if (element.style.border == "1px solid red") element.style.border = "";
     });
-})
+});

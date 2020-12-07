@@ -43,17 +43,23 @@ app.use(express.static('public'));
 app.use(expressLayouts);
 app.set('view engine', 'ejs');
 
-// Global variables 
-app.use((req, res, next)=>{
-    res.locals.success_msg;
-    res.locals.error_msg;
-    next();
-});
+//This code doesn't do anything
+// // Global variables 
+// app.use((req, res, next)=>{
+//     res.locals.success_msg;
+//     res.locals.error_msg;
+//     next();
+// });
 
 
 app.use('/', require("./routes/index"));
+app.use('/api', require('./routes/api'));
+app.use('/academic', require('./routes/academic'));
 app.use('/parse', require("./routes/form-validator")); // Routing the requests for form parsing
 app.use('/users', require("./routes/users"));
+app.use('/employment', require('./routes/employment'));
+app.use('/news', require('./routes/news'));
+app.use('/events', require('./routes/events'));
 app.use('/:page', require('./routes/subpages'));
 
 

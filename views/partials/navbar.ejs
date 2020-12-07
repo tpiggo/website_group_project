@@ -1,59 +1,303 @@
 <nav>
-    <div id="user-bar">
-        <% if (logged) {%>
-            <div id='user-info'><a href="/dashboard">Welcome, <%- username %></a></div>
-            <a id="logout" href="/users/logout">Logout</a>
-        <% } else { %>
-            <div id="user-info">You are not signed in!</div>
-            <a id="login" href="/users/login">Login</a></li>
-            <a id="register" href="/users/register">Register</a></li>
-        <% } %>
+    <div style="background-color: black" class="d-flex justify-content-between">
+        <!-- <div class="d-flex justify-content-around"> -->
+        <div class="d-inline-flex">
+            <!-- <img id="icon" src="/images/icons/hamburger.png" alt="icon" onclick="toggleMenu()"> -->
+            <svg id="icon" onclick="toggleMenu()" width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-list"
+                fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd"
+                    d="M2.5 11.5A.5.5 0 0 1 3 11h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4A.5.5 0 0 1 3 7h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4A.5.5 0 0 1 3 3h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z" />
+            </svg>
+        </div>
+        <div>
+            <span id="logo">
+                <img style="width: 5.5em" src="/images/socs-bird.png" alt="SOCS bird" onclick="window.location='/'">
+            </span>
+        </div>
+        <div id="large-navbar">
+            <ul class="nav">
+                <li class="nav-item">
+                    <a class="nav-link" onclick='dropDown("target", "prospective")'>
+                        Prospective
+                    </a>
+                    <div id="prospective" class="target collapsed">
+                        <a href="/prospective/general-info" >General Info</a>
+                        <a href="/prospective/why-cs" >Why CS?</a>
+                        <a href="/prospective/cegep" >CEGEP</a>
+                        <a href="/prospective/freshman" >Freshman</a>
+                        <a href="/prospective/choosing-major" >Choosing a Major</a>
+                        <a href="/prospective/transfer" >Transfer</a>
+                        <a href="/prospective/internship" >Internship</a>
+                        <a href="/academic/undergraduate" >Undergraduate</a>
+                        <a href="/academic/graduate" >Graduate</a>
+                
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" onclick='dropDown("target", "academic")'>
+                        Academic</a>
+
+                        <div id="academic" class="target collapsed">
+                            <a onclick='dropDown("sub-target", "undergraduate")' >Undergraduate</a>
+                            <a  onclick='dropDown("sub-target", "graduate")'>Graduate</a>
+                            <a href="/academic/courses" >Courses</a>
+                            <a onclick='dropDown("sub-target", "ta")' >Teaching Assitant</a>
+                            <a href="/academic/funding" >Funding</a>
+                        </div>
+
+                        <div id="undergraduate" class="sub-target collapsed">
+                            <a href="/academic/undergraduate/" >Overview</a>
+                            <a href="/academic/undergraduate/incoming-student" >Incoming Student</a>
+                            <a href="/academic/undergraduate/remote-learning" >Remote Learning</a>
+                            <a href="/academic/undergraduate/faq" >FAQ</a>
+                            <a href="/academic/undergraduate/advising" >Advising</a>
+                        </div>
+
+                        <div id="graduate" class="sub-target collapsed">
+                            <a href="/academic/graduate/" >Overview</a>
+                            <a href="/academic/graduate/masters" >Masters</a>
+                            <a href="/academic/graduate/phd" >Ph. D.</a>
+                            <a href="/academic/graduate/admission" >Admission</a>
+                            <a href="/academic/graduate/applying" >Applying</a>
+                            <a href="/academic/graduate/faq" >FAQ</a>
+
+                        </div>
+
+                        <div id="ta" class="sub-target collapsed">
+                            <a href="/academic/ta/" >Overview</a>
+                            <a href="/academic/ta/taAwards" >TA Awards</a>
+                        </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link">Research</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link">People</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" onclick='dropDown("target", "news")'>
+                        News</a>
+
+                        <div id="news" class="target collapsed">
+                            <a href="/news/all" >All</a>
+                            <a href="/news/announcements" >Announcements</a>
+                            <a href="/news/awards" >Awards</a>
+                        </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" onclick='dropDown("target", "events")'>
+                        Events</a>
+
+                        <div id="events" class="target collapsed">
+                            <a href="/events/all" >All</a>
+                            <a href="/events/colloquium" >Colloquia</a>
+                            <a href="/events/seminar" >Seminars</a>
+                    
+                        </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" onclick='dropDown("target", "employement")'>
+                        Employement</a>
+
+                        <div id="employement" class="target collapsed">
+                            <a href="/employement/faculty" >Faculty</a>
+                            <a href="/employement/lecturer" >Announcement</a>
+                            <a href="/employement/student" >Student</a>
+                            <a href="/employement/research" >Research</a>
+                    
+                        </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link">Donate</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="collapse" href="#about">About</a>
+                </li>
+            </ul>
+        </div>
+        <div id="user-wrap" class="d-inline-flex">
+            <!-- Search bar column -->
+            <form id="searchbar" action="/search" method="GET" style="visibility: hidden;">
+                <input name="q" placeholder="Type here and press enter!">
+            </form>
+            <!-- search bar controller -->
+            <svg id="searchbar-controller" style='color:white;font-size: 1.9em; margin:auto 0;' width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-search"
+                fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd"
+                    d="M10.442 10.442a1 1 0 0 1 1.415 0l3.85 3.85a1 1 0 0 1-1.414 1.415l-3.85-3.85a1 1 0 0 1 0-1.415z" />
+                <path fill-rule="evenodd"
+                    d="M6.5 12a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11zM13 6.5a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0z" />
+            </svg>
+
+            <div id="user-bar" class="dropdown show">
+                <a class="dropdown-toggle" href="#" role="button" id="UserMenu" data-toggle="dropdown"
+                    <% if (logged) {%> style='color: var(--secondary);' <%}%>
+                    aria-haspopup="true" aria-expanded="false">
+                    <% if (logged) {%> <img style="width:2em;" src="/images/icons/signed-in.png">
+                    <% } else { %>
+                    <img style="width:2em;" src="/images/icons/not-logged.png">
+                    <% } %>
+                </a>
+
+                <div id="user-info" class="dropdown-menu" aria-labelledby="UserMenu" role="menu">
+                    <% if (logged) {%>
+                    <a class="dropdown-item" id="username"
+                        href="/dashboard"><%- username %></a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" id='settings' href="/settings">Settings</a>
+                    <a class="dropdown-item" id="logout" href="/users/logout">Logout</a>
+                    <% } else { %>
+
+                    <a class="dropdown-item" id="login" href="/users/login">Login</a>
+                    <a class="dropdown-item" id="register" href="/users/register">Register</a>
+                    <% } %>
+                </div>
+            </div>
+        </div>
     </div>
-    <ul class="nav">
-        <li class="nav-item">
-            <img src="../images/coat-of-arms.png" alt="Coat of arms" onclick="window.location='/'">
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" data-toggle="collapse" href="#prospective">
-                Prospective
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link">Academic</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link">Research</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link">People</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link">News</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link">Employement</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link">Donate</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" data-toggle="collapse" href="#about">About</a>
-        </li>
-    </ul>
-    <!-- We have all this information stored in the database, why not redner it from there?-->
-    <div id="prospective" class="collapse container-fluid">
-        <a href="/prospective/general-info" class="unit">General Info</a>
-        <a href="/prospective/why-cs" class="unit">Why CS?</a>
-        <a href="/prospective/cegep" class="unit">CEGEP</a>
-        <a href="/prospective/freshman" class="unit">Freshman</a>
-        <a href="/prospective/choosing-major" class="unit">Choosing a Major</a>
-        <a href="/prospective/transfer" class="unit">Transfer</a>
-        <a href="/prospective/internship" class="unit">Internship</a>
-        <hr>
-        <a href="prospective/undergraduate" class="unit">Undergraduate</a>
-        <a href="prospective/graduate" class="unit">Graduate</a>
-    </div>
-    <div id="about" class="collapse container-fluid">
-        <a href="/about/general" class="unit">General</a>
+
+    <!-- We have all this information stored in the database, why not redner it from there?
+     collapse container-fluid-->
+
+    
+<!-- responsive Nav-Bar -->
+    
+    <div id="about" class="target collapse container-fluid">
+        <a href="/about/general" >General</a>
     </div>
 </nav>
+
+<div id="navbar" class="">
+    <div class="row">
+        <div style='display:grid; text-align:left;'>
+            <li class="nav-item">
+                <!-- data-toggle="collapse" href="#prospective" -->
+                <a class="nav-link" onclick="dropDown('nav-submenu', 's0')">
+                    Prospective
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" onclick="dropDown('nav-submenu', 's1')">
+                    Academic</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link">Research</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link">People</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" onclick="dropDown('nav-submenu', 's3')">
+                    News</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" onclick="dropDown('nav-submenu', 's4')">
+                    Events</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" onclick="dropDown('nav-submenu', 's5')">
+                    Employement</a>
+
+            
+            </li>
+            <li class="nav-item">
+                <a class="nav-link">Donate</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="collapse" href="#about">About</a>
+            </li>
+            
+        </div>
+
+        <div id="submenu-wrapper" class="collapsed">
+            <div id='s0' class='nav-submenu collapsed'>
+                <a href="/prospective/general-info" >General Info</a>
+                <a href="/prospective/why-cs" >Why CS?</a>
+                <a href="/prospective/cegep" >CEGEP</a>
+                <a href="/prospective/freshman" >Freshman</a>
+                <a href="/prospective/choosing-major" >Choosing a Major</a>
+                <a href="/prospective/transfer" >Transfer</a>
+                <a href="/prospective/internship" >Internship</a>
+                <a href="/academic/undergraduate" >Undergraduate</a>
+                <a href="/academic/graduate" >Graduate</a>
+    
+            </div>
+
+
+            <div id='s1' class='nav-submenu collapsed'>
+                <span>
+                    <a onclick="dropDown('nav-2nd-submenu','sb1')"> Undergraduate</a>
+
+                    <div id="sb1" class="nav-2nd-submenu collapsed">
+                        <a href="/academic/undergraduate/" >Overview</a>
+                        <a href="/academic/undergraduate/incoming-student" >Incoming Student</a>
+                        <a href="/academic/undergraduate/remote-learning" >Remote Learning</a>
+                        <a href="/academic/undergraduate/faq" >FAQ</a>
+                        <a href="/academic/undergraduate/advising" >Advising</a>
+                    </div>
+                </span>
+
+               <span>
+                <a onclick="dropDown('nav-2nd-submenu','sb2')"> Graduate</a>
+                <div id="sb2" class="nav-2nd-submenu collapsed">
+                    <a href="/academic/graduate/" >Overview</a>
+                    <a href="/academic/graduate/masters" >Masters</a>
+                    <a href="/academic/graduate/phd" >Ph. D.</a>
+                    <a href="/academic/graduate/admission" >Admission</a>
+                    <a href="/academic/graduate/applying" >Applying</a>
+                    <a href="/academic/graduate/faq" >FAQ</a>
+
+                </div>
+               </span> 
+
+                <a href="/academic/courses" >Courses</a>
+                <span>
+                    <a onclick="dropDown('nav-2nd-submenu', 'sb3')">Teaching Assitant</a>
+                    <div id="sb3" class="nav-2nd-submenu collapsed">
+                        <a href="/academic/ta/" >Overview</a>
+                        <a href="/academic/ta/taAwards" >TA Awards</a>
+                    </div>
+                </span>
+                
+                <a href="/academic/funding">Funding</a>
+            </div>
+
+            <div id="s3" class='nav-submenu collapsed'>
+                <a href="/news/all" >All</a>
+                <a href="/news/announcements" >Announcements</a>
+                <a href="/news/awards" >Awards</a>
+            </div>
+
+
+            <div id="s4" class='nav-submenu collapsed'>
+                <a href="/events/all" >All</a>
+                <a href="/events/colloquium" >Colloquia</a>
+                <a href="/events/seminar" >Seminars</a>
+
+            </div>
+
+            <div id="s5" class='nav-submenu collapsed'>
+                <a href="/employement/faculty" >Faculty</a>
+                <a href="/employement/lecturer" >Announcement</a>
+                <a href="/employement/student" >Student</a>
+                <a href="/employement/research" >Research</a>
+
+            </div>
+        </div>
+       
+
+    </div>
+    <img src="/images/socs-bird.png" alt="SOCS bird" onclick="window.location='/'">
+    <svg onclick='toggleMenu()' id='close' width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-x"
+        fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+        <path fill-rule="evenodd"
+            d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+    </svg>
+    <svg id="search" width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-search" fill="currentColor"
+    xmlns="http://www.w3.org/2000/svg">
+    <path fill-rule="evenodd"
+        d="M10.442 10.442a1 1 0 0 1 1.415 0l3.85 3.85a1 1 0 0 1-1.414 1.415l-3.85-3.85a1 1 0 0 1 0-1.415z" />
+    <path fill-rule="evenodd"
+        d="M6.5 12a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11zM13 6.5a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0z" />
+</svg>
+</div>

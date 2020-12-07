@@ -12,47 +12,59 @@
 }
 
 #content h2 {
-    color : var(--mcgill-burgundy);
+    color : var(--secondary);
 }
 #content h3{
     font-style:italic;
 }
 
-#icon {
-    position: fixed;
-    width:1.4em;
-    top: 2.3em;
-    left: 1em;
-    z-index: 1030;
-}
-
-#icon:hover {
-    cursor: pointer;
-}
-
 /* Side nav */
 #menu {
-    color: white;
-    transition: all 1s;
+    transition: all 0.5s;
     width: 15rem;
-    max-height: 90vh;
+    height: calc(100vh - var(--nav-height));
     overflow: scroll;
     position: fixed;
     z-index: 1000;
     background-color: black;
 }
-
-#menu ul:hover {
-    cursor: pointer;
-    background-color: var(--mcgill-burgundy);
+#menu a,
+#menu a:hover {
+    text-decoration: none;
+    color: white;
+}
+#menu li {
+    display:block;
+    padding: 0.5em 0;
 }
 
-#menu ul {
-    padding: 2rem 1rem;
+#menu li:hover{
+    font-style:italic;
+}
+.submenu {
+    transition: all 1s ease;
+    overflow: scroll;
+    max-height:15rem;
+    background-color: #6B0610;
+}
+.submenu.hidden {
+   max-height: 0;
+   overflow: hidden;
+}
+
+.menu-item:hover {
+    cursor: pointer;
+    background-color: var(--secondary);
+}
+.menu-item {
+    padding:1.5rem 0;
     text-align: center;
     margin: 0;
 }
 
 #menu.hidden {
     transform: translateX(-100%);
+}
+.card-body {
+    text-align: left;
 }
