@@ -15,15 +15,77 @@
     <%- include('partials/navbar', {logged, username}); %>
 
     <div id="content">
-    <form id="subpage-editor" method="POST">
-        <label for="markdown">Edit Page Contents:</label> <br>
-        <textarea id="markdown" name="markdown" rows="30" cols="100"><%=content%></textarea>
-        <input type="submit" id="save" name="save" value="Save Changes">
-    </form>
+        <div class="card-deck">
+            <div class="card" id="preview_card" style="max-height: 45em;">
+                <h2>Preview</h2>
+                <hr>
+                <div id="preview" class="overflow-auto"><%-preview%></div>
+            </div>
+            <div class="card" id="editor_card">
+                <form id="subpage-editor" method="POST">
+                    <div class="form-group">
+                        <label for="markdown"><h2>Edit Page Contents:</h2></label>
+                        <textarea class="form-control" id="markdown" name="markdown" rows="25" onchange="loadPreview()"><%=content%></textarea>
+                        <input type="submit" id="save" name="save" value="Save Changes">
+                    </div>
+                 </form>
+            </div>
+            <div class="card" id="help_Card">
+                <h2>Help</h2>
+                <hr>
+                <p>
+                Pages are formatted using Markdown, which allows for simple and easy to learn text formatting.
+                A quick reference is given below:
+                </p>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Formatting</th>
+                            <th>Syntax</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><b>Bold</b></td>
+                            <td>**Bold**</td>
+                        </tr>
+                        <tr>
+                            <td><em>Italics</em></td>
+                            <td>*Italics*</td>
+                        </tr>
+                        <tr>
+                            <td><h1>Heading 1</h1></td>
+                            <td># Heading 1</td>
+                        </tr>
+                        <tr>
+                            <td><h2>Heading 2</h2></td>
+                            <td>## Heading 2</td>
+                        </tr>
+                        <tr>
+                            <td><a href="http://cs.mcgill.ca">Link</a></td>
+                            <td>[Link](http://cs.mcgill.ca)</td>
+                        </tr>
+                        <tr>
+                            <td><ul><li>Unordered List</li></ul></td>
+                            <td>* Unordered List</td>
+                        </tr>
+                        <tr>
+                            <td><ol><li>Ordered List</li></ol></td>
+                            <td>1. Ordered List</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <br>
+                <p>For more information, check the <a href="https://commonmark.org/help/">CommonMark tutorial</a> or the <a href="https://spec.commonmark.org/current/full">specification.</a></p>
+                
+            </div>
+        </div>
     </div>
     <%- include('partials/footer'); %>
 
     <script src="/js/subpage.js"></script>
+    <script src="/js/editor.js"></script>
+    <script src="/js/frontendAPI.js"></script>
 </body>
 
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"

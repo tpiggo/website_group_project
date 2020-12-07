@@ -60,11 +60,13 @@ router.get('/:pagename/edit', canEdit, (req, res) => {
             var logged=req.session.authenticated;
             var username=req.session.username;
             var content=pagedata.markdown;
+            var preview=markdown.render(content);
             res.render('editor.ejs',{
                     title,
                     content,
                     logged,
-                    username
+                    username,
+                    preview
             });
         }else {
             console.log("User " + req.session.username + "tried to edit non-existent subpage "+ pagename);
@@ -85,17 +87,21 @@ router.post('/:pagename/edit', canEdit, (req, res) => {
         }else if(pagedata){
             pagedata.markdown = req.body.markdown;   
             pagedata.save((err) => {
-                console.log(err);
+                if(err){
+                    console.log(err);
+                }
             });
             var title=pagedata.name;
             var logged=req.session.authenticated;
             var username=req.session.username;
             var content=pagedata.markdown;
+            var preview=markdown.render(content);
             res.render('editor.ejs',{
                 title,
                 content,
                 logged,
-                username
+                username,
+                preview
             });
         }else {
             console.log("User " + req.session.username + "tried to edit non-existent subpage "+ pagename);

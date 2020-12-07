@@ -36,6 +36,7 @@ function callBackEnd(pOpts) {
             }))
         }
         aXML.setRequestHeader("Content-Type", "application/json;charset=UTF-8")
+        console.log(JSON.stringify(pOpts.request));
         aXML.send(JSON.stringify(pOpts.request));
     })
 }

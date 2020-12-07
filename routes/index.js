@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const middleware = require("../middleware");
+const markdown = require('markdown-it')('commonmark');
 const User = require('../models/User.js');
 const Course = require('../models/Courses');
 const Event = require('../models/Events');
@@ -100,6 +101,18 @@ router.get('/api/dashboard-info', middleware.isAuthenticated, (req, res) => {
             res.json({ status: 2, response:"error while fecthing data from db"});
         });
 
+});
+
+router.get('/api/render-markdown', (req, res) => {
+    console.log(req.body);
+    Promise.resolve(markdown.render(req.body.markdown))
+    .then(data => {
+        console.log('sending rendered html to editor');
+        res.json({ status: 0, data });
+    }).catch(err => {
+        console.error(err);
+        res.json({ status: 2, response:"error while rendering markdown"});
+    });
 });
 
 /**
