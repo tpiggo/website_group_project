@@ -55,6 +55,24 @@ router.get('/register', canUseRoute, (req, res)=>{
     });
 });
 
+/**
+ * 
+ * @param {String} username 
+ */
+function getUser(username){
+    return new Promise((resolve, reject) => {
+        User.findOne({username: username}, (err, result) => {
+            if (err) reject(err)
+            else if ( result ) {
+                resolve(result);
+            } else {
+                reject(result);
+            }
+        })
+    });
+}
+
+
 router.post('/login', canUseRoute, (req, res)=> {
 
     var username = req.body.username;
@@ -62,10 +80,9 @@ router.post('/login', canUseRoute, (req, res)=> {
     var errors = [];
     const title = "Login";
     const content = {"html": 'partials/login.ejs', "script":""};
-    User.findOne({username: username}, (err,user) => {
-        if(err){ 
-            console.log(err);
-        }else if(user){
+
+    getUser(username)
+        .then(user => {
             var authenticated = bcrypt.compareSync(password,user.password);
             if(authenticated){
                 console.log("User "+ username + " succesfully logged in.");
@@ -76,31 +93,39 @@ router.post('/login', canUseRoute, (req, res)=> {
                 console.log(req.session.theme);
                 return res.redirect("/dashboard");
             } else {
-                console.log("User "+username + " failed to log in.");
-                errors.push({msg: "Wrong username or password!"});
+                throw Error(`userNameError ${username}`);
             }
-        } else {
-            console.log("No user with Username: " + username + " found.");
-            errors.push({msg: "Wrong username or password!"});
-        }
-        common.getNavBar().then(pages => {
-            navbar = pages.navbar;
-            res.render('user-layout', {
-                title, 
-                menu: [],
-                content,
-                logged: req.session.authenticated,
-                user: req.session.username,
-                theme: req.session.theme,
-                errors,
-                navbar
+        })
+        .catch(err => {
+            if (err == null){
+                console.log("No user with Username: " + username + " found.");
+                errors.push({msg: "Wrong username or password!"});
+            } else if (err.message.includes('userNameError')){
+                let user = err.message.replace("userNameError ", "");
+                console.log(`Username ${user} does not exist`);
+                errors.push({msg: "Wrong username or password!"});
+            } else {
+                console.log("Catastrophic error!");
+                console.error(err);
+                errors.push({msg: "Error accessing database!"});
+            }
+            common.getNavBar().then(pages => {
+                navbar = pages.navbar;
+                res.render('user-layout', {
+                    title, 
+                    menu: [],
+                    content,
+                    logged: req.session.authenticated,
+                    user: req.session.username,
+                    theme: req.session.theme,
+                    errors,
+                    navbar
+                });
+            }).catch(err => {
+                console.log(err);
+                res.send("Error getting navbar from DB");
             });
-        }).catch(err => {
-            console.log(err);
-            res.send("Error getting navbar from DB");
         });
-        
-    }).catch(err=>console.log(err));
 });
 
 /**
@@ -218,6 +243,8 @@ router.get("/logout", (req, res)=>{
     res.redirect("/");
 });
 
+
+//Give access to the body parser for this route
 router.use(bodyParser.json())
 
 /** USER LEVEL REQUEST */
@@ -238,22 +265,6 @@ router.post('/requestLevel', isAuthenticated, (req, res) => {
                     reject({canMake: false});
                 }
             });
-        });
-    }
-    /**
-     * 
-     * @param {String} username 
-     */
-    function getUser(username){
-        return new Promise((resolve, reject) => {
-            User.findOne({username: username}, (err, result) => {
-                if (err) reject(err)
-                else if ( result ) {
-                    resolve(result);
-                } else {
-                    reject(result);
-                }
-            })
         });
     }
     /**
