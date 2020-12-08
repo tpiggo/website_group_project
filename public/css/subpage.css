@@ -12,6 +12,14 @@
 #content h3{
     font-style:italic;
 }
+ul, ol, dl{
+   list-style-position: inside;
+   text-align:center; 
+   padding-inline-start: 0px;
+}
+li p{
+    display:inline;
+}
 
 /* Side nav
 #menu {
