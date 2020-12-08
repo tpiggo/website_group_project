@@ -16,6 +16,7 @@ const Courses = require('../models/Courses');
 const bodyParser = require('body-parser');
 const Subpage = require('../models/Subpage');
 const Page = require('../models/Page');
+const markdown = require('markdown-it')('commonmark');
 
 router.get('/index-info', (req, res) => {
     // Get the events, latest , and postings. Get first 10, and then rest will be on the  
@@ -116,7 +117,39 @@ function getFirstN(pArray, maxSize){
 
 router.get('/getCourse', (req, res) => {
     const classTitle = req.query.class;
-    Courses.findOne({title: classTitle})
+    if (classTitle == "all"){
+        Courses.find()
+            .then(results => {
+                if (results.length > 0){
+                    // Need to check if this is already a link. Courses syllabus can be a link or a file  
+                    for (let result of results){
+                        if (result.syllabus != undefined){
+                            result.syllabus = '/api/courses/syllabus/comp-' + result.title.split(" ")[1];
+                        }
+                        // Hide the database ID
+                        result._id = null;
+                    }
+                    results = common.mergeSortCourses(results);
+                    res.json({
+                        response: results,
+                        status: 0
+                    });
+                } else {
+                    res.json({
+                        response: 'Error: No course found!',
+                        status: 1
+                    });
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                res.json({
+                    response: "Internal Server Error.",
+                    status: 2
+                });
+            });
+    } else {
+        Courses.findOne({title: classTitle})
         .then(result => {
             if (result) {
                 // Need to check if this is already a link. Courses syllabus can be a link or a file  
@@ -143,7 +176,23 @@ router.get('/getCourse', (req, res) => {
                 status: 2
             });
         });
+    }
+    
 });
 
+// Giving access to bodyparser from this moment on
+router.use(bodyParser.json());
+
+router.post('/render-markdown', (req, res) => {
+    console.log("Hello", req.body.markdown);
+    Promise.resolve(markdown.render(req.body.markdown))
+    .then(data => {
+        console.log('sending rendered html to editor');
+        res.json({ status: 0, data });
+    }).catch(err => {
+        console.error(err);
+        res.json({ status: 2, response:"error while rendering markdown"});
+    });
+});
 
 module.exports = router;

@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="/css/dashboard.css">
     <link rel="stylesheet" href="/css/themes.css">
     <style>
-        /* Resetting the searchbar form */
+        /* Resetting the searchbar form sizing*/
         #searchbar{
             all:initial;
         }
@@ -33,7 +33,7 @@
 </head>
 
 <body class=<%=theme%>>
-    <%- include('partials/navbar', {logged, username : user.username}); %>
+    <%- include('partials/navbar', {logged, username : user.username, navbar}); %>
 
     <div id="content">
         <% if(user.userType>0) {  %> 
@@ -56,30 +56,27 @@
             <div class="row">
                 <div class="col">
                     <h3>TA</h3>
-                    <button class="general" <% if(user.userType>0) {%> onclick="toggleForm('TA')" <%}%> >Add Posting</button>
-                    <button class="general"  <% if(user.userType>0) {%> onclick="toggleForm('Award')" <%}%>>Add Award Recipient</button><br>
+                    <button class="general" onclick="toggleForm('TA', 'POST', false)" >Add Posting</button>
+                    <button class="general" onclick="toggleForm('Award', 'POST', false)">Add Award Recipient</button><br>
                     
-                    <select id="modAward" class="form-control"<% if(user.userType>0) {%> onchange="getPageSelected('modAward')" <%}%>>
+                    <select id="modAward" class="form-control" onchange="getPageSelected('modAward')" >
                         <option>Modify Award Recipient</option>
                     </select>
 
                     <h3>Course</h3>
-                    <button class="general"
-                    <% if(user.userType>0) {%> onclick="toggleForm('Course')" <%}%>
+                    <button class="general" onclick="toggleForm('Course', 'POST', true)" >
                     >Add</button>
                     <br>
 
-                    <select class="form-control" id="modCourse" <% if(user.userType>0) {%> onchange="getPageSelected('modCourse')" <%}%>>
+                    <select class="form-control" id="modCourse"  onchange="getPageSelected('modCourse')" >
                         <option>Modify Course</option> 
                     </select>
 
                     <h3> Posting</h3>
-                    <button class="general"
-                    <% if(user.userType>0) {%> onclick="toggleForm('Posting')" <%}%>
-                    >Add</button>
+                    <button class="general" onclick="toggleForm('Posting', 'POST', false)">Add</button>
                     <br>
 
-                    <select class="form-control" id="modPosting"<% if(user.userType>0) {%> onchange="getPageSelected('modPosting')" <%}%>>
+                    <select class="form-control" id="modPosting" onchange="getPageSelected('modPosting')">
                         <option>Modify Posting</option>
                     </select> <br>
 
@@ -87,31 +84,25 @@
 
                 <div class="col">
                     <h3> News & Events</h3>
-                    <button class="general"
-                    <% if(user.userType>0) {%> onclick="toggleForm('News')" <%}%>
-                    >Add News</button>
+                    <button class="general" onclick="toggleForm('News', 'POST', false)">Add News</button>
                     <br>
 
-                    <select class="form-control" id="modNews" <% if(user.userType>0) {%> onchange="getPageSelected('modNews')" <%}%>>
+                    <select class="form-control" id="modNews" onchange="getPageSelected('modNews')" >
                         <option>Modify News Story</option>
                     </select> <br>
 
-                    <button class="general"
-                    <% if(user.userType>0) {%> onclick="toggleForm('Event')" <%}%>
-                    >Add Events</button>
+                    <button class="general" onclick="toggleForm('Event', 'POST', false)">Add Events</button>
                     <br>
 
-                    <select class="form-control" id="modEvent" <% if(user.userType>0) {%> onchange="getPageSelected('modEvent')" <%}%>>
+                    <select class="form-control" id="modEvent" onchange="getPageSelected('modEvent')" >
                         <option>Modify Events</option>
                     </select> <br>
 
                     <h3 class="mt-3"> Technical Report</h3>
-                    <button class="general"
-                    <% if(user.userType>0) {%> onclick="toggleForm('Tech')" <%}%>
-                    >Add</button>
+                    <button class="general" onclick="toggleForm('Tech', 'POST', false)">Add</button>
                     <br>
 
-                    <select class="form-control" id="modTech" <% if(user.userType>0) {%> onchange="getPageSelected('modTech')" <%}%>>
+                    <select class="form-control" id="modTech" onchange="getPageSelected('modTech')">
                         <option>Modify Technical Support</option> 
                     </select> <br>
                 </div>
@@ -194,7 +185,13 @@
             <br>
 
             <input id="ta_id" name="_id" style="display:none;">
-            <button class="general" type="submit">Submit</button>
+            <button id="delete-ta" onclick="deleteButton(event, $(this)[0])" style="visibility: hidden;">
+                <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-trash" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                    <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                </svg>
+            </button>
+            <button class="general" type="submit" value="TA" name="taSubmit">Submit</button>
         </form>
 
         <!-- Add Award -->
@@ -219,6 +216,12 @@
             <br>
             <br>
             <input id="a_id" name="_id" style="display:none;">
+            <button id="delete-award" onclick="deleteButton(event, $(this)[0])" style="visibility: hidden;">
+                <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-trash" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                    <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                </svg>
+            </button>
             <button class="general" type="submit">Submit</button>
         </form>
 
@@ -248,6 +251,12 @@
                 placeholder="Short description"></textarea>
             <br>
             <input id="n_id" name="_id" style="display:none;">
+            <button id="delete-news" onclick="deleteButton(event, $(this)[0])" style="visibility: hidden;">
+                <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-trash" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                    <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                </svg>
+            </button>
             <button class="general" type="submit">Add News</button>
         </form>
 
@@ -286,6 +295,12 @@
             <br>
 
             <input id="e_id" name="_id" style="display:none;">
+            <button id="delete-event" onclick="deleteButton(event, $(this)[0])" style="visibility: hidden;">
+                <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-trash" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                    <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                </svg>
+            </button>
             <button class="general" type="submit">Event</button>
         </form>
 
@@ -344,6 +359,12 @@
             <input type="file" name="syllabus">
             <br>
             <input id="c_id" name="_id" style="display:none;">
+            <button id="delete-course" onclick="deleteButton(event, $(this)[0])" style="visibility: hidden;">
+                <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-trash" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                    <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                </svg>
+            </button>
             <button class="general" type="submit">Submit</button>
         </form>
 
@@ -365,6 +386,12 @@
             <textarea id="techDescription" name="description" cols="60" placeholder="Report"></textarea>
             <br>
             <input id="tech_id" name="_id" style="display:none;">
+            <button id="delete-tech" onclick="deleteButton(event, $(this)[0])" style="visibility: hidden;"> 
+                <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-trash" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                    <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                </svg>
+            </button>
             <button class="general" type="submit">Submit</button>
         </form>
 
@@ -404,6 +431,12 @@
                 placeholder="Short description of the posting"></textarea>
             <br>
             <input id="p_id" name="_id" style="display:none;">
+            <button id="delete-posting" onclick="deleteButton(event, $(this)[0])" style="visibility: hidden;">
+                <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-trash" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                    <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                </svg>
+            </button>
             <button class="general" type="submit">Submit</button>
         </form>
     </div>
@@ -421,7 +454,7 @@
     crossorigin="anonymous"></script>
     <script src="/js/navbar.js"></script>
 
-<% if(user.userType>0) {%>
+<% if(user.userType>0) { %>
     <script src='/js/frontendAPI.js'></script>
     <script src='/js/dashboard.js'></script>
-    <% }  %>
+<% }  %>

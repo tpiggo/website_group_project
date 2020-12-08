@@ -1,11 +1,15 @@
 function loadPreview() {
-    markdown = document.getElementById("markdown").value;
-    const method = "GET";
-    var opts = { type: method, url: '/api/render-markdown', request: {markdown}};
+    let markdown = document.getElementById("markdown").value;
+    const method = "POST";
+    var opts = { type: method, url: '/api/render-markdown', request: {"markdown": markdown} , contentType: 'JSON'};
     const aPromise = callBackEnd(opts);
     aPromise
         .then((response) => {
-            document.getElementById("preview").innerHTML = response.response.html;
+            if (response.status > 0){
+                console.log("ERROR!", response.response);
+            } else {
+                document.getElementById("preview").innerHTML = response.data;
+            }
         })
         .catch(err => console.log(err));
 }

@@ -16,32 +16,8 @@
     <span id="title" style="display:none"><%=title%></span>
 
     <!-- Top fixed menu -->
-    <%- include('partials/navbar', {logged, username}) %>
-    <!-- left side menu-->
-    <!-- <div id="menu" class="hidden">
-        menu list specifically for the Prospective page
-        <div>
-            <#% for(var i =0; i< menu.length; i++) { %>
-            <div id="submenu<#%=i%>">
-                <ul class="menu-item">
-                    <a href=<#%- "'/" + menu[i].path +"'"%>>
-                        <#%= menu[i].name%>
-                    </a>
-                </ul>
-
-                <#%if(menu[i].submenu) { %>
-                <ul id="<#%= i %>" class="submenu hidden">
-                    <#%for(var j =0; j< menu[i].submenu.length; j++) {%>
-                    <li> <a href=<#%= "/" +menu[i].submenu[j].path +""%>><#%= menu[i].submenu[j].name%></a></li>
-                    <%#}%>
-                </ul>
-
-                <#%}%>
-            </div>
-            <#%}%>
-        </div>
-    </div> -->
-    <!-- <span id="icon">icon</span> -->
+    <%- include('partials/navbar', {logged, username, navbar}) %>
+   
     <div id="content">
         <!--Get the content from the database and render it here -->
         <% if(content.data) { %>

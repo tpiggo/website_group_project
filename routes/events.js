@@ -9,10 +9,14 @@ router.get('/all', (req, res) => {
     const logged = req.session.authenticated;
     const username = req.session.username;
 
+    var data;
     common.getAllDataFrom(Event).then(events => {
         //res.send("request received !");
         var content = { html: './list/events', data: events };
-        res.render('subpage.ejs', { type: req.params.pagename, title, menu, content, logged, username, theme: req.session.theme });
+        data = { type: req.params.pagename, title, menu, content, logged, username, theme: req.session.theme };
+        return common.getNavBar();
+    }).then(pages => {
+        res.render('subpage.ejs', {...data, navbar: pages.navbar});
     }).catch(err => {
         console.error(err);
         res.send(err);
@@ -28,7 +32,10 @@ router.get('/:pagename', (req, res) => {
 
     common.getAllDataWith(Event, { eventType: req.params.pagename }).then(events => {
         var content = { html: './list/events', data: events };
-        res.render('subpage.ejs', { type: req.params.pagename, title, menu, content, logged, username, theme: req.session.theme });
+        data = { type: req.params.pagename, title, menu, content, logged, username, theme: req.session.theme };
+        return common.getNavBar();
+    }).then(pages => {
+        res.render('subpage.ejs', {...data, navbar: pages.navbar});
     }).catch(err => {
         console.error(err);
         res.send(err);

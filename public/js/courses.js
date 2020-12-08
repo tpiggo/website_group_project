@@ -1,4 +1,3 @@
-
 var aClass;
 const courseSelector = document.getElementById('course-select');
 const courseBox = document.getElementById('response-container');
@@ -73,32 +72,37 @@ function createCourse(content, target){
     aCardDiv.className = 'card card-body';
     for (var key of Object.keys(content)){
         var contentDiv = null;
+        /**
+         * Handling each case of the courses. Since the course are jsons, they are not ordered,
+         * therefore static handling of order creation must be done. The following code allows
+         * for levels to be created to order the elements by their priority
+         */
         if (key == "syllabus" || key == 'mcgillCalendar'){
             var pContent = key.slice(0,1).toUpperCase() + key.slice(1)
             var level = 8;
             if (key == "mcgillCalendar") {
                 level = 9;
                 pContent = pContent.slice(0, 2) + pContent.slice(2,3).toUpperCase() + pContent.slice(3,6) + " " + pContent.slice(6);
-            };
+            }
             contentDiv = createAnElement({type: 'a', content: pContent, ref: content[key], class:'card-text', level: level});
-        } else if (key == "instructor"){
-            contentDiv = createElementFromArray({content: content[key], text: "Instructor(s): ", type: 'p', class:'card-text', level: 4});
-        } else if (key == "termsOffered"){
-            contentDiv = createElementFromArray({content: content[key], text: "Terms: ", type: 'p', class:'card-text', level: 3});
-        } else if ((key == "prerequisites" || key=="restrictions" || key=='notes' || key=="credits") && content[key] != 'none'){
+        }
+        else if (key == "instructor") contentDiv = createElementFromArray({content: content[key], text: "Instructor(s): ", type: 'p', class:'card-text', level: 4});
+
+        else if (key == "termsOffered") contentDiv = createElementFromArray({content: content[key], text: "Terms: ", type: 'p', class:'card-text', level: 3});
+
+        else if ((key == "prerequisites" || key=="restrictions" || key=='notes' || key=="credits") && content[key] != 'none'){
             var pContent = key.slice(0,1).toUpperCase() + key.slice(1) + ": " + content[key];
             var level = 7;
             if (key == "credits") level = 2;
             else if (key == "prerequisites") level = 5;
             else if (key == "restrictions") level = 6;
             contentDiv = createAnElement({type: 'p', content: pContent, class:'card-text', level: level});
-        } else if (key == 'title'){
-            contentDiv = createAnElement({type:'h3', content: content[key], class:'card-text', level: 0});
-        } else if (key == 'description'){
-            contentDiv = createAnElement({type: 'p', content: content[key], class:'card-text', level: 1});
         }
-        
 
+        else if (key == 'title') contentDiv = createAnElement({type:'h3', content: content[key], class:'card-text', level: 0});
+
+        else if (key == 'description') contentDiv = createAnElement({type: 'p', content: content[key], class:'card-text', level: 1});
+        
         if (contentDiv != undefined) buildCourseLayout(aCardDiv, contentDiv);
     }
     // Builds close button
@@ -115,6 +119,7 @@ function createCourse(content, target){
         target.insertBefore(aCardDiv, target.firstChild);
     }
 }
+
 /**
  * @description Displays an error using the frontendAPI Popup Error
  * @param {Error} err 
@@ -132,16 +137,20 @@ function displayError(err, targetHeader){
  */
 function findInArray(array, course){
     for (let value of array){
-        if (value.firstChild.innerHTML == course){
+        if(value.firstElementChild.innerHTML == course){
             return value;
         }
     }
     return null;
 }
 
+/**
+ * @description creates a list of all the courses in the response box
+ * @param {Array<HTMLElement>} course 
+ * @returns {HTMLElement} or null if nothing matched
+ */
 function findCoursesInBox(course){
     var courses = [];
-    console.log(courseBox.children);
     for (let i = 0; i < courseBox.children.length; i++ ){
         courses.push(courseBox.children[i]);
     }
@@ -150,6 +159,12 @@ function findCoursesInBox(course){
     return null;
 }
 
+/**
+ * @description removes a value from an array
+ * @param {Array} array 
+ * @param {HTMLElement} remVal 
+ * @returns {Array}
+ */
 function removeFromArray(array, remVal){
     let newArr = [];
     for (let value of array){
@@ -158,6 +173,78 @@ function removeFromArray(array, remVal){
         }
     }
     return newArr;
+}
+/**
+ * @description removes an element from an array
+ * @param {Array} array 
+ */
+function removeAllElements(array){
+    for (let value of array){
+        heldCourses.push(value);
+        courseBox.removeChild(value);
+    }
+}
+
+/**
+ * @description Sorts the courses and renders them
+ */
+function sortAndRender(){
+    heldCourses.sort((a, b) =>{
+        let childANum = a.firstElementChild.innerHTML.slice(5, 8); 
+        let childBNum = b.firstElementChild.innerHTML.slice(5, 8);
+        return parseInt(childANum) - parseInt(childBNum);
+    });
+    for (let course of heldCourses){
+        courseBox.appendChild(course);
+    }
+}
+
+/**
+ * @description Gets all the courses if they do not already exist within the page.
+ */
+function seeAllCourses(){
+    // get the courses in ordered fashion!
+    if (heldCourses.length == document.getElementById("course-select").children.length){
+       sortAndRender();
+    } else if (courseBox.children.length == document.getElementById("course-select").children.length ) {
+        // Removes and then sorts and displays the courses
+        removeAllCourses();
+        sortAndRender();
+    } else if (document.getElementById("course-select").children.length == (heldCourses.length + courseBox.children.length)){
+        // Removes and then sorts and displays the courses
+        removeAllCourses();
+        sortAndRender();
+    } else {
+        if (heldCourses.length > 1){
+            heldCourses = [];
+        }
+        const pOpts = {type: "GET", url: '/api/getCourse?class=all', contentType: "None"}
+        callBackEnd(pOpts)
+            .then( response => {
+                if (response.status == 0){
+                    // In order to put them into the file properly, 
+                    let coursesArr = response.response.reverse();
+                    for (let course of coursesArr){
+                        createCourse(course, courseBox);
+                    }
+                } else {
+                    displayError(response.response, 'coursesHeader');
+                }
+            })
+            .catch( err => {
+                console.error(err);
+                displayError(response.response, 'coursesHeader');
+            });
+    }
+}
+
+
+/**
+ * @description Removes all courses
+ */
+function removeAllCourses(){
+    let courses = collectionToArray(courseBox.children);
+    removeAllElements(courses);
 }
 
 /**
@@ -168,29 +255,31 @@ function getClass() {
     let heldCourse = findInArray(heldCourses, aClass);
     let courseInBox = findCoursesInBox(aClass);
     if (heldCourse != null){
-        courseBox.insertBefore(heldCourse, courseBox.firstChild);
+        // If a heldCourse exists, render it
+        if (courseBox.firstElementChild != null){
+            courseBox.insertBefore(heldCourse, courseBox.firstElementChild);
+        }else{
+            courseBox.appendChild(heldCourse);
+        }
         heldCourses = removeFromArray(heldCourses, heldCourse);
-        console.log(heldCourses)
     } else if (courseInBox != null) {
+        // If a course is in the course box, bubble it up
         courseBox.removeChild(courseInBox);
         if (courseBox.firstChild != null){
-            console.log('here1', courseBox.firstChild);
             courseBox.insertBefore(courseInBox, courseBox.firstChild);
         }else{
-            console.log("here2");
             courseBox.appendChild(courseInBox);
         }
     } else {
+        // Call api and get the desired course
         const pOpts = {type: "GET", url: '/api/getCourse?class='+aClass, contentType: "None"}
         callBackEnd(pOpts)
             .then( response => {
                 if (response.status == 0){
-                    console.log(response);
                     createCourse(response.response, courseBox);
                 } else {
                     displayError(response.response, 'coursesHeader');
                 }
-                
             })
             .catch( err => {
                 console.error(err);
@@ -198,6 +287,7 @@ function getClass() {
             });
     }
 }
+
 /**
  * @description Removes an element from the page and places it into a list of deleted courses
  * @param {HTMLElement} element 

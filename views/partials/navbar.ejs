@@ -16,64 +16,42 @@
         </div>
         <div id="large-navbar">
             <ul class="nav">
+
+                <% for(var i =0; i < navbar.length; i++) { %>
                 <li class="nav-item">
-                    <a class="nav-link" onclick='dropDown("target", "prospective")'>
-                        Prospective
+                    <a class="nav-link" onclick='dropDown("target", "<%= navbar[i].path%>")'>
+                        <%= navbar[i].title%>
                     </a>
-                    <div id="prospective" class="target collapsed">
-                        <a href="/prospective/general-info" >General Info</a>
-                        <a href="/prospective/why-cs" >Why CS?</a>
-                        <a href="/prospective/cegep" >CEGEP</a>
-                        <a href="/prospective/freshman" >Freshman</a>
-                        <a href="/prospective/choosing-major" >Choosing a Major</a>
-                        <a href="/prospective/transfer" >Transfer</a>
-                        <a href="/prospective/internship" >Internship</a>
-                        <a href="/academic/undergraduate" >Undergraduate</a>
-                        <a href="/academic/graduate" >Graduate</a>
-                
-                    </div>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" onclick='dropDown("target", "academic")'>
-                        Academic</a>
 
-                        <div id="academic" class="target collapsed">
-                            <a onclick='dropDown("sub-target", "undergraduate")' >Undergraduate</a>
-                            <a  onclick='dropDown("sub-target", "graduate")'>Graduate</a>
-                            <a href="/academic/courses" >Courses</a>
-                            <a onclick='dropDown("sub-target", "ta")' >Teaching Assitant</a>
-                            <a href="/academic/funding" >Funding</a>
-                        </div>
+                    <div id="<%= navbar[i].path%>"" class=" target collapsed">
 
-                        <div id="undergraduate" class="sub-target collapsed">
-                            <a href="/academic/undergraduate/" >Overview</a>
-                            <a href="/academic/undergraduate/incoming-student" >Incoming Student</a>
-                            <a href="/academic/undergraduate/remote-learning" >Remote Learning</a>
-                            <a href="/academic/undergraduate/faq" >FAQ</a>
-                            <a href="/academic/undergraduate/advising" >Advising</a>
-                        </div>
+                        <% for(var j =0; j < navbar[i].menu.length; j++) {%>
 
-                        <div id="graduate" class="sub-target collapsed">
-                            <a href="/academic/graduate/" >Overview</a>
-                            <a href="/academic/graduate/masters" >Masters</a>
-                            <a href="/academic/graduate/phd" >Ph. D.</a>
-                            <a href="/academic/graduate/admission" >Admission</a>
-                            <a href="/academic/graduate/applying" >Applying</a>
-                            <a href="/academic/graduate/faq" >FAQ</a>
+                        <a <%if(navbar[i].menu[j].submenu) { %>
+                            onclick='dropDown("sub-target","<%=navbar[i].path%>-<%=navbar[i].menu[j].path%>")' 
+                            <%}else{%>
+                            href='/<%= navbar[i].menu[j].path%>' <%}%>>
+                                 <%= navbar[i].menu[j].name%> </a>
+                            <%}%> 
+                                </div>
+                                <% for(var j =0; j < navbar[i].menu.length; j++) {%>
+                                    <%if(navbar[i].menu[j].submenu) {%>
+                                            <div id="<%=navbar[i].path%>-<%=navbar[i].menu[j].path%>" class="sub-target collapsed">
+                                                <% for(var k =0; k < navbar[i].menu[j].submenu.length; k++) {%>
+                                                    <%if(k==0) {%>
+                                                        <a href='/<%= navbar[i].menu[j].path%>'>
+                                                            Overview
+                                                        </a>
+                                                    <%}%> 
+                                                    <a href= '/<%= navbar[i].menu[j].submenu[k].path%>'> <%= navbar[i].menu[j].submenu[k].name%> </a>
+                                            <%}%>
+                                        </div> 
+                                    <%}%>
+                        <%}%> 
+    
+                    </li>
+                <%}%>
 
-                        </div>
-
-                        <div id="ta" class="sub-target collapsed">
-                            <a href="/academic/ta/" >Overview</a>
-                            <a href="/academic/ta/taAwards" >TA Awards</a>
-                        </div>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link">Research</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link">People</a>
-                </li>
                 <li class="nav-item">
                     <a class="nav-link" onclick='dropDown("target", "news")'>
                         News</a>
@@ -107,22 +85,17 @@
                     
                         </div>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link">Donate</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="collapse" href="#about">About</a>
-                </li>
             </ul>
         </div>
+        
         <div id="user-wrap" class="d-inline-flex">
             <!-- Search bar column -->
-            <form id="searchbar" action="/search" method="GET" style="visibility: hidden;">
-                <input name="q" placeholder="Type here and press enter!">
+            <form id="searchbar" action="/search" method="GET" style="display: none;">
+                <input name="q" class="searchbar-box" type="text" placeholder="Search">
             </form>
             <!-- search bar controller -->
-            <svg id="searchbar-controller" style='color:white;font-size: 1.9em; margin:auto 0;' width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-search"
-                fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <svg onclick="display('searchbar')" id="searchbar-controller" width="1em" height="1em" viewBox="0 0 16 16"
+                class="bi bi-search" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                 <path fill-rule="evenodd"
                     d="M10.442 10.442a1 1 0 0 1 1.415 0l3.85 3.85a1 1 0 0 1-1.414 1.415l-3.85-3.85a1 1 0 0 1 0-1.415z" />
                 <path fill-rule="evenodd"
@@ -131,8 +104,8 @@
 
             <div id="user-bar" class="dropdown show">
                 <a class="dropdown-toggle" href="#" role="button" id="UserMenu" data-toggle="dropdown"
-                    <% if (logged) {%> style='color: var(--secondary);' <%}%>
-                    aria-haspopup="true" aria-expanded="false">
+                    <% if (logged) { %> style='color: var(--secondary);' <% } %> aria-haspopup="true"
+                    aria-expanded="false">
                     <% if (logged) {%> <img style="width:2em;" src="/images/icons/signed-in.png">
                     <% } else { %>
                     <img style="width:2em;" src="/images/icons/not-logged.png">
@@ -141,8 +114,7 @@
 
                 <div id="user-info" class="dropdown-menu" aria-labelledby="UserMenu" role="menu">
                     <% if (logged) {%>
-                    <a class="dropdown-item" id="username"
-                        href="/dashboard"><%- username %></a>
+                    <a class="dropdown-item" id="username" href="/dashboard"><%- username %></a>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" id='settings' href="/settings">Settings</a>
                     <a class="dropdown-item" id="logout" href="/users/logout">Logout</a>
@@ -159,19 +131,29 @@
     <!-- We have all this information stored in the database, why not redner it from there?
      collapse container-fluid-->
 
-    
-<!-- responsive Nav-Bar -->
-    
+
+    <!-- responsive Nav-Bar -->
+
     <div id="about" class="target collapse container-fluid">
-        <a href="/about/general" >General</a>
+        <a href="/about/general">General</a>
     </div>
 </nav>
 
 <div id="navbar" class="">
     <div class="row">
         <div style='display:grid; text-align:left;'>
-            <li class="nav-item">
-                <!-- data-toggle="collapse" href="#prospective" -->
+<!-- for loop through all the pages name -->
+
+            <% for(var i =0; i < navbar.length; i++) { %>
+                <li class="nav-item">
+                    <a class="nav-link" onclick="dropDown('nav-submenu', 's<%=i%>')">
+                        <%=navbar[i].title%>
+                    </a>
+                </li>
+                <%}%>
+
+            <!-- <li class="nav-item">
+                
                 <a class="nav-link" onclick="dropDown('nav-submenu', 's0')">
                     Prospective
                 </a>
@@ -185,7 +167,7 @@
             </li>
             <li class="nav-item">
                 <a class="nav-link">People</a>
-            </li>
+            </li> -->
             <li class="nav-item">
                 <a class="nav-link" onclick="dropDown('nav-submenu', 's3')">
                     News</a>
@@ -197,94 +179,124 @@
             <li class="nav-item">
                 <a class="nav-link" onclick="dropDown('nav-submenu', 's5')">
                     Employement</a>
-
-            
             </li>
-            <li class="nav-item">
+            <!-- <li class="nav-item">
                 <a class="nav-link">Donate</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" data-toggle="collapse" href="#about">About</a>
-            </li>
-            
+            </li> -->
+
         </div>
 
         <div id="submenu-wrapper" class="collapsed">
-            <div id='s0' class='nav-submenu collapsed'>
-                <a href="/prospective/general-info" >General Info</a>
-                <a href="/prospective/why-cs" >Why CS?</a>
-                <a href="/prospective/cegep" >CEGEP</a>
-                <a href="/prospective/freshman" >Freshman</a>
-                <a href="/prospective/choosing-major" >Choosing a Major</a>
-                <a href="/prospective/transfer" >Transfer</a>
-                <a href="/prospective/internship" >Internship</a>
-                <a href="/academic/undergraduate" >Undergraduate</a>
-                <a href="/academic/graduate" >Graduate</a>
-    
+            <!-- two for loop through all the menus-->
+            <% for(var i =0; i < navbar.length; i++) { %>
+                <div id='s<%=i%>' class='nav-submenu collapsed'>
+                    <% for(var j =0; j < navbar[i].menu.length; j++) { %>
+
+                        <%if(navbar[i].menu[j].submenu) {%>
+                            <span>
+                                <a onclick="dropDown('nav-2nd-submenu','s<%=i%>-sb<%=j%>')"> <%=navbar[i].menu[j].name%></a>
+                                <div id="s<%=i%>-sb<%=j%>" class="nav-2nd-submenu collapsed">
+                                    <% for(var k =0; k < navbar[i].menu[j].submenu.length; k++) {%>
+                                        <%if(k==0) {%>
+                                            <a href='/<%= navbar[i].menu[j].path%>'>Overview</a>
+                                        <%} else {%> 
+                                            <a href= '/<%= navbar[i].menu[j].submenu[k].path%>'>
+                                            <%= navbar[i].menu[j].submenu[k].name%>
+                                            </a>
+                                            <%}%>
+                                    <%}%>
+                                </div>
+                            </span>
+
+                        <%} else {%>
+                            <a href='/'<%= navbar[i].menu[j].path%>>
+                            <%= navbar[i].menu[j].name%> </a>
+
+                        <%}%>
+
+                    <%}%>
+                </div>
+            <%}%>
+
+            <!-- <div id='s0' class='nav-submenu collapsed'>
+                <a href="/prospective/general-info">General Info</a>
+                <a href="/prospective/why-cs">Why CS?</a>
+                <a href="/prospective/cegep">CEGEP</a>
+                <a href="/prospective/freshman">Freshman</a>
+                <a href="/prospective/choosing-major">Choosing a Major</a>
+                <a href="/prospective/transfer">Transfer</a>
+                <a href="/prospective/internship">Internship</a>
+                <a href="/academic/undergraduate">Undergraduate</a>
+                <a href="/academic/graduate">Graduate</a>
+
             </div>
 
 
             <div id='s1' class='nav-submenu collapsed'>
                 <span>
+                    3 for loop through all the submenus
                     <a onclick="dropDown('nav-2nd-submenu','sb1')"> Undergraduate</a>
 
                     <div id="sb1" class="nav-2nd-submenu collapsed">
-                        <a href="/academic/undergraduate/" >Overview</a>
-                        <a href="/academic/undergraduate/incoming-student" >Incoming Student</a>
-                        <a href="/academic/undergraduate/remote-learning" >Remote Learning</a>
-                        <a href="/academic/undergraduate/faq" >FAQ</a>
-                        <a href="/academic/undergraduate/advising" >Advising</a>
+                        <a href="/academic/undergraduate/">Overview</a>
+                        <a href="/academic/undergraduate/incoming-student">Incoming Student</a>
+                        <a href="/academic/undergraduate/remote-learning">Remote Learning</a>
+                        <a href="/academic/undergraduate/faq">FAQ</a>
+                        <a href="/academic/undergraduate/advising">Advising</a>
                     </div>
                 </span>
 
-               <span>
-                <a onclick="dropDown('nav-2nd-submenu','sb2')"> Graduate</a>
-                <div id="sb2" class="nav-2nd-submenu collapsed">
-                    <a href="/academic/graduate/" >Overview</a>
-                    <a href="/academic/graduate/masters" >Masters</a>
-                    <a href="/academic/graduate/phd" >Ph. D.</a>
-                    <a href="/academic/graduate/admission" >Admission</a>
-                    <a href="/academic/graduate/applying" >Applying</a>
-                    <a href="/academic/graduate/faq" >FAQ</a>
+                <span>
+                    <a onclick="dropDown('nav-2nd-submenu','sb2')"> Graduate</a>
+                    <div id="sb2" class="nav-2nd-submenu collapsed">
+                        <a href="/academic/graduate/">Overview</a>
+                        <a href="/academic/graduate/masters">Masters</a>
+                        <a href="/academic/graduate/phd">Ph. D.</a>
+                        <a href="/academic/graduate/admission">Admission</a>
+                        <a href="/academic/graduate/applying">Applying</a>
+                        <a href="/academic/graduate/faq">FAQ</a>
 
-                </div>
-               </span> 
+                    </div>
+                </span>
 
-                <a href="/academic/courses" >Courses</a>
+                <a href="/academic/courses">Courses</a>
                 <span>
                     <a onclick="dropDown('nav-2nd-submenu', 'sb3')">Teaching Assitant</a>
                     <div id="sb3" class="nav-2nd-submenu collapsed">
-                        <a href="/academic/ta/" >Overview</a>
-                        <a href="/academic/ta/taAwards" >TA Awards</a>
+                        <a href="/academic/ta/">Overview</a>
+                        <a href="/academic/ta/taAwards">TA Awards</a>
                     </div>
                 </span>
-                
+
                 <a href="/academic/funding">Funding</a>
-            </div>
+            </div> -->
 
             <div id="s3" class='nav-submenu collapsed'>
-                <a href="/news/all" >All</a>
-                <a href="/news/announcements" >Announcements</a>
-                <a href="/news/awards" >Awards</a>
+                <a href="/news/all">All</a>
+                <a href="/news/announcements">Announcements</a>
+                <a href="/news/awards">Awards</a>
             </div>
 
 
             <div id="s4" class='nav-submenu collapsed'>
-                <a href="/events/all" >All</a>
-                <a href="/events/colloquium" >Colloquia</a>
-                <a href="/events/seminar" >Seminars</a>
+                <a href="/events/all">All</a>
+                <a href="/events/colloquium">Colloquia</a>
+                <a href="/events/seminar">Seminars</a>
 
             </div>
 
             <div id="s5" class='nav-submenu collapsed'>
-                <a href="/employement/faculty" >Faculty</a>
-                <a href="/employement/lecturer" >Announcement</a>
-                <a href="/employement/student" >Student</a>
-                <a href="/employement/research" >Research</a>
+                <a href="/employement/faculty">Faculty</a>
+                <a href="/employement/lecturer">Announcement</a>
+                <a href="/employement/student">Student</a>
+                <a href="/employement/research">Research</a>
 
             </div>
         </div>
-       
+
 
     </div>
     <img src="/images/socs-bird.png" alt="SOCS bird" onclick="window.location='/'">
@@ -293,11 +305,15 @@
         <path fill-rule="evenodd"
             d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
     </svg>
-    <svg id="search" width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-search" fill="currentColor"
-    xmlns="http://www.w3.org/2000/svg">
-    <path fill-rule="evenodd"
-        d="M10.442 10.442a1 1 0 0 1 1.415 0l3.85 3.85a1 1 0 0 1-1.414 1.415l-3.85-3.85a1 1 0 0 1 0-1.415z" />
-    <path fill-rule="evenodd"
-        d="M6.5 12a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11zM13 6.5a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0z" />
-</svg>
+    <!-- Search bar column -->
+    <form id="searchbar2" action="/search" method="GET" style="display: none;">
+        <input name="q" class="searchbar-box" type="text" placeholder="Search">
+    </form>
+    <svg onclick="display('searchbar2')" id="search" width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-search"
+        fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+        <path fill-rule="evenodd"
+            d="M10.442 10.442a1 1 0 0 1 1.415 0l3.85 3.85a1 1 0 0 1-1.414 1.415l-3.85-3.85a1 1 0 0 1 0-1.415z" />
+        <path fill-rule="evenodd"
+            d="M6.5 12a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11zM13 6.5a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0z" />
+    </svg>
 </div>
