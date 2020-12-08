@@ -472,6 +472,9 @@ function refreshDropDownPages(pages) {
  * @param {*} subpages 
  */
 function refreshDropDownSubpages(subpages) {
+    subpages.sort((a,b) => { //Sorts the subpages alphabetically by path so we can chunk them into categories easily
+        return a.path.localeCompare(b.path);
+    });
     var menu = document.getElementById('select_page');
     if(!menu){
         return;
