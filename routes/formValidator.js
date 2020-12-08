@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const bodyParser = require('body-parser');
 const middleware = require("../middleware");
-const fs = require('fs');
 const TAPosting = require('../models/TAPosting');
 const Course = require('../models/Courses');
 const Event = require('../models/Events');
@@ -10,10 +9,13 @@ const News = require('../models/News');
 const TechnicalReport = require('../models/TechnicalReport');
 const Posting = require('../models/Posting');
 const Award = require('../models/Award');
-const multer = require('multer');
-const path = require('path');
+const UserRequest = require('../models/UserRequest');
 const Subpage = require('../models/Subpage');
 const Page = require('../models/Page');
+const multer = require('multer');
+const path = require('path');
+const User = require('../models/User');
+const { resolve } = require('path');
 // Body parser for these routes. Needed since sending JSONs to and from the frontend.
 router.use(bodyParser.json());
 
@@ -843,6 +845,84 @@ router.post('/Subpage-Delete', middleware.canCreateOrDestroy, (req,res) => {
             res.json({status: 0, response: "Subpage successfully deleted"});
         }
     });
+});
+
+/** USER LEVEL REQUEST */
+router.post('/requestLevel', middleware.isAuthenticated, (req, res) => {
+    /**
+     * 
+     * @param {String} username 
+     */
+    function requestNotMade(username){
+        return new Promise((resolve, reject) => {
+            UserRequest.findOne({username: username}, (err, result)=>{
+                if (err){
+                    reject(err);
+                }
+                else if ( !result ) {
+                    resolve({canMake: true});
+                } else {
+                    reject({canMake: false});
+                }
+            });
+        });
+    }
+    /**
+     * 
+     * @param {String} username 
+     */
+    function getUser(username){
+        return new Promise((resolve, reject) => {
+            User.findOne({username: username}, (err, result) => {
+                if (err) reject(err)
+                else if ( result ) {
+                    resolve(result);
+                } else {
+                    reject(result);
+                }
+            })
+        });
+    }
+    /**
+     * 
+     * @param {User} user 
+     * @param {String} message 
+     */
+    function createRequest(user, message){
+        return new Promise((resolve, reject) => {
+            UserRequest.create({
+                username: user.username,
+                email: user.email,
+                message: message,
+                userType: user.userType
+            }, (err) => {
+                if (err) reject(err);
+                else resolve({status: 0, response: "Request was made!"});
+            })
+        });
+    }
+    // Making the request, trying to avoid callback hell
+    requestNotMade(req.body.user)
+        .then(result => {
+            console.log("username:", req.body.user);
+            return getUser(req.body.user);
+        })
+        .then(user => {
+            console.log("Got user:", user);
+            return createRequest(user, req.body.reason);
+        })
+        .then(result => {
+            res.json(result);
+        })
+        .catch(err=>{
+            console.error(err);
+            if (err.canMake != undefined){
+                res.json({status: 1, response: "Request has already been made!" })
+            } else {
+                res.json({status: 2, response: "Error in database! Try again later" })
+            }
+        })
+        
 });
 
 module.exports = router;

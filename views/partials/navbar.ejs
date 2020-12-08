@@ -27,7 +27,7 @@
 
                         <% for(var j =0; j < navbar[i].menu.length; j++) {%>
 
-                        <a <%if(navbar[i].menu[j].submenu) { %>
+                        <a <% if(navbar[i].menu[j].submenu) { %>
                             onclick='dropDown("sub-target","<%=navbar[i].path%>-<%=navbar[i].menu[j].path%>")' 
                             <%}else{%>
                             href='/<%= navbar[i].menu[j].path%>' <%}%>>
@@ -74,14 +74,14 @@
                         </div>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" onclick='dropDown("target", "employement")'>
-                        Employement</a>
+                    <a class="nav-link" onclick='dropDown("target", "employment")'>
+                        Employment</a>
 
                         <div id="employement" class="target collapsed">
-                            <a href="/employement/faculty" >Faculty</a>
-                            <a href="/employement/lecturer" >Announcement</a>
-                            <a href="/employement/student" >Student</a>
-                            <a href="/employement/research" >Research</a>
+                            <a href="/employment/faculty" >Faculty</a>
+                            <a href="/employment/lecturer" >Announcement</a>
+                            <a href="/employment/student" >Student</a>
+                            <a href="/employment/research" >Research</a>
                     
                         </div>
                 </li>
@@ -151,23 +151,6 @@
                     </a>
                 </li>
                 <%}%>
-
-            <!-- <li class="nav-item">
-                
-                <a class="nav-link" onclick="dropDown('nav-submenu', 's0')">
-                    Prospective
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" onclick="dropDown('nav-submenu', 's1')">
-                    Academic</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link">Research</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link">People</a>
-            </li> -->
             <li class="nav-item">
                 <a class="nav-link" onclick="dropDown('nav-submenu', 's3')">
                     News</a>
@@ -178,14 +161,8 @@
             </li>
             <li class="nav-item">
                 <a class="nav-link" onclick="dropDown('nav-submenu', 's5')">
-                    Employement</a>
+                    Employment</a>
             </li>
-            <!-- <li class="nav-item">
-                <a class="nav-link">Donate</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" data-toggle="collapse" href="#about">About</a>
-            </li> -->
 
         </div>
 
@@ -221,59 +198,6 @@
                 </div>
             <%}%>
 
-            <!-- <div id='s0' class='nav-submenu collapsed'>
-                <a href="/prospective/general-info">General Info</a>
-                <a href="/prospective/why-cs">Why CS?</a>
-                <a href="/prospective/cegep">CEGEP</a>
-                <a href="/prospective/freshman">Freshman</a>
-                <a href="/prospective/choosing-major">Choosing a Major</a>
-                <a href="/prospective/transfer">Transfer</a>
-                <a href="/prospective/internship">Internship</a>
-                <a href="/academic/undergraduate">Undergraduate</a>
-                <a href="/academic/graduate">Graduate</a>
-
-            </div>
-
-
-            <div id='s1' class='nav-submenu collapsed'>
-                <span>
-                    3 for loop through all the submenus
-                    <a onclick="dropDown('nav-2nd-submenu','sb1')"> Undergraduate</a>
-
-                    <div id="sb1" class="nav-2nd-submenu collapsed">
-                        <a href="/academic/undergraduate/">Overview</a>
-                        <a href="/academic/undergraduate/incoming-student">Incoming Student</a>
-                        <a href="/academic/undergraduate/remote-learning">Remote Learning</a>
-                        <a href="/academic/undergraduate/faq">FAQ</a>
-                        <a href="/academic/undergraduate/advising">Advising</a>
-                    </div>
-                </span>
-
-                <span>
-                    <a onclick="dropDown('nav-2nd-submenu','sb2')"> Graduate</a>
-                    <div id="sb2" class="nav-2nd-submenu collapsed">
-                        <a href="/academic/graduate/">Overview</a>
-                        <a href="/academic/graduate/masters">Masters</a>
-                        <a href="/academic/graduate/phd">Ph. D.</a>
-                        <a href="/academic/graduate/admission">Admission</a>
-                        <a href="/academic/graduate/applying">Applying</a>
-                        <a href="/academic/graduate/faq">FAQ</a>
-
-                    </div>
-                </span>
-
-                <a href="/academic/courses">Courses</a>
-                <span>
-                    <a onclick="dropDown('nav-2nd-submenu', 'sb3')">Teaching Assitant</a>
-                    <div id="sb3" class="nav-2nd-submenu collapsed">
-                        <a href="/academic/ta/">Overview</a>
-                        <a href="/academic/ta/taAwards">TA Awards</a>
-                    </div>
-                </span>
-
-                <a href="/academic/funding">Funding</a>
-            </div> -->
-
             <div id="s3" class='nav-submenu collapsed'>
                 <a href="/news/all">All</a>
                 <a href="/news/announcements">Announcements</a>
@@ -289,10 +213,10 @@
             </div>
 
             <div id="s5" class='nav-submenu collapsed'>
-                <a href="/employement/faculty">Faculty</a>
-                <a href="/employement/lecturer">Announcement</a>
-                <a href="/employement/student">Student</a>
-                <a href="/employement/research">Research</a>
+                <a href="/employment/faculty">Faculty</a>
+                <a href="/employment/lecturer">Announcement</a>
+                <a href="/employment/student">Student</a>
+                <a href="/employment/research">Research</a>
 
             </div>
         </div>

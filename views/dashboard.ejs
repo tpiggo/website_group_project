@@ -146,7 +146,11 @@
             <% }  %>    
         </div>
         <% } else { %>
-            Welcome <%= user.username %>
+            <h2>Welcome <%= user.username %></h2>
+            <div id="clearance-box">
+                <p>Unfortunately you do not have the required permissions in order to access the full dashboard.</p>
+                <button type="button" id="request-button" user=<%= user.username %> onclick="requestLevel(event)">Request higher level!</button> 
+            </div>
         <% }  %>
 
     </div>
@@ -453,8 +457,9 @@
     integrity="sha384-w1Q4orYjBQndcko6MimVbzY0tgp4pWB4lZ7lr30WKz0vr/aWKhXdBNmNb5D92v7s"
     crossorigin="anonymous"></script>
     <script src="/js/navbar.js"></script>
-
-<% if(user.userType>0) { %>
     <script src='/js/frontendAPI.js'></script>
+<% if(user.userType >0) { %>
     <script src='/js/dashboard.js'></script>
-<% }  %>
+<% } else { %>
+    <script src='/js/dashboardLow.js'></script>
+<% } %>

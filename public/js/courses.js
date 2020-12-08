@@ -106,7 +106,7 @@ function createCourse(content, target){
         if (contentDiv != undefined) buildCourseLayout(aCardDiv, contentDiv);
     }
     // Builds close button
-    let closeBtn = document.createElement('button');
+    var closeBtn = document.createElement('button');
     closeBtn.className = "close";
     closeBtn.setAttribute('type', 'button');
     closeBtn.setAttribute('aria-label', 'Close');

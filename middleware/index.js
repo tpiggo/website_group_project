@@ -1,4 +1,5 @@
 const User = require('../models/User.js');
+const common = require('../common');
 var middleware = {};
 
 middleware.isAuthenticated = (req, res, next) => {
@@ -8,7 +9,20 @@ middleware.isAuthenticated = (req, res, next) => {
     const title = "Error!";
     var content = { "html": "<h1>You do not have access to this page! Please <a href='/users/login'>Login</a> to view this content</h1>" }
     // Render a subpage with the error
-    res.render('subpage', { title, content, menu: [], logged: req.session.authenticated, username: req.session.username, theme: req.session.theme});
+    common.getNavBar().then(pages => {
+        res.render('subpage', {
+            title, 
+            content, 
+            menu: [],
+            logged: req.session.authenticated,
+            username: req.session.username,
+            theme: req.session.theme,
+            navbar: pages.navbar
+        });
+    }).catch(err => {
+        console.log(err);
+        res.send("Error getting navbar from DB");
+    });
 }
 
 middleware.canUseRoute = (req, res, next) =>{

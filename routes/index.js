@@ -49,7 +49,14 @@ router.get('/unknown', (req,res) => {
     var error_message = "The page you are looking for was not found";
 
     common.getNavBar().then(pages => {
-        res.render('user-error', {error_code, menu, error_message, logged, username, navbar:pages.navbar});
+        res.render('user-error', {
+            error_code,
+            menu,
+            error_message,
+            logged, username,
+            theme:req.session.theme,
+            navbar: pages.navbar
+        });
     }).catch(err => {
         console.log(err);
         res.send(err);
@@ -64,7 +71,7 @@ router.get('/dashboard', middleware.isAuthenticated, (req, res) => {
             res.send("error when accessing the User Database");
         } else {
             common.getNavBar().then(pages => {
-                res.render('dashboard', { logged: req.session.authenticated, user: user, theme: req.session.theme, navbar:pages.navbar})
+                res.render('dashboard', { logged: req.session.authenticated, user: user, theme: req.session.theme, navbar: pages.navbar})
             }).catch(err => {
                 console.log(err);
                 res.send(err);
@@ -123,7 +130,7 @@ router.get('/settings', middleware.isAuthenticated,  (req, res)=>{
                         logged: req.session.authenticated,
                         user: req.session.username,
                         theme: req.session.theme,
-                        navbar:pages.navbar
+                        navbar: pages.navbar
                     });
                 }).catch(err => {
                     console.log(err);
@@ -462,14 +469,12 @@ router.get('/search', (req, res) => {
  * @param {String} expr
  */
 function getMatchedDesc(descString, expr){
-    console.log(descString);
     let indicies = [];
     let regex = new RegExp(expr, 'gi');
     var matched;
     while (null !=(matched = regex.exec(descString))){
         indicies.push(matched.index);
     }
-    console.log(indicies);
     // Create the string
     let matchedString = '';
     for (let i = 0; i < indicies.length; i++){
@@ -518,7 +523,6 @@ function getMatchedDesc(descString, expr){
         let matched = descString.slice(indicies[i], indicies[i]+expr.length);
         let endString = eDots?descString.slice(indicies[i] + expr.length, end)+"...":descString.slice(indicies[i] + expr.length, end);
         matchedString += startString + "<b>" + matched + "</b>" + endString;
-        console.log(matchedString);
     }
     return matchedString;
 }   
@@ -548,15 +552,15 @@ function parseHTML(string){
     return parsedString;
 }
 
+/**
+ * @description Takes a string of markup and returns a parsed string of text without any tags
+ * @todo Get markdown to render me a string of text? Just want the string of text without markup.....
+ * @param {String} markdownText
+ * @returns {String}
+ */
 function parseMarkdown(markdownText){
-    let parsedString = '';
-    for (let i  = 0; i < markdownText.length; i++){
-        if (!isMarkdownTag(markdownText.charAt(i))){
-            if (markdownText.charAt(i) != '\n' && markdownText.charAt(i) != '\r' && markdownText.charAt(i) != '\r')
-                parsedString += markdownText.charAt(i);
-        }
-    }
-    return parsedString;
+    let htmlString = markdown.render(markdownText);
+    return parseHTML(htmlString);
 }
 /**
  * @description Matches markdown tag with characters

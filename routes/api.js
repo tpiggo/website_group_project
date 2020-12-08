@@ -32,11 +32,10 @@ router.get('/index-info', (req, res) => {
     Promise.all([getNews(), getEvents(), getPosting()])
         .then(data => {
             // Data is an array of arrays
-            console.log("Handling firstTen");
             var newArr = [];
             const maxStringLength = 200;
             data.forEach((value, index) => {
-                newArr.push({name: mapIndex(index), elements: getFirstN(value, 3)});
+                newArr.push({name: mapIndex(index), elements: getFirstN(value, 5)});
             });
             newArr.forEach(values => {
                 values.elements.forEach(value => {
