@@ -712,11 +712,14 @@ router.post('/Course', upload.single("syllabus"), middleware.isAuthenticated, (r
     if (req.body.title.slice(4,5) != ""){
         req.body.title = req.body.title.slice(0, 4)+" "+req.body.title.slice(4);
     }
+    req.body.termsOffered = req.body.termsOffered.split(",");
     Course.create(req.body, (err, content) => {
         if (err) {
             res.json(handleError(err, 'course'));
-            // delete the file!
-            fs.unlink(`../files/${req.file.filename}`);
+            // delete the file! DOESNT WORK?!?!?!?!?!
+            fs.unlink(`../files/${req.file.filename}`, ()=>{
+                console.log('Done unlinking!');
+            });
         }
         else {
             console.log(content);
@@ -740,7 +743,9 @@ router.put('/Course', upload.single("syllabus"), middleware.isAuthenticated, (re
         if(err){
             console.error(err);
             // delete the file!
-            fs.unlink(`../files/${req.file.filename}`)
+            fs.unlink(`../files/${req.file.filename}`, ()=>{
+                console.log('Done unlinking!');
+            });
             res.json({status:2, response:'Error while accessing the databse'});
         } else {
             if(update) {
@@ -803,39 +808,70 @@ router.post('/Subpage', middleware.canCreateOrDestroy, (req,res) => {
     if(!req.body.category || req.body.category == "Category"){
         return res.json({status: 1, response: "Invalid category selection"});
     }
-    Page.findById(req.body.category, (err,page) => {
-        if(err){
-            console.log(err);
-            return res.json({status: 1, response: "Invalid category selection"});
-        }else if(page){
-            var path = page.title.toLowerCase() + "/" + req.body.page_name.toLowerCase();
+    /**
+     * @description Finds the elemetn by its ID
+     * @param {ObjectID} id 
+     * @returns {Promise}
+     */
+    function findPageById(id){
+        return new Promise((resolve, reject) => {
+            Page.findById(id, (err,page) => {
+                if(err){
+                    console.log(err);
+                    reject({status: 1, response: "Invalid category selection"});
+                } else {
+                    resolve(page);
+                }
+            });
+        });
+    }
+
+    /**
+     * @description 
+     * @param {Page} page 
+     * @param {String} subpageName 
+     * @param {String} path 
+     * @returns {Promise}
+     */
+    function createPage(page, subpageName, path){
+        return new Promise((resolve, reject) => {
             Subpage.create({
-                name: req.body.page_name,
+                name: subpageName,
                 markdown: "",
                 html: "",
                 path,
                 submenu: null
-            }, (err,subpage) => {
-                if(err){
-                    console.log(err);
-                    return res.json({status: 1, response: "Error while creating subpage"});
-                }else if(subpage){
-                    console.log(page);
-                    console.log(page.subpages);
+            }, (err,subpage) =>{
+                if (err){
+                    reject({status: 1, response: "Error while creating subpage"});
+                } else {
                     page.subpages.push(subpage);
                     page.save((err) => {
                         if(err){
                             console.log(err);
+                            reject({status: 1, response: "Error while saving in pages"});
                         }
                     });
-                    return res.json({status: 0, response: "Subpage successfully created"});
+                    resolve({status: 0, response: "Subpage successfully created"})
                 }
             });
-        }else{
-            console.log("Could not find page with id: " +req.body.category);
-            return res.json({status: 1, response: "Invalid category selection"});
-        }
-    });
+        });
+    }
+    // Going through the levels of the subpaging structure, in order to find the proper page.
+    findPageById(req.body.category)
+        .then(result => {
+            let pagename = req.body.page_name.toLowerCase().replace(" ", "-");
+            var path = result.title.toLowerCase() + "/" + pagename;
+            // Create the new page 
+            return createPage(result, req.body.page_name, path);
+        })
+        .then(result=>{
+            res.json(result);
+        })
+        .catch(err=>{
+            console.error(err);
+            res.json(err);
+        });
 });
 
 router.post('/Subpage-Delete', middleware.canCreateOrDestroy, (req,res) => {
