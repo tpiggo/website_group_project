@@ -14,6 +14,7 @@ const Subpage = require('../models/Subpage');
 const Page = require('../models/Page');
 const multer = require('multer');
 const path = require('path');
+const fs = require('fs');
 const User = require('../models/User');
 // Body parser for these routes. Needed since sending JSONs to and from the frontend.
 router.use(bodyParser.json());
@@ -706,9 +707,17 @@ router.delete('/Posting', middleware.isAuthenticated, (req, res) => {
 //  ********************************* COURSE REQUESTS *********************************
 router.post('/Course', upload.single("syllabus"), middleware.isAuthenticated, (req, res) => {
     // Fix syllabus, add its path rather than its name
+    console.log(req.body, req.file)
     req.body.syllabus = req.file.filename;
+    if (req.body.title.slice(4,5) != ""){
+        req.body.title = req.body.title.slice(0, 4)+" "+req.body.title.slice(4);
+    }
     Course.create(req.body, (err, content) => {
-        if (err) res.json(handleError(err, 'course'));
+        if (err) {
+            res.json(handleError(err, 'course'));
+            // delete the file!
+            fs.unlink(`../files/${req.file.filename}`);
+        }
         else {
             console.log(content);
             res.json({
@@ -723,10 +732,15 @@ router.post('/Course', upload.single("syllabus"), middleware.isAuthenticated, (r
 router.put('/Course', upload.single("syllabus"), middleware.isAuthenticated, (req, res) => {
     var id = req.body._id;
     delete req.body._id;
+    if (req.body.title.slice(4,5) != ""){
+        req.body.title = req.title.slice(0, 4)+" "+req.body.title(4);
+    }
     req.body.syllabus = req.file.filename;
     Course.findByIdAndUpdate(id, req.body, (err, update)=> {
         if(err){
             console.error(err);
+            // delete the file!
+            fs.unlink(`../files/${req.file.filename}`)
             res.json({status:2, response:'Error while accessing the databse'});
         } else {
             if(update) {
@@ -738,7 +752,9 @@ router.put('/Course', upload.single("syllabus"), middleware.isAuthenticated, (re
                 res.json({
                     status: 1,
                     response: 'Course deleted, please close window, the current form is invalid'
-                })
+                });
+                // delete the file!
+                fs.unlink(`../files/${req.file.filename}`)
             }
         }
     });
@@ -763,8 +779,8 @@ router.get('/Course', (req, res) => {
 
         }
     });
-
 });
+
 router.delete('/Course', middleware.isAuthenticated, (req, res) => {
     Course.deleteOne(req.body)
         .then(result=>{
