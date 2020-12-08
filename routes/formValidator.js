@@ -895,13 +895,22 @@ router.get('/user-requests', (req, res) => {
 
 router.put('/user-requests', (req, res) => {
     var id = req.body._id;
-    delete req.body._id;
-
     console.log('modifying user type !');
-    console.log(id + req.body)
+    console.log(id + req.body);
 
+    UserRequest.deleteOne({_id:id})
+        .then(result=>{
+            if ( result.ok == 1 && result.deletedCount > 0 && result.n > 0){
+                console.log("Successfully deleted!");
+            } else {
+                console.log("Error deleting! Try again later");
+            }
+        })
+        .catch(err=>{
+            console.error(err);
+        });
 
-    UserRequest.findByIdAndUpdate(id, req.body, (err, update)=> {
+    User.updateOne({username: req.body.username}, {$set: { "userType" : req.body.userType }}, (err, update)=> {
         if(err){
             console.error(err);
             res.json({status:2, response:'Error while accessing the databse'});
@@ -909,7 +918,7 @@ router.put('/user-requests', (req, res) => {
             if(update) {
                 res.json({
                     status:0,
-                    response: 'User request was succesfully updated'
+                    response: 'User was succesfully updated'
                 });
             } else {
                 res.json({

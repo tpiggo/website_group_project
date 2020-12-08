@@ -75,6 +75,7 @@ function fillUserForm(userRequest) {
     document.getElementById('user-message').innerText = userRequest.message;
 
     var menu =  document.getElementById('type-radio-menu');
+    menu.innerHTML = '';
     var userType = userRequest.userType;
     for(var type = userType ; type < 4; type++) {
         var input = document.createElement('input');
@@ -92,7 +93,11 @@ function fillUserForm(userRequest) {
         menu.appendChild(label);
         menu.appendChild(document.createElement('br'));
     }
+
+    document.getElementById('username-field').value= userRequest.username;
     document.getElementById('ur_id').value = document.getElementById('requests-dropdown').value;
+    
+
 }
 
 //called by the onchange functions on the dropdowns : 
@@ -463,7 +468,11 @@ function makeJson(pObject) {
                 instructors.push(pObject[i].value);
             } else if (currId.includes("w2021c") || currId.includes("s2021c") || currId.includes("f2021c")) {
                 if (document.getElementById(currId).checked) terms.push(pObject[i].value);
-            }
+            } else if(pObject[i].type =="radio") {
+                if(document.getElementById(currId).checked) aJson[pObject[i].name] = pObject[i].value;
+                else continue;
+            } 
+
             else aJson[pObject[i].name] = pObject[i].value;
         }
     }
@@ -525,7 +534,7 @@ function errorCheck(pObject) {
 function handleRequest(event, element, method, hasFile) {
     // Do not allow default.
     event.preventDefault();
-    console.log(event);
+    console.log(element);
     // Building the request JSON
     var mForm, type;
     if (hasFile){
@@ -549,11 +558,11 @@ function handleRequest(event, element, method, hasFile) {
                 if (response.status == 0) {
                     if (method != 'PUT') document.getElementById(element[0].id).reset();
                     refreshDropdowns();
-                    if(aid=="user-requests") getUserRequests();
+                    if(aId=="user-requests") getUserRequests();
                     createPopupMsg('success', response.response, aId + "Header");
                 } else if (response.status >= 1) {
                     console.log("Error on submission");
-                    console.log(esponse.response);
+                    console.log(response.response);
                     // Creating Element to display in the form!
                     createPopupMsg('error', response.response, aId + "Header");
                 } else {
