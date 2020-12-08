@@ -293,6 +293,9 @@ function refreshDropDownSubpages(subpages) {
     var category;
     var group;
     subpages.forEach(page => {
+        if(page.subpages && page.subpages.length > 0){
+            return;
+        }
         var new_category = page.path.replace(/\/.+/,'');
         if(category != new_category){
             category = new_category;
