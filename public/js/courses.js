@@ -174,6 +174,7 @@ function removeFromArray(array, remVal){
     }
     return newArr;
 }
+
 /**
  * @description removes an element from an array
  * @param {Array} array 

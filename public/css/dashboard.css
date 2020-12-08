@@ -104,6 +104,10 @@ body {
 .alert {
     animation: disappear 3.5s forwards;
 }
+<<<<<<< HEAD
+
+=======
+>>>>>>> 5c5b86574d28361dd76a74024bb9a328024769fd
 @keyframes disappear {
     90% {
         opacity: 1;
