@@ -4,7 +4,9 @@ window.addEventListener('load', function (event) {
     getUserRequests();
     // console.log('dropdowns were updated');
 });
-
+/**
+ * @description Gets and displays the current user requests
+ */
 function getUserRequests() {
 
     var opts = { type: "GET", url: '/api/user-requests' };
@@ -22,7 +24,10 @@ function getUserRequests() {
     });
 
 }
-
+/**
+ * @description Refreshes the dropdown containing the current user requests
+ * @param {*} requests 
+ */
 function refreshDropdownRequestUsers(requests) {
 
     var menu = document.getElementById('requests-dropdown');
@@ -38,7 +43,9 @@ function refreshDropdownRequestUsers(requests) {
         menu.add(option);
     });
 }
-
+/**
+ * @description Custom function for submitting the user request form
+ */
 function getUserRequestForm() {
     var menu = document.getElementById('requests-dropdown');
     if (menu.value) {
@@ -68,7 +75,10 @@ function getUserRequestForm() {
 
 
 }
-
+/**
+ * Fills out the user request form with the provided info
+ * @param {*} userRequest 
+ */
 function fillUserForm(userRequest) {
     document.getElementById('user-username').innerText = userRequest.username;
     document.getElementById('user-email').innerText = userRequest.email;
@@ -128,7 +138,11 @@ function getPageSelected(mId) {
     }
 }
 
-//element declared multiple time
+/**
+ * @description Fill the form with the given id with the content provided
+ * @param {*} fId The idea of the form to be filled
+ * @param {*} content The content for the form to be filled with
+ */
 function fillForm(fId, content) {
     const hasFile = fId=='Course'?true:false;
     var form = document.getElementById(fId);
@@ -178,7 +192,9 @@ var nav = document.querySelector("nav");
 nav.classList.add("fixed-top");
 nav.setAttribute("style", "position:sticky !important");
 
-//Display/Hide forms
+/**
+ * @description Display/Hide forms
+ */
 function toggleForm(name, method, hasFile) {
     var form = document.getElementById(name);
     // Hides the garbage that 
@@ -225,7 +241,10 @@ function toggleForm(name, method, hasFile) {
     }
 
 }
-
+/**
+ * @description Sets the position of a form
+ * @param {*} form 
+ */
 function setFormPosition(form) {
 
     var wrapper = document.getElementById('form-wrap');
@@ -249,6 +268,9 @@ function setFormPosition(form) {
 //Add a new input field for instructor in Course Form
 var pointer = 0;
 var total = 0;
+/**
+ * @description Helper function for adding a field to the instructor form
+ */
 function addField() {
 
     var previousField = document.getElementById('divInstr' + pointer);
@@ -276,7 +298,10 @@ function addField() {
 
 }
 
-//remove input field
+/**
+ * @description Remove field at a given index from a form
+ * @param {*} index 
+ */
 function removeField(index) {
     var field = document.getElementById('divInstr' + index);
     var minus = document.getElementById('minus' + index);
@@ -286,7 +311,9 @@ function removeField(index) {
     total--;
     if (total == 0) pointer = 0;
 }
-
+/**
+ * @description Refreshes all the dropdown menus for all forms with the updated data from the database
+ */
 function refreshDropdowns() {
 
     var opts = { type: "GET", url: '/api/dashboard-info' };
@@ -311,7 +338,10 @@ function refreshDropdowns() {
     });
 
 }
-
+/**
+ * @description Refreshes specifically the awards dropdown
+ * @param {*} awards 
+ */
 function refreshDropdownAward(awards) {
 
     var menu = document.getElementById('modAward');
@@ -327,7 +357,10 @@ function refreshDropdownAward(awards) {
         menu.add(option);
     });
 }
-
+/**
+ * @description Refreshes the dropdown with all the courses
+ * @param {*} courses 
+ */
 function refreshDropdownCourse(courses) {
     var menu = document.getElementById('modCourse');
     menu.innerHTML = '';
@@ -342,7 +375,10 @@ function refreshDropdownCourse(courses) {
         menu.add(option);
     });
 }
-
+/**
+ * @description Refreshes the postings dropdown
+ * @param {*} postings 
+ */
 function refreshDropdownPosting(postings) {
     var menu = document.getElementById('modPosting');
     menu.innerHTML = '';
@@ -357,7 +393,10 @@ function refreshDropdownPosting(postings) {
         menu.add(option);
     });
 }
-
+/**
+ * @description Refreshes the news dropdown
+ * @param {*} news 
+ */
 function refreshDropdownNews(news) {
     var menu = document.getElementById('modNews');
     menu.innerHTML = '';
@@ -372,7 +411,10 @@ function refreshDropdownNews(news) {
         menu.add(option);
     });
 }
-
+/**
+ * @description Refreshes the events dropdown
+ * @param {} events 
+ */
 function refreshDropdownEvent(events) {
     var menu = document.getElementById('modEvent');
     menu.innerHTML = '';
@@ -387,7 +429,10 @@ function refreshDropdownEvent(events) {
         menu.add(option);
     });
 }
-
+/**
+ * @description Refreshes the tech support dropdown
+ * @param {} techSupports 
+ */
 function refreshDropdownTech(techSupports) {
     var menu = document.getElementById('modTech');
     menu.innerHTML = '';
@@ -402,7 +447,10 @@ function refreshDropdownTech(techSupports) {
         menu.add(option);
     });
 }
-
+/**
+ * @description Refreshes the page categories dropdown
+ * @param {*} pages 
+ */
 function refreshDropDownPages(pages) {
     var menu = document.getElementById('select_category');
     if(!menu){
@@ -419,7 +467,10 @@ function refreshDropDownPages(pages) {
         menu.add(option);
     })
 }
-
+/**
+ * @description Refresh the dropdown with all the subpages
+ * @param {*} subpages 
+ */
 function refreshDropDownSubpages(subpages) {
     var menu = document.getElementById('select_page');
     if(!menu){
@@ -436,7 +487,7 @@ function refreshDropDownSubpages(subpages) {
             return;
         }
         var new_category = page.path.replace(/\/.+/,'');
-        if(category != new_category){
+        if(category != new_category){ //Creates optgroups based on the category each subpage is in
             category = new_category;
             group = document.createElement('optgroup');
             group.label = category;
@@ -526,7 +577,7 @@ function errorCheck(pObject) {
 }
 
 /**
- * 
+ * @description Generic function for handling the submission of forms on the dashboard page
  * @param {Event} event 
  * @param {HTMLElement} element 
  * @param {String} method 
@@ -583,7 +634,7 @@ collectionToArray(document.getElementsByTagName('input')).forEach(element => {
 });
 
 /**
- * @description  
+ * @description  Function used for the delete button on the modify forms
  * @param {HTMLElement} element
  * @returns {null}
  */

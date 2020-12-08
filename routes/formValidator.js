@@ -861,8 +861,8 @@ router.post('/Category', middleware.canCreateOrDestroy, (req,res) => {
             }, (err, page) => {
                 if(err){
                     console.log(err);
-                    return res.json({status: 1, response: "Error occured while creating category"});
                     Page.findByIdAndDelete(page.id); //Clean up the page if we messed it up
+                    return res.json({status: 1, response: "Error occured while creating category"});
                 }else if(page){
                     return res.json({status: 0, response: "Category created successfully"});
                 }

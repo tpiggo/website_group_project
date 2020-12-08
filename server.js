@@ -66,8 +66,7 @@ app.use('/:page', require('./routes/subpages'));
 
 //If the route isn't recognized
 app.get('*', (req, res) => {
-    console.log(`404 REQUEST NOT RECOGNIZED [${req.url}]`);
-    res.send(`404 REQUEST NOT RECOGNIZED [${req.url}]`);
+    res.redirect('/unknown');
 });
 
 const PORT = process.env.PORT || 8016;
