@@ -113,13 +113,14 @@
                     <div class="row">
                         <div class="col-4">
                           <div class="list-group" id="list-tab" role="tablist">
-                            <a class="list-group-item list-group-item-action active" id="list-home-list" data-toggle="list" href="#list-home" role="tab" aria-controls="add">Add Page</a>
-                            <a class="list-group-item list-group-item-action" id="list-profile-list" data-toggle="list" href="#list-profile" role="tab" aria-controls="delete">Delete Page</a>
+                            <a class="list-group-item list-group-item-action active" id="list-create-list" data-toggle="list" href="#list-create" role="tab" aria-controls="add">Add Page</a>
+                            <a class="list-group-item list-group-item-action" id="list-delete-list" data-toggle="list" href="#list-delete" role="tab" aria-controls="delete">Delete Page</a>
+                            <a class="list-group-item list-group-item-action" id="list-category-list" data-toggle="list" href="#list-category" role="tab" aria-controls="delete">Add Category</a>
                           </div>
                         </div>
                         <div class="col-8">
                           <div class="tab-content" id="nav-tabContent">
-                            <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
+                            <div class="tab-pane fade show active" id="list-create" role="tabpanel" aria-labelledby="list-create-list">
                                 <form id="subpage" method="POST" onsubmit="handleRequest(event, $(this), 'POST', false)">
                                     <h2 id="subpageHeader">Add Page</h2>
                                     <select class="form-control" id="select_category" name="category">
@@ -130,13 +131,21 @@
                                     <button type="submit">Add</button>
                                 </form>
                             </div>
-                            <div class="tab-pane fade" id="list-profile" role="tabpanel" aria-labelledby="list-profile-list">
+                            <div class="tab-pane fade" id="list-delete" role="tabpanel" aria-labelledby="list-delete-list">
                                 <form id="subpage-Delete" method="POST" onsubmit="handleRequest(event, $(this), 'POST', false)">
                                     <h2 id="subpage-DeleteHeader">Delete Page</h2>
                                     <select class="form-control" id="select_page" name="page_id">
                                         <option>Page</option>
                                     </select>
                                     <button type="submit">Delete</button>
+                                </form>
+                            </div>
+                            <div class="tab-pane fade" id="list-category" role="tabpanel" aria-labelledby="list-category-list">
+                                <form id="category" method="POST" onsubmit="handleRequest(event, $(this), 'POST', false)">
+                                    <h2 id="categoryHeader">Add Category</h2> 
+                                    <input type="text" class="form-control" id="category_name" placeholder="Category Name" name="category_name">
+                                    <br>
+                                    <button type="submit">Add Category</button>
                                 </form>
                             </div>
                           </div>

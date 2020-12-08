@@ -13,7 +13,7 @@ app.use(express.urlencoded({ extended: true }));
 
 
 router.get('/:pagename', (req, res) => {
-    console.log('Request received for /' + req.params.pagename + ' - sending file /views/' + req.params.pagename);
+    
     
     console.log(req.originalUrl.substr(1));
     Subpage.findOne({ path: req.originalUrl.substr(1) }, (err, subpage) => {
@@ -67,19 +67,25 @@ router.get('/:pagename/edit', canEdit, (req, res) => {
         if (err) {
             console.log(err);
         } else if (pagedata) {
-            var title = pagedata.name;
-            var logged = req.session.authenticated;
-            var username = req.session.username;
-            var content = pagedata.markdown;
-            var preview = markdown.render(content);
-            res.render('editor.ejs', {
-                title,
-                content,
-                logged,
-                username,
-                preview,
-                theme: req.session.theme,
-                navbar
+            common.getNavBar().then(pages => {
+                var navbar = pages.navbar;
+                var title = pagedata.name;
+                var logged = req.session.authenticated;
+                var username = req.session.username;
+                var content = pagedata.markdown;
+                var preview = markdown.render(content);
+                res.render('editor.ejs', {
+                    title,
+                    content,
+                    logged,
+                    username,
+                    preview,
+                    theme: req.session.theme,
+                    navbar
+                });
+            }).catch(err => {
+                console.log(err);
+                res.send("Error getting navbar from DB");
             });
         } else {
             console.log("User " + req.session.username + "tried to edit non-existent subpage " + pagename);
@@ -128,12 +134,6 @@ router.get('/:pagename/:subpage', (req, res) => {
 router.post('/:pagename/edit', canEdit, (req, res) => {
 
     var navbar;
-    common.getNavBar().then(pages => {
-        navbar = pages.navbar;
-    }).catch(err => {
-        console.log(err);
-        res.send("Error getting navbar from DB");
-    });
 
     var pagename = req.params.pagename;
     const entry = req.baseUrl.replace("/", '');
@@ -148,19 +148,25 @@ router.post('/:pagename/edit', canEdit, (req, res) => {
                     console.log(err);
                 }
             });
-            var title = pagedata.name;
-            var logged = req.session.authenticated;
-            var username = req.session.username;
-            var content = pagedata.markdown;
-            var preview = markdown.render(content);
-            res.render('editor.ejs', {
-                title,
-                content,
-                logged,
-                username,
-                preview,
-                theme: req.session.theme,
-                navbar
+            common.getNavBar().then(pages => {
+                navbar = pages.navbar;
+                var title = pagedata.name;
+                var logged = req.session.authenticated;
+                var username = req.session.username;
+                var content = pagedata.markdown;
+                var preview = markdown.render(content);
+                res.render('editor.ejs', {
+                    title,
+                    content,
+                    logged,
+                    username,
+                    preview,
+                    theme: req.session.theme,
+                    navbar
+                });
+            }).catch(err => {
+                console.log(err);
+                res.send("Error getting navbar from DB");
             });
         } else {
             console.log("User " + req.session.username + "tried to edit non-existent subpage " + pagename);
