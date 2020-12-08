@@ -544,15 +544,18 @@ function createForm(pObject){
     for (var i = 0; i < pObject.length; i++) {
         if (pObject[i].id != '' && pObject[i].type != 'submit') {
             var currId = pObject[i].id;
-
+            
             if (currId.includes('_id') && pObject[i].value == '') continue;
-            if (pObject[i].type == 'file') formData.append(pObject[i].name, pObject[i].files[0]);
-            else if (currId.includes('instruct')) {
+            if (pObject[i].type == 'file'){ 
+                formData.append(pObject[i].name, pObject[i].files[0]);
+            } else if (currId.includes('instruct')) {
                 instructors.push(pObject[i].value);
             } else if (currId.includes("w2021c") || currId.includes("s2021c") || currId.includes("f2021c")) {
                 if (document.getElementById(currId).checked) terms.push(pObject[i].value);
             }
-            else formData.append(pObject[i].name, pObject[i].value)
+            else {
+                formData.append(pObject[i].name, pObject[i].value);
+            }
         }
     }
     if (instructors.length > 0) formData.append('instructor', instructors);
