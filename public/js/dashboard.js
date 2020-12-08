@@ -551,9 +551,6 @@ function handleRequest(event, element, method, hasFile) {
     if (!errorCheck(mForm)) {
         // clear each one!
         // Create the async promise
-        for (var pair of mForm.entries()) {
-            console.log(pair[0]+ ', ' + pair[1]); 
-        }
         var opts = { type: method, url: '/parse/' + element[0].id, request: mForm , contentType: type};
         var aPromise = callBackEnd(opts);
         // Handle
