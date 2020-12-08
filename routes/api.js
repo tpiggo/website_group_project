@@ -16,6 +16,7 @@ const Courses = require('../models/Courses');
 const bodyParser = require('body-parser');
 const Subpage = require('../models/Subpage');
 const Page = require('../models/Page');
+const UserRequests = require('../models/UserRequest');
 const markdown = require('markdown-it')('commonmark');
 
 router.get('/index-info', (req, res) => {
@@ -99,6 +100,18 @@ router.get('/courses/syllabus/:courseName', (req, res) =>{
             console.error(err);
             return res.send('Error loading course page');
         });
+});
+
+router.get('/user-requests', (req, res) =>{ 
+
+    common.getAllDataFrom(UserRequests).then(requests => {
+        //console.log(requests);
+        res.send({ status: 0, requests});
+    }).catch(err => {
+        console.error(err);
+        res.send({ status: 1, response:'"Error Fetching the user requests"' });
+    })
+
 });
 
 /**

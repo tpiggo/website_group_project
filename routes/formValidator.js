@@ -925,6 +925,72 @@ router.post('/requestLevel', middleware.isAuthenticated, (req, res) => {
         
 });
 
+
+router.get('/user-requests', (req, res) => {
+    console.log('user request received !');
+    console.log('id : ' +req.query.id );
+    UserRequest.findById(req.query.id, (err, content) => {
+        if (err) {
+            console.error(err);
+            res.json({ status: 2, response: "Internal Error" });
+        } else {
+            if (content) {
+                console.log('user request found !');
+                res.json({ status: 0, response: 'User Request Accepted Succesfully', request: content });
+            } else {
+                console.log('content not found');
+                res.json({ status: 1, response: "Error : Request can't be found - Internal error or request deleted" });
+            }
+
+        }
+    });
+
+});
+
+router.put('/user-requests', (req, res) => {
+    var id = req.body._id;
+    delete req.body._id;
+
+    console.log('modifying user type !');
+    console.log(id + req.body)
+
+
+    UserRequest.findByIdAndUpdate(id, req.body, (err, update)=> {
+        if(err){
+            console.error(err);
+            res.json({status:2, response:'Error while accessing the databse'});
+        } else {
+            if(update) {
+                res.json({
+                    status:0,
+                    response: 'User request was succesfully updated'
+                });
+            } else {
+                res.json({
+                    status: 1,
+                    response: 'User request deleted, please close window, the current form is invalid'
+                })
+            }
+        }
+    });
+
+});
+
+router.delete('/user-requests', (req,res) => {
+    UserRequest.deleteOne(req.body)
+        .then(result=>{
+            if ( result.ok == 1 && result.deletedCount > 0 && result.n > 0){
+                res.json({status: 0, response: "Successfully deleted!"});
+            } else {
+                res.json({status: 2, response: "Error deleting! Try again later"})
+            }
+        })
+        .catch(err=>{
+            console.error(err);
+            res.json({status: 2, response: "Error accessing database"});
+        });
+})
+
 module.exports = router;
 
 

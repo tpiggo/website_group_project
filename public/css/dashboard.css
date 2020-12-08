@@ -102,9 +102,9 @@ body {
 }
 
 .alert {
-    -webkit-animation: disappear 3.5s forwards;
+    animation: disappear 3.5s forwards;
 }
-@-webkit-keyframes disappear {
+@keyframes disappear {
     90% {
         opacity: 1;
       }
