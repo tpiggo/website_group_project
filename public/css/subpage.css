@@ -4,11 +4,6 @@
     border: 2px black;
     height: 100%;
     text-align: center;
-    transition: all 0.7s;
-}
-
-#content.hidden {
-    transform: translateX(10%);
 }
 
 #content h2 {
@@ -18,7 +13,7 @@
     font-style:italic;
 }
 
-/* Side nav */
+/* Side nav
 #menu {
     transition: all 0.5s;
     width: 15rem;
@@ -64,7 +59,7 @@
 
 #menu.hidden {
     transform: translateX(-100%);
-}
+} */
 .card-body {
     text-align: left;
 }
