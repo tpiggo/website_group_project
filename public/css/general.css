@@ -222,7 +222,7 @@ nav ul {
 #user-wrap {
     margin: auto 0;
     margin-right: 2rem;
-    overflow:hidden;
+    /* overflow:hidden; */
 }
 
 /* user-bar CSS */
