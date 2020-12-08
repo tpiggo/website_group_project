@@ -14,6 +14,8 @@ const fs = require('fs');
 const path = require('path');
 const Courses = require('../models/Courses');
 const bodyParser = require('body-parser');
+const Subpage = require('../models/Subpage');
+const Page = require('../models/Page');
 
 router.get('/index-info', (req, res) => {
     // Get the events, latest , and postings. Get first 10, and then rest will be on the  
@@ -58,8 +60,9 @@ router.get('/dashboard-info', middleware.isAuthenticated, (req, res) => {
     var getAwards = () => common.getAllDataFrom(Award);
     var getTech = () => common.getAllDataFrom(TechnicalReport);
     var getPosting = () => common.getAllDataFrom(Posting);
-
-    Promise.all([getCourses(), getNews(), getEvents(), getAwards(), getTech(), getPosting()])
+    var getSubpages = () => common.getAllDataFrom(Subpage);
+    var getPages = () => common.getAllDataFrom(Page);
+    Promise.all([getCourses(), getNews(), getEvents(), getAwards(), getTech(), getPosting(), getSubpages(), getPages()])
         .then(data => {
             console.log('sending all the data to dashboard');
             res.json({ status: 0, data });

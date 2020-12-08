@@ -12,6 +12,8 @@ const Posting = require('../models/Posting');
 const Award = require('../models/Award');
 const multer = require('multer');
 const path = require('path');
+const Subpage = require('../models/Subpage');
+const Page = require('../models/Page');
 // Body parser for these routes. Needed since sending JSONs to and from the frontend.
 router.use(bodyParser.json());
 
@@ -685,6 +687,70 @@ router.get('/Course', (req, res) => {
         }
     });
 
+});
+
+// *****************Adding and deleting subpages**************
+router.post('/Subpage', middleware.canCreateOrDestroy, (req,res) => {
+    if(!req.body.category || req.body.category == "Category"){
+        return res.json({status: 1, response: "Invalid category selection"});
+    }
+    var category;
+    console.log(req.body.category);
+    Page.findById(req.body.category, (err,page) => {
+        if(err){
+            console.log(err);
+            return res.json({status: 1, response: "Invalid category selection"});
+        }else if(page){
+            var path = page.title.toLowerCase() + "/" + req.body.page_name;
+            Subpage.create({
+                name: req.body.page_name,
+                markdown: "",
+                html: "",
+                path,
+                submenu: []
+            }, (err,subpage) => {
+                if(err){
+                    console.log(err);
+                    return res.json({status: 1, response: "Error while creating subpage"});
+                }else if(subpage){
+                    console.log(page);
+                    console.log(page.subpages);
+                    page.subpages.push(subpage);
+                    page.save((err) => {
+                        if(err){
+                            console.log(err);
+                        }
+                    });
+                    return res.json({status: 0, response: "Subpage successfully created"});
+                }
+            });
+        }else{
+            console.log("Could not find page with id: " +req.body.category);
+            return res.json({status: 1, response: "Invalid category selection"});
+        }
+    });
+});
+
+router.post('/Subpage-Delete', middleware.canCreateOrDestroy, (req,res) => {
+    console.log(req.body);
+    Subpage.findByIdAndDelete(req.body.page_id, (err,subpage) => {
+        if(err){
+            res.json({status: 1, response: "Error deleting subpage"});
+        }else{
+            var page_path = subpage.path.replace(/\/.+/,'').toLowerCase();
+            console.log("Page path: " + page_path);
+            Page.findOne({path: page_path}, (err,page) => {
+                var page_index = page.subpages.indexOf(req.body.page_id);
+                page.subpages.splice(page_index,1);
+                page.save((err) => {
+                    if(err){
+                        console.log(err);
+                    }
+                });
+            });
+            res.json({status: 0, response: "Subpage successfully deleted"});
+        }
+    });
 });
 
 

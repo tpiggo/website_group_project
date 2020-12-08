@@ -162,7 +162,8 @@ function refreshDropdowns() {
             refreshDropdownAward(response.data[3]);
             refreshDropdownTech(response.data[4]);
             refreshDropdownPosting(response.data[5]);
-
+            refreshDropDownSubpages(response.data[6]);
+            refreshDropDownPages(response.data[7]);
         } else if (response.status >= 1) {
             console.log("Error on sending GET request");
             createPopupMsg('error', response.response, 'center');
@@ -260,6 +261,49 @@ function refreshDropdownTech(techSupports) {
         option.value = tech._id;
         option.text = tech.title + " on " + tech.reportDate;
         menu.add(option);
+    });
+}
+
+function refreshDropDownPages(pages) {
+    var menu = document.getElementById('select_category');
+    if(!menu){
+        return;
+    }
+    menu.innerHTML = '';
+    var defaultOpt = document.createElement('option');
+    defaultOpt.text = 'Category';
+    menu.add(defaultOpt);
+    pages.forEach(page => {
+        var option = document.createElement('option');
+        option.value = page._id;
+        option.text = page.title;
+        menu.add(option);
+    })
+}
+
+function refreshDropDownSubpages(subpages) {
+    var menu = document.getElementById('select_page');
+    if(!menu){
+        return;
+    }
+    menu.innerHTML = '';
+    var defaultOpt = document.createElement('option');
+    defaultOpt.text = 'Page';
+    menu.add(defaultOpt);
+    var category;
+    var group;
+    subpages.forEach(page => {
+        var new_category = page.path.replace(/\/.+/,'');
+        if(category != new_category){
+            category = new_category;
+            group = document.createElement('optgroup');
+            group.label = category;
+            menu.add(group);
+        }
+        var option = document.createElement('option');
+        option.value = page._id;
+        option.text = page.path.replace(/.+\//,'');
+        group.appendChild(option);
     });
 }
 
