@@ -16,14 +16,14 @@ function getPrev(){
     var currentPage = document.getElementsByClassName("page-item active")[0];
     currentPage.classList.toggle("active");
     // toggle the current slide to be unviewable;
-    let currentSlide = document.getElementById( currentPage.firstElementChild.getAttribute("data-element") );
+    var currentSlide = document.getElementById( currentPage.firstElementChild.getAttribute("data-element") );
     currentSlide.style.display = "none";
     isNextBtn(currentPage);
     currentPage = currentPage.previousElementSibling;
+    currentPage.classList.toggle("active");
     // toggles the current page (new page) to be viewable
     currentSlide = document.getElementById( currentPage.firstElementChild.getAttribute("data-element") );
-    currentSlide.style.display = "none";
-    currentPage.classList.toggle("active");
+    currentSlide.style.display = "block";
     isPrevBtn(currentPage)
 }
 
@@ -36,13 +36,14 @@ function getNext(){
     var currentPage = document.getElementsByClassName("page-item active")[0];
     currentPage.classList.toggle("active");
     // toggle the current slide to be unviewable
-    let currentSlide = document.getElementById( currentPage.firstElementChild.getAttribute("data-element") );
+    var currentSlide = document.getElementById( currentPage.firstElementChild.getAttribute("data-element") );
     currentSlide.style.display = "none";
     isPrevBtn(currentPage)
+    console.log(currentSlide);
     // toggles the current page (new page) to be viewable
     currentPage = currentPage.nextElementSibling;
-    document.getElementById( currentPage.firstElementChild.getAttribute("data-element") );
-    currentSlide.style.display = "none";
+    currentSlide = document.getElementById( currentPage.firstElementChild.getAttribute("data-element") );
+    currentSlide.style.display = "block";
     currentPage.classList.toggle("active");
     isNextBtn(currentPage);
 }
