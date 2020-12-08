@@ -56,7 +56,6 @@ function callBackEnd(pOpts) {
         // On the load call for the data.
         aXML.onload = function () {
             if (this.status >= 200 && this.status < 300) {
-                console.log("returned", aXML.response)
                 resolve(JSON.parse(aXML.response));
             } else {
                 reject(JSON.parse({

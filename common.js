@@ -184,4 +184,53 @@ common.searchModelNames = (search) => {
     });
 }
 
+
+
+/**
+ * @description Takes an array of courses and sorts them
+ * @param {Array} pArr 
+ */
+common.mergeSortCourses = function(pArr){
+    if (pArr.length <= 1) {
+        return pArr;
+    }
+    var mid = Math.floor(pArr.length/2);
+    var lArr = pArr.slice(0, mid);
+    var rArr = pArr.slice(mid);
+    lArr = common.mergeSortCourses(lArr);
+    rArr = common.mergeSortCourses(rArr);
+    return mergeCourses(lArr, rArr); 
+}
+
+/**
+ * @description Merges two sorted arrays, returns a sorted array
+ * @param {Array} lArr 
+ * @param {Array} rArr 
+ */
+function mergeCourses(lArr, rArr){
+    var i = 0, k = 0; 
+    var arr = [];
+    while( i < rArr.length && k < lArr.length){
+        var rCode = parseInt(rArr[i].title.split(" ")[1]);
+        var lCode = parseInt(lArr[k].title.split(" ")[1]);
+        if (rCode < lCode) {
+            arr.push(rArr[i]);
+            i++;
+        } else {
+            arr.push(lArr[k]);
+            k++;
+        }
+    }
+    while (i < rArr.length){
+        arr.push(rArr[i]);
+        i++;
+    }
+    
+    while (k < lArr.length){
+        arr.push(lArr[k]);
+        k++;
+    }
+    return arr;
+}
+
 module.exports = common;

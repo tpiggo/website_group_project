@@ -2,7 +2,7 @@
 
 <h3 id='coursesHeader'>Courses</h3>
 
-<a id="see-all-courses" href="courses?query=all">Want to see all courses?</a>
+
 
 <div id="select-box">
     <select id='course-select'>
@@ -11,6 +11,10 @@
         <% } %>
     </select>
     <button class="btn btn-primary" onclick="getClass()" >Get course!</button>
+</div>
+<div id="course-toolbar">
+    <button class="btn btn-secondary btn-sm" onclick="seeAllCourses()">See All</button>
+    <button class="btn btn-secondary btn-sm" onclick="removeAllCourses()">Remove All</button>
 </div>
 
 <div id="response-container">

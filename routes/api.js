@@ -14,6 +14,7 @@ const fs = require('fs');
 const path = require('path');
 const Courses = require('../models/Courses');
 const bodyParser = require('body-parser');
+const { mergeSortCourses } = require('../common');
 const markdown = require('markdown-it')('commonmark');
 
 router.get('/index-info', (req, res) => {
@@ -114,7 +115,39 @@ function getFirstN(pArray, maxSize){
 
 router.get('/getCourse', (req, res) => {
     const classTitle = req.query.class;
-    Courses.findOne({title: classTitle})
+    if (classTitle == "all"){
+        Courses.find()
+            .then(results => {
+                if (results.length > 0){
+                    // Need to check if this is already a link. Courses syllabus can be a link or a file  
+                    for (let result of results){
+                        if (result.syllabus != undefined){
+                            result.syllabus = '/api/courses/syllabus/comp-' + result.title.split(" ")[1];
+                        }
+                        // Hide the database ID
+                        result._id = null;
+                    }
+                    results = common.mergeSortCourses(results);
+                    res.json({
+                        response: results,
+                        status: 0
+                    });
+                } else {
+                    res.json({
+                        response: 'Error: No course found!',
+                        status: 1
+                    });
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                res.json({
+                    response: "Internal Server Error.",
+                    status: 2
+                });
+            });
+    } else {
+        Courses.findOne({title: classTitle})
         .then(result => {
             if (result) {
                 // Need to check if this is already a link. Courses syllabus can be a link or a file  
@@ -141,6 +174,8 @@ router.get('/getCourse', (req, res) => {
                 status: 2
             });
         });
+    }
+    
 });
 
 // Giving access to bodyparser from this moment on
