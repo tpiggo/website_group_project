@@ -222,7 +222,6 @@ nav ul {
 #user-wrap {
     margin: auto 0;
     margin-right: 2rem;
-    overflow:hidden;
 }
 
 /* user-bar CSS */
@@ -258,7 +257,7 @@ nav ul {
 #register,
 #logout,
  #settings{
-    color:tertiary;
+    color: var(--tertiary);
 }
 
 #icon {

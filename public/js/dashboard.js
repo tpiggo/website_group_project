@@ -85,12 +85,20 @@ nav.setAttribute("style", "position:sticky !important");
 //Display forms
 function toggleForm(name, method, hasFile) {
     var form = document.getElementById(name);
+    // Hides the garbage that 
+    if (form.className.includes("hidden")){
+        for (let child of form.children){
+            let idString = name.toLowerCase();
+            if ( child.id == `delete-${idString}`){
+                child.style="visibility: hidden;";
+            }
+        }
+    }
     form.classList.toggle("hidden");
     if (name.includes("Course")) {
         while (total > 0) {
             removeField(pointer);
         }
-        console.log($( "#syllabus-choice" ).val());
     }
     var content = document.getElementById("center");
     content.classList.toggle("hidden");
@@ -103,7 +111,18 @@ function toggleForm(name, method, hasFile) {
     for (var j = 0; j < selects.length; j++) {
         selects[j].disabled = !selects[j].disabled;
     }
-    if (method) form.setAttribute('onsubmit', `handleRequest(event, $(this), '${method}', ${hasFile})`);
+    if (method == "PUT"){
+        form.setAttribute('onsubmit', `handleRequest(event, $(this), '${method}', ${hasFile})`);
+        for (let child of form.children){
+            let idString = name.toLowerCase();
+            if ( child.id == `delete-${idString}`){
+                child.style="visibility: visible;";
+            }
+        }
+    } else {
+        form.setAttribute('onsubmit', `handleRequest(event, $(this), '${method}', ${hasFile})`);
+        form.reset();
+    }
 
 }
 
@@ -343,6 +362,7 @@ function errorCheck(pObject) {
 function handleRequest(event, element, method, hasFile) {
     // Do not allow default.
     event.preventDefault();
+    console.log(event);
     // Building the request JSON
     var mForm, type;
     if (hasFile){
@@ -361,10 +381,7 @@ function handleRequest(event, element, method, hasFile) {
         // Handle
         aPromise
             .then(function (response) {
-                // Returning element to its JSON format
                 var aId = element[0].id;
-                // response = JSON.parse(response);
-                // console.log(response);
                 if (response.status == 0) {
                     if (method != 'PUT') document.getElementById(element[0].id).reset();
                     refreshDropdowns();
@@ -389,3 +406,35 @@ collectionToArray(document.getElementsByTagName('input')).forEach(element => {
         if (element.style.border == "1px solid red") element.style.border = "";
     });
 });
+
+/**
+ * @description  
+ * @param {HTMLElement} element
+ * @returns {null}
+ */
+function deleteButton(event, element){
+    // preventing the default action since it SOMEHOW magically propogates to the other button....
+    event.preventDefault();
+    let id;
+    let parentElement = element.parentElement;
+    for (let el of parentElement.children){
+        if (el.name == '_id'){
+            id = el.value;
+            break;
+        }
+    }
+    var opts = { type: "DELETE", url: '/parse/' + parentElement.id, request: {_id: id} , contentType: "JSON"};
+    const aPromise = callBackEnd(opts);
+    aPromise
+        .then(result=>{
+            console.log(result);
+            if (result.status == 0){
+                createPopupMsg('success', result.response, parentElement.id + "Header");
+                refreshDropdowns();
+                parentElement.reset();
+            } else {
+                createPopupMsg('error', result.response, parentElement.id + "Header");
+            }
+        })
+        .catch(err=>console.log(err));
+}   

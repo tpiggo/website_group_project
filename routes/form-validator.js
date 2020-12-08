@@ -249,6 +249,22 @@ router.put('/Award', middleware.isAuthenticated, (req, res) => {
     });
 
 });
+
+router.delete('/Award', middleware.isAuthenticated, (req, res) => {
+    Award.deleteOne(req.body)
+        .then(result=>{
+            if ( result.ok == 1 && result.deletedCount > 0 && result.n > 0){
+                res.json({status: 0, response: "Successfully deleted!"});
+            } else {
+                res.json({status: 2, response: "Error deleting! Try again later"})
+            }
+        })
+        .catch(err=>{
+            console.error(err);
+            res.json({status: 2, response: "Error accessing database"});
+        });
+});
+
 //  ********************************* NEWS REQUESTS *********************************
 router.post('/News', middleware.isAuthenticated, (req, res) => {
     /**
@@ -327,6 +343,21 @@ router.put('/News', middleware.isAuthenticated, (req, res) => {
         }
     });
 
+});
+
+router.delete('/News', middleware.isAuthenticated, (req, res) => {
+    News.deleteOne(req.body)
+        .then(result=>{
+            if ( result.ok == 1 && result.deletedCount > 0 && result.n > 0){
+                res.json({status: 0, response: "Successfully deleted!"});
+            } else {
+                res.json({status: 2, response: "Error deleting! Try again later"})
+            }
+        })
+        .catch(err=>{
+            console.error(err);
+            res.json({status: 2, response: "Error accessing database"});
+        });
 });
 
 //  ********************************* EVENT REQUESTS *********************************
@@ -437,6 +468,21 @@ router.put('/Event', middleware.isAuthenticated, (req, res) => {
         }
     });
 
+});
+
+router.delete('/Event', middleware.isAuthenticated, (req, res) => {
+    Event.deleteOne(req.body)
+        .then(result=>{
+            if ( result.ok == 1 && result.deletedCount > 0 && result.n > 0){
+                res.json({status: 0, response: "Successfully deleted!"});
+            } else {
+                res.json({status: 2, response: "Error deleting! Try again later"})
+            }
+        })
+        .catch(err=>{
+            console.error(err);
+            res.json({status: 2, response: "Error accessing database"});
+        });
 });
 
 //  ********************************* TECH REQUESTS *********************************
@@ -552,6 +598,21 @@ router.put('/Tech', middleware.isAuthenticated, (req, res) => {
 
 });
 
+router.delete('/Tech', middleware.isAuthenticated, (req, res) => {
+    TechnicalReport.deleteOne(req.body)
+        .then(result=>{
+            if ( result.ok == 1 && result.deletedCount > 0 && result.n > 0){
+                res.json({status: 0, response: "Successfully deleted!"});
+            } else {
+                res.json({status: 2, response: "Error deleting! Try again later"})
+            }
+        })
+        .catch(err=>{
+            console.error(err);
+            res.json({status: 2, response: "Error accessing database"});
+        });
+});
+
 
 //  ********************************* POSTING REQUESTS *********************************
 router.post('/Posting', middleware.isAuthenticated, (req, res) => {
@@ -624,6 +685,21 @@ router.get('/Posting', middleware.isAuthenticated, (req, res) => {
     });
 });
 
+router.delete('/Posting', middleware.isAuthenticated, (req, res) => {
+    Posting.deleteOne(req.body)
+        .then(result=>{
+            if ( result.ok == 1 && result.deletedCount > 0 && result.n > 0){
+                res.json({status: 0, response: "Successfully deleted!"});
+            } else {
+                res.json({status: 2, response: "Error deleting! Try again later"})
+            }
+        })
+        .catch(err=>{
+            console.error(err);
+            res.json({status: 2, response: "Error accessing database"});
+        });
+});
+
 //  ********************************* COURSE REQUESTS *********************************
 router.post('/Course', upload.single("syllabus"), middleware.isAuthenticated, (req, res) => {
     // Fix syllabus, add its path rather than its name
@@ -685,6 +761,21 @@ router.get('/Course', (req, res) => {
         }
     });
 
+});
+
+router.delete('/Course', middleware.isAuthenticated, (req, res) => {
+    Course.deleteOne(req.body)
+        .then(result=>{
+            if ( result.ok == 1 && result.deletedCount > 0 && result.n > 0){
+                res.json({status: 0, response: "Successfully deleted!"});
+            } else {
+                res.json({status: 2, response: "Error deleting! Try again later"})
+            }
+        })
+        .catch(err=>{
+            console.error(err);
+            res.json({status: 2, response: "Error accessing database"});
+        });
 });
 
 
