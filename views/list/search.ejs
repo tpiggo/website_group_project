@@ -5,18 +5,22 @@
         <% if (result.data.length > 0 ) {%>
             <% for (let searched of result.data) {%>
                 <% if (searched.title != undefined ) {%>
-                    <li class="custom-list-group-item" href=<%=searched.href%> onclick="clickableBlock($(this)[0])">
-                        <h2><%=searched.title%></h2>
-                        <div class="matchedBox">
-                            <%-searched.matchedString%>
-                        </div>
+                    <li class="custom-list-group-item">
+                        <button class="custom-btn" href=<%=searched.href%> onclick="clickableBlock($(this)[0])">
+                            <h2><%=searched.title%></h2>
+                            <div class="matchedBox">
+                                <%-searched.matchedString%>
+                            </div>
+                        </button>
                     </li>
                 <% } else { %>
                     <li class="custom-list-group-item" href=<%=searched.href%> onclick="clickableBlock($(this)[0])">
-                        <h2><%=searched.name%></h2>
-                        <div class="matchedBox">
-                            <%-searched.matchedString%>
-                        </div>
+                        <button class="custom-btn" href=<%=searched.href%> onclick="clickableBlock($(this)[0])">
+                            <h2><%=searched.name%></h2>
+                            <div class="matchedBox">
+                                <%-searched.matchedString%>
+                            </div>
+                        </button>
                     </li>
                 <% } %>
             <% } %>

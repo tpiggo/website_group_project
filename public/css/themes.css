@@ -5,6 +5,7 @@
     --scroll:0;
     --nav-height:'';
     --text-color: black;
+    --btn-color: #ac2431;
 }
 
 body.blue{
@@ -12,6 +13,7 @@ body.blue{
     --secondary: #0b099e;
     --tertiary: #918fa5;
     --text-color: white;
+    --btn-color: #273fa7;
 }
 
 body.green{
@@ -19,6 +21,7 @@ body.green{
     --secondary: #279e09;
     --tertiary: #8fa590;
     --text-color: black;
+    --btn-color: #2a8d26;
 }
 
 body.yellow{
@@ -26,6 +29,7 @@ body.yellow{
     --secondary: #9e9c09;
     --tertiary: #a2a58f;
     --text-color: black;
+    --btn-color: #7c7a13;
 }
 
 body.dark{
@@ -33,4 +37,5 @@ body.dark{
     --secondary: #240c0c;
     --tertiary: #343738;
     --text-color: white;
+    --btn-color: #2b0303bb;
 }

@@ -98,3 +98,17 @@ body {
         display: none;
       }
 }
+
+#request-button{
+    color: var(--text-color);
+    background-color: var(--btn-color);
+}
+#request-form{
+    position: relative;
+}
+.close{
+    position: absolute;
+    margin: 0;
+    top: 0.5em;
+    right: 0.5em;
+}
