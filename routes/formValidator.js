@@ -15,13 +15,12 @@ const Page = require('../models/Page');
 const multer = require('multer');
 const path = require('path');
 const User = require('../models/User');
-const { resolve } = require('path');
 // Body parser for these routes. Needed since sending JSONs to and from the frontend.
 router.use(bodyParser.json());
 
 
 var upload = multer({
-    dest: path.join(__dirname, "../fileHolderDir/")
+    dest: path.join(__dirname, "../files/")
 });
 
 
@@ -788,8 +787,6 @@ router.post('/Subpage', middleware.canCreateOrDestroy, (req,res) => {
     if(!req.body.category || req.body.category == "Category"){
         return res.json({status: 1, response: "Invalid category selection"});
     }
-    var category;
-    console.log(req.body.category);
     Page.findById(req.body.category, (err,page) => {
         if(err){
             console.log(err);
@@ -871,6 +868,7 @@ router.post('/Category', middleware.canCreateOrDestroy, (req,res) => {
     });
 });
 
+// ********************** USER REQUEST UPDATES ***************************
 
 router.get('/user-requests', (req, res) => {
     console.log('user request received !');
@@ -887,7 +885,6 @@ router.get('/user-requests', (req, res) => {
                 console.log('content not found');
                 res.json({ status: 1, response: "Error : Request can't be found - Internal error or request deleted" });
             }
-
         }
     });
 
