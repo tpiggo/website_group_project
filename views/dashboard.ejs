@@ -9,14 +9,14 @@
     <link rel="stylesheet" href="/css/themes.css">
     <style>
         /* Resetting the searchbar form sizing*/
-        #searchbar{
+        /* #searchbar{
             all:initial;
         }
-        #Subpage{
+        #subpage{
             width:initial;
             box-shadow:none;
         }
-        #Subpage-Delete{
+        #subpage-Delete{
             width:initial;
             box-shadow:none;
         }
@@ -25,7 +25,7 @@
         }
         #form-wrap form{
             width:70vw;
-        }
+        } */
     </style>
     <title>CS Dashboard</title>
 
@@ -65,7 +65,7 @@
 
                     <h3>Course</h3>
                     <button class="general" onclick="toggleForm('Course', 'POST', true)" >
-                    >Add</button>
+                   Add</button>
                     <br>
 
                     <select class="form-control" id="modCourse"  onchange="getPageSelected('modCourse')" >
@@ -120,8 +120,8 @@
                         <div class="col-8">
                           <div class="tab-content" id="nav-tabContent">
                             <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
-                                <form id="Subpage" method="POST" onsubmit="handleRequest(event, $(this), 'POST', false)">
-                                    <h2 id="SubpageHeader">Add Page</h2>
+                                <form id="subpage" method="POST" onsubmit="handleRequest(event, $(this), 'POST', false)">
+                                    <h2 id="subpageHeader">Add Page</h2>
                                     <select class="form-control" id="select_category" name="category">
                                         <option>Category</option>
                                     </select> 
@@ -131,8 +131,8 @@
                                 </form>
                             </div>
                             <div class="tab-pane fade" id="list-profile" role="tabpanel" aria-labelledby="list-profile-list">
-                                <form id="Subpage-Delete" method="POST" onsubmit="handleRequest(event, $(this), 'POST', false)">
-                                    <h2 id="Subpage-DeleteHeader">Delete Page</h2>
+                                <form id="subpage-Delete" method="POST" onsubmit="handleRequest(event, $(this), 'POST', false)">
+                                    <h2 id="subpage-DeleteHeader">Delete Page</h2>
                                     <select class="form-control" id="select_page" name="page_id">
                                         <option>Page</option>
                                     </select>
@@ -189,7 +189,7 @@
             <br>
 
             <input id="ta_id" name="_id" style="display:none;">
-            <button id="delete-ta" onclick="deleteButton(event, $(this)[0])" style="visibility: hidden;">
+            <button id="delete-ta" class="general" onclick="deleteButton(event, $(this)[0])" style="visibility: hidden;">
                 <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-trash" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                     <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
                     <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
@@ -220,7 +220,7 @@
             <br>
             <br>
             <input id="a_id" name="_id" style="display:none;">
-            <button id="delete-award" onclick="deleteButton(event, $(this)[0])" style="visibility: hidden;">
+            <button id="delete-award" class="general" onclick="deleteButton(event, $(this)[0])" style="visibility: hidden;">
                 <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-trash" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                     <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
                     <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
@@ -255,7 +255,7 @@
                 placeholder="Short description"></textarea>
             <br>
             <input id="n_id" name="_id" style="display:none;">
-            <button id="delete-news" onclick="deleteButton(event, $(this)[0])" style="visibility: hidden;">
+            <button id="delete-news" class="general" onclick="deleteButton(event, $(this)[0])" style="visibility: hidden;">
                 <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-trash" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                     <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
                     <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
@@ -299,7 +299,7 @@
             <br>
 
             <input id="e_id" name="_id" style="display:none;">
-            <button id="delete-event" onclick="deleteButton(event, $(this)[0])" style="visibility: hidden;">
+            <button id="delete-event" class="general" onclick="deleteButton(event, $(this)[0])" style="visibility: hidden;">
                 <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-trash" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                     <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
                     <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
@@ -363,7 +363,7 @@
             <input type="file" name="syllabus">
             <br>
             <input id="c_id" name="_id" style="display:none;">
-            <button id="delete-course" onclick="deleteButton(event, $(this)[0])" style="visibility: hidden;">
+            <button id="delete-course" class="general" onclick="deleteButton(event, $(this)[0])" style="visibility: hidden;">
                 <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-trash" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                     <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
                     <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
@@ -390,7 +390,7 @@
             <textarea id="techDescription" name="description" cols="60" placeholder="Report"></textarea>
             <br>
             <input id="tech_id" name="_id" style="display:none;">
-            <button id="delete-tech" onclick="deleteButton(event, $(this)[0])" style="visibility: hidden;"> 
+            <button id="delete-tech" class="general" onclick="deleteButton(event, $(this)[0])" style="visibility: hidden;"> 
                 <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-trash" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                     <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
                     <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
@@ -435,7 +435,7 @@
                 placeholder="Short description of the posting"></textarea>
             <br>
             <input id="p_id" name="_id" style="display:none;">
-            <button id="delete-posting" onclick="deleteButton(event, $(this)[0])" style="visibility: hidden;">
+            <button id="delete-posting" class="general" onclick="deleteButton(event, $(this)[0])" style="visibility: hidden;">
                 <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-trash" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                     <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
                     <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>

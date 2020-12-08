@@ -21,10 +21,9 @@ h3 {
     left: 14.5%;
 }
 
-#center, form {
+#center, #form-wrap form {
     border-radius: 10px;
     padding: 10px;
-    width: 50rem;
     background-color: white;
     box-shadow: 0 0 15px 1px rgba(0, 0, 0, 0.4);
 }
@@ -32,12 +31,29 @@ h3 {
     filter: blur(8px);
     -webkit-filter: blur(8px);
 }
+#center{
+    width:initial;
+}
 
-form{
+#subpage{
+    width:initial;
+    box-shadow:none;
+}
+#subpage-Delete{
+    width:initial;
+    box-shadow:none;
+}
+
+#form-wrap form{
     /* position: absolute; */
     /* top: 50%; */
     /* left:20%; */
     transition: all 0.5s;
+    width:70vw;
+}
+
+#searchbar{
+    all:initial;
 }
 
 form.hidden{
