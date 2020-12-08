@@ -5,6 +5,8 @@ const app = express();
 const bcrypt = require('bcrypt');
 const User = require('../models/User.js');
 const { isAuthenticated, canUseRoute } = require('../middleware');
+const UserRequest = require('../models/UserRequest');
+const bodyParser = require('body-parser');
 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
@@ -216,5 +218,84 @@ router.get("/logout", (req, res)=>{
     res.redirect("/");
 });
 
+router.use(bodyParser.json())
+
+/** USER LEVEL REQUEST */
+router.post('/requestLevel', isAuthenticated, (req, res) => {
+    /**
+     * 
+     * @param {String} username 
+     */
+    function requestNotMade(username){
+        return new Promise((resolve, reject) => {
+            UserRequest.findOne({username: username}, (err, result)=>{
+                if (err){
+                    reject(err);
+                }
+                else if ( !result ) {
+                    resolve({canMake: true});
+                } else {
+                    reject({canMake: false});
+                }
+            });
+        });
+    }
+    /**
+     * 
+     * @param {String} username 
+     */
+    function getUser(username){
+        return new Promise((resolve, reject) => {
+            User.findOne({username: username}, (err, result) => {
+                if (err) reject(err)
+                else if ( result ) {
+                    resolve(result);
+                } else {
+                    reject(result);
+                }
+            })
+        });
+    }
+    /**
+     * 
+     * @param {User} user 
+     * @param {String} message 
+     */
+    function createRequest(user, message){
+        return new Promise((resolve, reject) => {
+            UserRequest.create({
+                username: user.username,
+                email: user.email,
+                message: message,
+                userType: user.userType
+            }, (err) => {
+                if (err) reject(err);
+                else resolve({status: 0, response: "Request was made!"});
+            })
+        });
+    }
+    // Making the request, trying to avoid callback hell
+    requestNotMade(req.body.user)
+        .then(() => {
+            console.log("username:", req.body.user);
+            return getUser(req.body.user);
+        })
+        .then(user => {
+            console.log("Got user:", user);
+            return createRequest(user, req.body.reason);
+        })
+        .then(result => {
+            res.json(result);
+        })
+        .catch(err=>{
+            console.error(err);
+            if (err.canMake != undefined){
+                res.json({status: 1, response: "Request has already been made!" });
+            } else {
+                res.json({status: 2, response: "Error in database! Try again later" });
+            }
+        })
+        
+});
 
 module.exports = router;
