@@ -11,6 +11,7 @@ router.get('/courses', (req, res) => {
     var courses;
     // Check if the query is empty! Only possible matches can be all or a course. 
     const {query} = req.query;
+    var data;
     common.getAllDataFrom(Courses)
         .then(result => {
             courses = mergeSortCourses(result);
@@ -27,13 +28,17 @@ router.get('/courses', (req, res) => {
                 }
             }
             content = { html: './list/courses', data: courses, query: query, queryCourses: queryCourses};
-            res.render('subpage', { title, menu: result.menu, content, logged, username, theme: req.session.theme});
-        })
-        .catch(err => {
+            data= { title, menu: result.menu, content, logged, username, theme: req.session.theme};
+            return common.getNavBar()
+        }).then(pages => {
+            res.render('subpage',{...data, navbar:pages.navbar});
+
+        }).catch(err => {
             console.error(err);
             content = {html: 'user-error', data: 'error'};
             res.render('subpage', { title, menu: result.menu, content, logged, username, theme: req.session.theme});
         });
+        
 });
 
 /**

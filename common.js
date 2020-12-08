@@ -95,7 +95,7 @@ common.getDataOfSubpage = (page, subpage) => {
 }
 
 /** Get and populate all the subpages of a page and extract the content of a specified subpage
- * @param {String} page indicate the collection to get data from
+ * @param {String} page indicate the path of the collection to get data from
  * @param {String} subpage indicates the document to extract the content from
  * @returns {Promise}   returns a formatted menu of the page to be rendered and the content of the specified subpage
 */
@@ -118,6 +118,38 @@ common.getPagesMenu = (page) => {
                         menu.push({ path: element.path, name: element.name, submenu: element.submenu });
                     });
                     resolve({ menu: menu});
+                    }
+
+            });
+
+    });
+}
+
+common.getNavBar = () =>{
+    return new Promise((resolve, reject) => {
+        Page
+            .find({})
+            .populate('subpages')
+            .exec((err, data) => {
+                if (err) {
+                    console.logo(err);
+                    reject("Internal error");
+                }
+                else if (data == null) {
+                    reject("404 : Nothing in the DB");
+                }
+                else {
+                    var navbar= []
+                    data.forEach(page =>{
+                        var title = page.title
+                        var path = page.path;
+                        var menu = []
+                        page.subpages.forEach(element => {
+                            menu.push({ path: element.path, name: element.name, submenu: element.submenu });
+                        });
+                        navbar.push({path:path, title:title, menu:menu});
+                    })
+                    resolve({navbar:navbar});
                     }
 
             });

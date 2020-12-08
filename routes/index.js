@@ -17,7 +17,13 @@ const bcrypt = require('bcrypt');
 const Page = require('../models/Page');
 
 router.get('/', (req, res) => {
-    res.render('homepage', { logged: req.session.authenticated, username: req.session.username, theme: req.session.theme});
+    common.getNavBar().then(pages =>{
+        console.log(pages.navbar);
+        res.render('homepage', { logged: req.session.authenticated, username: req.session.username, theme: req.session.theme, navbar:pages.navbar});
+    }).catch(err =>{
+        console.log(err);
+       res.send(err);
+    });
 });
 
 router.get('/denied', (req,res) => {
@@ -26,7 +32,13 @@ router.get('/denied', (req,res) => {
     var logged = req.session.authenticated;
     var username = req.session.username;
     var error_message = "You do not have permission to do that. If you believe this message to be in error please contact the website administrator.";
-    res.render('user-error', {error_code, menu, error_message, logged, username});
+    
+    common.getNavBar().then(pages =>{
+        res.render('user-error', {error_code, menu, error_message, logged, username, navbar:pages.navbar});
+    }).catch(err =>{
+        console.log(err);
+       res.send(err);
+    });
 });
 
 router.get('/unknown', (req,res) => {
@@ -35,18 +47,28 @@ router.get('/unknown', (req,res) => {
     var logged = req.session.authenticated;
     var username = req.session.username;
     var error_message = "The page you are looking for was not found";
-    res.render('user-error', {error_code, menu, error_message, logged, username});
+
+    common.getNavBar().then(pages => {
+        res.render('user-error', {error_code, menu, error_message, logged, username, navbar:pages.navbar});
+    }).catch(err => {
+        console.log(err);
+        res.send(err);
+    });
 });
 
 router.get('/dashboard', middleware.isAuthenticated, (req, res) => {
     // Set content
-
     User.findOne({ username: req.session.username }, (err, user) => {
         if (err) {
             console.error(err);
             res.send("error when accessing the User Database");
         } else {
-            res.render('dashboard', { logged: req.session.authenticated, user: user, theme: req.session.theme})
+            common.getNavBar().then(pages => {
+                res.render('dashboard', { logged: req.session.authenticated, user: user, theme: req.session.theme, navbar:pages.navbar})
+            }).catch(err => {
+                console.log(err);
+                res.send(err);
+            });
         }
     });
 
@@ -57,6 +79,7 @@ router.get('/dashboard', middleware.isAuthenticated, (req, res) => {
  */
 // Adding the settings route
 router.get('/settings', middleware.isAuthenticated,  (req, res)=>{
+
     User.findOne({username: req.session.username})
         .then(user=>{
             if (user){
@@ -72,28 +95,40 @@ router.get('/settings', middleware.isAuthenticated,  (req, res)=>{
                 dropDownTotal += userTheme!="yellow"?`<option value="yellow">Yellow</option>`:`<option value="yellow" selected=${selected}>Yellow</option>`;
                 content = {"html": "./partials/settings",  "script": "<script src='/js/settings.js'></script>", dropdown: dropDownTotal};
                 
-                res.render('user-layout', {
-                    title,
-                    content,
-                    menu: [],
-                    logged: req.session.authenticated,
-                    user: req.session.username,
-                    email: email,
-                    theme: req.session.theme,
-                })
+                common.getNavBar().then(pages => {
+                    res.render('user-layout', {
+                        title,
+                        content,
+                        logged: req.session.authenticated,
+                        user: req.session.username,
+                        email: email,
+                        theme: req.session.theme,
+                        navbar:pages.navbar
+                    });
+                }).catch(err => {
+                    console.log(err);
+                    res.send("Error getting navbar from DB");
+                });
             } else {
                 // This shouldn't occur if the user is logged in, but protecting against errors
                 const title = "Error!";
                 content = {"html": "./partials/user-error"}
                 // Render a subpage with the error
-                res.render('user-layout', {
-                    title, 
-                    content, 
-                    menu: [],
-                    logged: req.session.authenticated,
-                    user: req.session.username,
-                    theme: req.session.theme
-                })
+                
+                common.getNavBar().then(pages => {
+                    res.render('user-layout', {
+                        title, 
+                        content, 
+                        menu: [],
+                        logged: req.session.authenticated,
+                        user: req.session.username,
+                        theme: req.session.theme,
+                        navbar:pages.navbar
+                    });
+                }).catch(err => {
+                    console.log(err);
+                    res.send("Error getting navbar from DB");
+                });
             }
         })
         .catch(err=>{
@@ -101,13 +136,19 @@ router.get('/settings', middleware.isAuthenticated,  (req, res)=>{
             const title = "Error!";
             content = {"html": "./partials/user-error"}
             // Render a subpage with the error
-            res.render('user-layout', {
-                title,
-                content,
-                menu: [],
-                logged: req.session.authenticated,
-                user: req.session.username,
-                theme: req.session.theme
+            common.getNavBar().then(pages => {
+                res.render('user-layout', {
+                    title, 
+                    content, 
+                    menu: [],
+                    logged: req.session.authenticated,
+                    user: req.session.username,
+                    theme: req.session.theme,
+                    navbar:pages.navbar
+                });
+            }).catch(err => {
+                console.log(err);
+                res.send("Error getting navbar from DB");
             });
         });
 });
@@ -116,6 +157,7 @@ router.get('/settings', middleware.isAuthenticated,  (req, res)=>{
 router.post('/settings', middleware.isAuthenticated, (req, res)=>{
     
     console.log("Received update for a user!");
+
     // This shouldn't occur if the user is logged in, but protecting against errors
     console.log(req.body);
     const mUser = req.session.username;
@@ -198,14 +240,21 @@ router.post('/settings', middleware.isAuthenticated, (req, res)=>{
             dropDownTotal += user.userTheme!="green"?`<option value="green">Green</option>`:`<option value="green" selected=${selected}>Green</option>`;
             dropDownTotal += user.userTheme!="yellow"?`<option value="yellow">Yellow</option>`:`<option value="yellow" selected=${selected}>Yellow</option>`;
             content = {"html": "./partials/settings",  "script": "<script src='/js/settings.js'></script>", dropdown: dropDownTotal}
-            return res.render('user-layout', {
-                title, 
-                content, 
-                menu: [], 
-                logged: req.session.authenticated, 
-                theme: req.session.theme, 
-                user: req.session.username, 
-                email: user.email
+            
+            common.getNavBar().then(pages => {
+                return res.render('user-layout', {
+                    title, 
+                    content, 
+                    menu: [], 
+                    logged: req.session.authenticated, 
+                    theme: req.session.theme, 
+                    user: req.session.username, 
+                    email: user.email,
+                    navbar:pages.navbar
+                });
+            }).catch(err => {
+                console.log(err);
+                res.send("Error getting navbar from DB");
             });
         })
         .catch(result => {
@@ -215,15 +264,22 @@ router.post('/settings', middleware.isAuthenticated, (req, res)=>{
             const user = result.user;
             console.log(result);
             const errors = result.errors;
-            return res.render('user-layout', {
-                title,
-                content,
-                menu: [],
-                logged: req.session.authenticated, 
-                theme: req.session.theme, 
-                user: req.session.username, 
-                email: user.email, 
-                errors
+            
+            common.getNavBar().then(pages => {
+                return res.render('user-layout', {
+                    title,
+                    content,
+                    menu: [],
+                    logged: req.session.authenticated, 
+                    theme: req.session.theme, 
+                    user: req.session.username, 
+                    email: user.email, 
+                    navbar:pages.navbar,
+                    errors
+                });
+            }).catch(err => {
+                console.log(err);
+                res.send("Error getting navbar from DB");
             });
         });
 });
@@ -232,6 +288,7 @@ router.post('/settings', middleware.isAuthenticated, (req, res)=>{
  * The search bar route.
  */
 router.get('/search', (req, res) => {
+
     // Building Generic search of the site
     let searchQuery = {'$regex': req.query.q, '$options': 'i'};
     const logged = req.session.authenticated;
@@ -248,7 +305,15 @@ router.get('/search', (req, res) => {
             data: result, script: "<script src='/js/search.js'></script>",
             searchQuery: "https://www.google.com/search?q=mcgill+computer+science+"+req.query.q.replace(" ","+")
         };
-        return res.render('subpage', { title: "Search", menu: result.menu, content, logged, username, theme});
+
+     //Get navbar for rendering pages
+     common.getNavBar().then(pages => {
+         var navbar = pages.navbar;
+         res.render('subpage', { title: "Search", menu: result.menu, content, logged, username, theme, navbar});
+     }).catch(err => {
+         console.log(err);
+         res.send("Error getting navbar from DB");
+     });
     }
     //functions which search each table within the database 
     const searchCourses = () =>common.getAllDataWithModel(Course, {$or: [
@@ -365,7 +430,13 @@ router.get('/search', (req, res) => {
                 data: result, script: "<script src='/js/search.js'></script>",
                 searchQuery: "https://www.google.com/search?q=mcgill+computer+science+"+req.query.q.replace(" ","+")
             };
-            res.render('subpage', { title: "Search", menu: result.menu, content, logged, username, theme});
+            common.getNavBar().then(pages => {
+                var navbar = pages.navbar;
+                res.render('subpage', { title: "Search", menu: result.menu, content, logged, username, theme, navbar});
+            }).catch(err => {
+                console.log(err);
+                res.send("Error getting navbar from DB");
+            });
         })
         .catch(err => {
             console.error(err);
@@ -375,10 +446,14 @@ router.get('/search', (req, res) => {
                 data: result, script: "<script src='/js/search.js'></script>",
                 searchQuery: "https://www.google.com/search?q=mcgill+computer+science+"+req.query.q.replace(" ","+")
             };
-            res.render('subpage', { title: "Search", menu: result.menu, content, logged, username, theme});
+            common.getNavBar().then(pages => {
+                var navbar = pages.navbar;
+                res.render('subpage', { title: "Search", menu: result.menu, content, logged, username, theme, navbar});
+            }).catch(err => {
+                console.log(err);
+                res.send("Error getting navbar from DB");
+            });
         });
-
-
 });
 
 /**

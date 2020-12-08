@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const common = require("../common.js");
 const app = express();
 const bcrypt = require('bcrypt');
 const User = require('../models/User.js');
@@ -9,31 +10,51 @@ app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
 router.get('/login', canUseRoute, (req, res)=>{
+
     const title = "Login";
     const content = {"html": 'partials/login.ejs', "script":""};
     const menu = [];
-    return res.render('user-layout', {
-        title,
-        menu,
-        content,
-        logged: req.session.authenticated,
-        user: req.session.username,
-        theme: req.session.them
+    common.getNavBar().then(pages => {
+        navbar = pages.navbar;
+        res.render('user-layout', {
+            title,
+            menu,
+            content,
+            logged: req.session.authenticated,
+            user: req.session.username,
+            theme: req.session.them,
+            navbar
+        });
+    }).catch(err => {
+        console.log(err);
+        res.send("Error getting navbar from DB");
     });
+
 });
+
 router.get('/register', canUseRoute, (req, res)=>{
+
     const title = "Register";
     const content = {"html": 'partials/register.ejs', "script": "<script src='/js/register.js'></script>"};
-    return res.render('user-layout', {
-        title,
-        content,
-        logged: req.session.authenticated,
-        user: req.session.username,
-        theme: req.session.theme
+
+    common.getNavBar().then(pages => {
+        navbar = pages.navbar;
+        res.render('user-layout', {
+            title,
+            content,
+            logged: req.session.authenticated,
+            user: req.session.username,
+            theme: req.session.theme,
+            navbar
+        });
+    }).catch(err => {
+        console.log(err);
+        res.send("Error getting navbar from DB");
     });
 });
 
 router.post('/login', canUseRoute, (req, res)=> {
+
     var username = req.body.username;
     var password = req.body.password;
     var errors = [];
@@ -60,15 +81,23 @@ router.post('/login', canUseRoute, (req, res)=> {
             console.log("No user with Username: " + username + " found.");
             errors.push({msg: "Wrong username or password!"});
         }
-        return res.render('user-layout', {
-            title, 
-            menu: [],
-            content,
-            logged: req.session.authenticated,
-            user: req.session.username,
-            theme: req.session.theme,
-            errors
+        common.getNavBar().then(pages => {
+            navbar = pages.navbar;
+            res.render('user-layout', {
+                title, 
+                menu: [],
+                content,
+                logged: req.session.authenticated,
+                user: req.session.username,
+                theme: req.session.theme,
+                errors,
+                navbar
+            });
+        }).catch(err => {
+            console.log(err);
+            res.send("Error getting navbar from DB");
         });
+        
     }).catch(err=>console.log(err));
 });
 
@@ -76,6 +105,7 @@ router.post('/login', canUseRoute, (req, res)=> {
  * Registration Route
  */
 router.post('/register', canUseRoute, (req, res)=> {
+
     // Is there  a reason for doing it this way?
     var password = bcrypt.hashSync(req.body.password,10);
     const username = req.body.username;
@@ -152,13 +182,21 @@ router.post('/register', canUseRoute, (req, res)=> {
         })
         .catch(errors => {
             console.log("Error occurred!")
-            return res.render('user-layout', {
-                title, 
-                content,
-                logged: req.session.authenticated,
-                user: req.session.user,
-                theme: req.session.theme,
-                errors
+
+            common.getNavBar().then(pages => {
+                navbar = pages.navbar;
+                res.render('user-layout', {
+                    title, 
+                    content,
+                    logged: req.session.authenticated,
+                    user: req.session.user,
+                    theme: req.session.theme,
+                    errors,
+                    navbar
+                });
+            }).catch(err => {
+                console.log(err);
+                res.send("Error getting navbar from DB");
             });
         })
 });

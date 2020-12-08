@@ -9,9 +9,10 @@ router.get('/:pagename', (req, res) => {
     const logged = req.session.authenticated;
     const username = req.session.username;
 
+    var data;
     common.getAllDataWith(Posting, { type: req.params.pagename }).then(posts => {
         var content= { html: './list/posting', data:posts};
-        res.render('subpage.ejs', {
+        data= {
             type:req.params.pagename,
             title,
             menu,
@@ -19,7 +20,10 @@ router.get('/:pagename', (req, res) => {
             logged,
             username,
             theme: req.session.theme
-        });
+        };
+        return common.getNavBar();
+    }).then(pages => {
+        res.render('subpage.ejs', {...data, navbar: pages.navbar});
     }).catch(err => {
         console.error(err);
         res.send(err);
