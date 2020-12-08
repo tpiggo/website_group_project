@@ -21,7 +21,7 @@
     <div id="content">
         <!--Get the content from the database and render it here -->
         <% if(content.data) { %>
-            <%- include(content.html) %>
+            <%- include(content.html); %>
             <% } else { %>
             <%-content.html %>
 

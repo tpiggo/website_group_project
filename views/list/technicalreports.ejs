@@ -1,0 +1,30 @@
+<h1>Technical Reports</h1>
+<link rel="stylesheet" href="/css/technicalReports.css">
+<div id="report-container-controller">
+    <nav aria-label="Technical Report Pages">
+        <ul class="pagination">
+            <li id="prev-btn"  class="page-item disabled"><a class="page-link" href="javascript:void(0)" onclick="getPrev()">Previous</a></li>
+            <% for (let report of content.data ) { %> 
+                <li <% if (report.num > 1) {%> class="page-item" <% } else { %>  class="page-item active" <% } %> >
+                    <a class="page-link" data-element=<%= report.boxId %> href="javascript:void(0)" onclick="pageClicked(event)"><%= report.num %></a>
+                </li>  
+            <% } %>
+            <li id="next-btn" class="page-item"><a class="page-link" href="javascript:void(0)" onclick="getNext()">Next</a></li>
+        </ul>
+    </nav>
+    
+</div>
+
+<div id="report-container" aria-label="Technical Report Pages">
+    <% for (let report of content.data ) { %> 
+        <div id=<%= report.boxId %> <% if (report.num > 1) {%> style="display:none" <% } %> >
+            <h3> <%= report.title %></h3>
+            <p>Author: <%= report.creator %></p>
+            <p>Date: <%= report.reportDate %></p>
+            <p><%= report.description %></p>
+        </div>
+    <% } %>
+</div>
+
+<script src="/js/frontendAPI.js"></script>
+<script src="/js/technicalReports.js"></script>

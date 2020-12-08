@@ -60,6 +60,7 @@ app.use('/users', require("./routes/users"));
 app.use('/employment', require('./routes/employment'));
 app.use('/news', require('./routes/news'));
 app.use('/events', require('./routes/events'));
+app.use('/research', require('./routes/research'));
 app.use('/:page', require('./routes/subpages'));
 
 

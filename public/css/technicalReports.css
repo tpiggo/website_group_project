@@ -1,0 +1,10 @@
+#report-container-controller{
+    display:grid;
+    place-items: center;
+}
+
+@media only screen and (max-width: 410px ){
+    #content{
+        padding: 2.5rem 0;
+    }
+}
