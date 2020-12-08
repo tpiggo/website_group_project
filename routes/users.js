@@ -85,18 +85,18 @@ router.post('/login', canUseRoute, (req, res)=> {
 
     getUser(username)
         .then(user => {
-            var authenticated = bcrypt.compareSync(password,user.password);
-            if(authenticated){
-                console.log("User "+ username + " succesfully logged in.");
-                // Saving the username into the session, potentially not the greatest solution, but works for now
-                req.session.username = username;
-                req.session.authenticated = true;
-                req.session.theme = user.userTheme;
-                console.log(req.session.theme);
-                return res.redirect("/dashboard");
-            } else {
-                throw Error(`userNameError ${username}`);
-            }
+            bcrypt.compare(password,user.password, (err, authenticated) => {
+                if(authenticated){
+                    console.log("User "+ username + " succesfully logged in.");
+                    // Saving the username into the session, potentially not the greatest solution, but works for now
+                    req.session.username = username;
+                    req.session.authenticated = true;
+                    req.session.theme = user.userTheme;
+                    console.log(req.session.theme);
+                    return res.redirect("/dashboard");
+                } else {
+                    throw Error(`userNameError ${username}`);
+            }});
         })
         .catch(err => {
             if (err == null){

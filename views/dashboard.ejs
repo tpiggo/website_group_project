@@ -65,7 +65,7 @@
 
                     <h3>Course</h3>
                     <button class="general" onclick="toggleForm('Course', 'POST', true)" >
-                   Add</button>
+                    Add</button>
                     <br>
 
                     <select class="form-control" id="modCourse"  onchange="getPageSelected('modCourse')" >
@@ -113,13 +113,14 @@
                     <div class="row">
                         <div class="col-4">
                           <div class="list-group" id="list-tab" role="tablist">
-                            <a class="list-group-item list-group-item-action active" id="list-home-list" data-toggle="list" href="#list-home" role="tab" aria-controls="add">Add Page</a>
-                            <a class="list-group-item list-group-item-action" id="list-profile-list" data-toggle="list" href="#list-profile" role="tab" aria-controls="delete">Delete Page</a>
+                            <a class="list-group-item list-group-item-action active" id="list-create-list" data-toggle="list" href="#list-create" role="tab" aria-controls="add">Add Page</a>
+                            <a class="list-group-item list-group-item-action" id="list-delete-list" data-toggle="list" href="#list-delete" role="tab" aria-controls="delete">Delete Page</a>
+                            <a class="list-group-item list-group-item-action" id="list-category-list" data-toggle="list" href="#list-category" role="tab" aria-controls="delete">Add Category</a>
                           </div>
                         </div>
                         <div class="col-8">
                           <div class="tab-content" id="nav-tabContent">
-                            <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
+                            <div class="tab-pane fade show active" id="list-create" role="tabpanel" aria-labelledby="list-create-list">
                                 <form id="subpage" method="POST" onsubmit="handleRequest(event, $(this), 'POST', false)">
                                     <h2 id="subpageHeader">Add Page</h2>
                                     <select class="form-control" id="select_category" name="category">
@@ -130,7 +131,7 @@
                                     <button type="submit">Add</button>
                                 </form>
                             </div>
-                            <div class="tab-pane fade" id="list-profile" role="tabpanel" aria-labelledby="list-profile-list">
+                            <div class="tab-pane fade" id="list-delete" role="tabpanel" aria-labelledby="list-delete-list">
                                 <form id="subpage-Delete" method="POST" onsubmit="handleRequest(event, $(this), 'POST', false)">
                                     <h2 id="subpage-DeleteHeader">Delete Page</h2>
                                     <select class="form-control" id="select_page" name="page_id">
@@ -139,11 +140,28 @@
                                     <button type="submit">Delete</button>
                                 </form>
                             </div>
+                            <div class="tab-pane fade" id="list-category" role="tabpanel" aria-labelledby="list-category-list">
+                                <form id="category" method="POST" onsubmit="handleRequest(event, $(this), 'POST', false)">
+                                    <h2 id="categoryHeader">Add Category</h2> 
+                                    <input type="text" class="form-control" id="category_name" placeholder="Category Name" name="category_name">
+                                    <br>
+                                    <button type="submit">Add Category</button>
+                                </form>
+                            </div>
                           </div>
                         </div>
                       </div>
                 </div>
-            <% }  %>    
+            <% }  %>   
+            <% if(user.userType>3) {  %>
+                <hr>
+                <h2>User Request</h2>
+                <select id="requests-dropdown" class="form-control" onchange="getUserRequestForm()">
+                    <option>See User Requests</option>
+                </select>
+    
+                
+            <% }  %>  
         </div>
         <% } else { %>
             <h2>Welcome <%= user.username %></h2>
@@ -152,52 +170,14 @@
                 <button type="button" id="request-button" user=<%= user.username %> onclick="requestLevel(event)">Request higher level!</button> 
             </div>
         <% }  %>
-
+        
     </div>
     <!-- The forms will only be renderer if the user is of type 1 or above -->
     <!-- Make these async? Sends down a path and returns an answer which renders a message? Seem like the best idea! -->
     <!-- Make all the required fields required, e.prevent default the form -->
     <% if(user.userType>0) {  %> 
         <div id="form-wrap">
-        <form id="TA" class="hidden" method="POST" onsubmit="handleRequest(event, $(this), 'POST', false)">
-            <span id="closeIcon" onclick="toggleForm('TA', 'POST')">&times;</span>
-            <h2 id="TAHeader">TA Posting</h2>
-            <label for="courseTitle">Course:</label>
-            <input type="text" id="courseTitle" name="courseTitle" placeholder="COMP XXX">
-            <br>
-
-            <label for="semester">Semester:</label>
-            <select id="semester" name="semester">
-                <option value='Winter 2021'>Winter 2021</option>
-                <option value='Fall 2021'>Fall 2021</option>
-                <option value='Winter 2022'>Winter 2022</option>
-            </select> &emsp;
-
-            <label for="spaces">Number of Vacancies:</label>
-            <input name="spaces" id="spaces" type="number" min="1" max="100">
-            <br>
-
-            <label for="contact" class="p-3">Contact:</label>
-            <input type="text" id="taContact" name="contact"
-                placeholder="Person to contact for more information">
-            <br>
-
-            <label for="description">Description:</label> <br>
-
-            <textarea id="taDescription" name="description" cols="60"
-                placeholder="Short description of the posting"></textarea>
-            <br>
-
-            <input id="ta_id" name="_id" style="display:none;">
-            <button id="delete-ta" class="general" onclick="deleteButton(event, $(this)[0])" style="visibility: hidden;">
-                <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-trash" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
-                    <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
-                </svg>
-            </button>
-            <button class="general" type="submit" value="TA" name="taSubmit">Submit</button>
-        </form>
-
+            
         <!-- Add Award -->
         <form id="Award" class="hidden" method="POST" onsubmit="handleRequest(event, $(this), 'POST', false)">
             <span id="closeIcon" onclick="toggleForm('Award', 'POST')">&times;</span>
@@ -220,7 +200,7 @@
             <br>
             <br>
             <input id="a_id" name="_id" style="display:none;">
-            <button id="delete-award" class="general" onclick="deleteButton(event, $(this)[0])" style="visibility: hidden;">
+            <button id="delete-award" onclick="deleteButton(event, $(this)[0])">
                 <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-trash" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                     <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
                     <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
@@ -255,7 +235,7 @@
                 placeholder="Short description"></textarea>
             <br>
             <input id="n_id" name="_id" style="display:none;">
-            <button id="delete-news" class="general" onclick="deleteButton(event, $(this)[0])" style="visibility: hidden;">
+            <button id="delete-news" onclick="deleteButton(event, $(this)[0])" style="visibility: hidden;">
                 <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-trash" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                     <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
                     <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
@@ -299,7 +279,7 @@
             <br>
 
             <input id="e_id" name="_id" style="display:none;">
-            <button id="delete-event" class="general" onclick="deleteButton(event, $(this)[0])" style="visibility: hidden;">
+            <button id="delete-event" onclick="deleteButton(event, $(this)[0])" style="visibility: hidden;">
                 <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-trash" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                     <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
                     <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
@@ -363,7 +343,7 @@
             <input type="file" name="syllabus">
             <br>
             <input id="c_id" name="_id" style="display:none;">
-            <button id="delete-course" class="general" onclick="deleteButton(event, $(this)[0])" style="visibility: hidden;">
+            <button id="delete-course" onclick="deleteButton(event, $(this)[0])" style="visibility: hidden;">
                 <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-trash" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                     <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
                     <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
@@ -390,7 +370,7 @@
             <textarea id="techDescription" name="description" cols="60" placeholder="Report"></textarea>
             <br>
             <input id="tech_id" name="_id" style="display:none;">
-            <button id="delete-tech" class="general" onclick="deleteButton(event, $(this)[0])" style="visibility: hidden;"> 
+            <button id="delete-tech" onclick="deleteButton(event, $(this)[0])" style="visibility: hidden;"> 
                 <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-trash" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                     <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
                     <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
@@ -435,7 +415,7 @@
                 placeholder="Short description of the posting"></textarea>
             <br>
             <input id="p_id" name="_id" style="display:none;">
-            <button id="delete-posting" class="general" onclick="deleteButton(event, $(this)[0])" style="visibility: hidden;">
+            <button id="delete-posting" onclick="deleteButton(event, $(this)[0])" style="visibility: hidden;">
                 <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-trash" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                     <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
                     <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
@@ -443,6 +423,38 @@
             </button>
             <button class="general" type="submit">Submit</button>
         </form>
+
+        <% if(user.userType > 3) {%>
+            <form id="user-requests" class="hidden" onsubmit="handleRequest(event, $(this), 'PUT', false)""> 
+                <span id="closeIcon" onclick="toggleForm('user-requests', 'PUT', false)">&times;</span>
+                <h2 id="user-requestsHeader">User Requests</h2>
+                <div class="row">
+                    <div class="col">
+                        <span style="font-weight: 300; color:var(--secondary);"> Username</span> <br>
+                        <span id="user-username"> </span><br>
+                        <br>
+                        <span style="font-weight: 300; color:var(--secondary);"> Email</span> <br>
+                        <span id="user-email"> </span><br>
+                        <br>
+                        <span style="font-weight: 300; color:var(--secondary);"> User message</span><br>
+                        <span id="user-message"> </span>
+                    </div>
+                    <div class="col">
+                        <span id='type-radio-menu'> 
+                            <span style="font-weight: 300; color:var(--secondary);"> Give clearance of:</span><br>
+                        </span>
+                    </div>
+                </div>
+                <input id="ur_id" name="_id" style="display:none;">
+                <button class='general' id="delete-user-requests" onclick="deleteButton(event, $(this)[0])" style="visibility: hidden;">
+                    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-trash" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                        <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                    </svg>
+                </button>
+                <button class="general" type="submit">Add News</button>
+            </form>
+            <% }  %>
     </div>
 
     <% }  %>
@@ -458,8 +470,7 @@
     crossorigin="anonymous"></script>
     <script src="/js/navbar.js"></script>
     <script src='/js/frontendAPI.js'></script>
-<% if(user.userType >0) { %>
-    <script src='/js/dashboard.js'></script>
-<% } else { %>
     <script src='/js/dashboardLow.js'></script>
-<% } %>
+    <% if(user.userType >0) { %>
+        <script src='/js/dashboard.js'></script>
+    <% } %>

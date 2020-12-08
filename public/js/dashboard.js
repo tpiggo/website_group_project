@@ -1,8 +1,99 @@
 //Fill in the dropdowns
 window.addEventListener('load', function (event) {
     refreshDropdowns();
+    getUserRequests();
     // console.log('dropdowns were updated');
 });
+
+function getUserRequests() {
+
+    var opts = { type: "GET", url: '/api/user-requests' };
+    var GetData = callBackEnd(opts);
+
+    GetData.then(response => {
+
+        if (response.status == 0) {
+            refreshDropdownRequestUsers(response.requests);
+        } else if (response.status >= 1) {
+            console.log("Error on sending GET request");
+            createPopupMsg('error', response.response, 'center');
+        }
+
+    });
+
+}
+
+function refreshDropdownRequestUsers(requests) {
+
+    var menu = document.getElementById('requests-dropdown');
+    menu.innerHTML = '';
+    var defaultOpt = document.createElement('option');
+    defaultOpt.text = 'See User Requests';
+    menu.add(defaultOpt);
+
+    requests.forEach(request => {
+        var option = document.createElement('option');
+        option.value = request._id;
+        option.text = request.username + " of Level " + request.userType;
+        menu.add(option);
+    });
+}
+
+function getUserRequestForm() {
+    var menu = document.getElementById('requests-dropdown');
+    if (menu.value) {
+        var req = { id: menu.value };
+        console.log(req);
+        $.ajax({
+            url: '/parse/user-requests',
+            data: req,
+            type: 'GET',
+            dataType: 'json', // added data type
+            success: function (response) {
+                //response = JSON.parse(response);
+                if (response.status == 0) {
+                    fillUserForm(response.request);
+                    toggleForm('user-requests','PUT', false);
+                } else {
+                    console.log("Error when Getting the data");
+                    createPopupMsg('Error', response.response, 'pageHeader');
+                }
+            },
+            error: function(jqXHR, exception) {
+                createPopupMsg('error', "Internal Error", 'pageHeader');
+            }
+        });
+
+    }
+
+
+}
+
+function fillUserForm(userRequest) {
+    document.getElementById('user-username').innerText = userRequest.username;
+    document.getElementById('user-email').innerText = userRequest.email;
+    document.getElementById('user-message').innerText = userRequest.message;
+
+    var menu =  document.getElementById('type-radio-menu');
+    var userType = userRequest.userType;
+    for(var type = userType ; type < 4; type++) {
+        var input = document.createElement('input');
+        input.class = "form-check-input";
+        input.type= "radio";
+        input.name="userType";
+        input.id = "userType" + type;
+        input.value = type;
+
+        var label = document.createElement('label');
+        label.class = "form-check-label";
+        label.for= input.id;
+        label.innerText = "Level " + type;
+        menu.appendChild(input);
+        menu.appendChild(label);
+        menu.appendChild(document.createElement('br'));
+    }
+    document.getElementById('ur_id').value = document.getElementById('requests-dropdown').value;
+}
 
 //called by the onchange functions on the dropdowns : 
 function getPageSelected(mId) {
@@ -358,6 +449,7 @@ function refreshDropDownSubpages(subpages) {
  * @param {Array} pObject 
  */
 function makeJson(pObject) {
+    console.log(pObject);
     var aJson = {};
     var terms = [];
     var instructors = []
@@ -453,12 +545,15 @@ function handleRequest(event, element, method, hasFile) {
         aPromise
             .then(function (response) {
                 var aId = element[0].id;
+                console.log('id form ' + aId);
                 if (response.status == 0) {
                     if (method != 'PUT') document.getElementById(element[0].id).reset();
                     refreshDropdowns();
+                    if(aid=="user-requests") getUserRequests();
                     createPopupMsg('success', response.response, aId + "Header");
                 } else if (response.status >= 1) {
                     console.log("Error on submission");
+                    console.log(esponse.response);
                     // Creating Element to display in the form!
                     createPopupMsg('error', response.response, aId + "Header");
                 } else {
@@ -502,6 +597,7 @@ function deleteButton(event, element){
             if (result.status == 0){
                 createPopupMsg('success', result.response, parentElement.id + "Header");
                 refreshDropdowns();
+                if( parentElement.id =='user-requests') getUserRequests();
                 parentElement.reset();
             } else {
                 createPopupMsg('error', result.response, parentElement.id + "Header");
