@@ -54,7 +54,7 @@ function handleRequest(event, user) {
         return;
     }
     const values = {user: user, reason: document.getElementById("reason").value};
-    var opts = { type: "POST", url: '/parse/requestLevel', request: values , contentType: "JSON"};
+    var opts = { type: "POST", url: '/users/requestLevel', request: values , contentType: "JSON"};
     var aPromise = callBackEnd(opts);
     // Handle
     aPromise

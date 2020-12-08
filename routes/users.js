@@ -5,6 +5,8 @@ const app = express();
 const bcrypt = require('bcrypt');
 const User = require('../models/User.js');
 const { isAuthenticated, canUseRoute } = require('../middleware');
+const UserRequest = require('../models/UserRequest');
+const bodyParser = require('body-parser');
 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
@@ -53,6 +55,26 @@ router.get('/register', canUseRoute, (req, res)=>{
     });
 });
 
+/**
+ * @description Finds a user in the user table. Since users are unique, uses find one.
+ * @param {String} username 
+ */
+function getUser(username){
+    return new Promise((resolve, reject) => {
+        User.findOne({username: username}, (err, result) => {
+            if (err) reject(err)
+            else if ( result ) {
+                resolve(result);
+            } else {
+                reject(result);
+            }
+        })
+    });
+}
+
+/**
+ * Login route.
+ */
 router.post('/login', canUseRoute, (req, res)=> {
 
     var username = req.body.username;
@@ -60,45 +82,52 @@ router.post('/login', canUseRoute, (req, res)=> {
     var errors = [];
     const title = "Login";
     const content = {"html": 'partials/login.ejs', "script":""};
-    User.findOne({username: username}, (err,user) => {
-        if(err){ 
-            console.log(err);
-        }else if(user){
-            var authenticated = bcrypt.compareSync(password,user.password);
-            if(authenticated){
-                console.log("User "+ username + " succesfully logged in.");
-                // Saving the username into the session, potentially not the greatest solution, but works for now
-                req.session.username = username;
-                req.session.authenticated = true;
-                req.session.theme = user.userTheme;
-                console.log(req.session.theme);
-                return res.redirect("/dashboard");
-            } else {
-                console.log("User "+username + " failed to log in.");
+
+    getUser(username)
+        .then(user => {
+            bcrypt.compare(password,user.password, (err, authenticated) => {
+                if(authenticated){
+                    console.log("User "+ username + " succesfully logged in.");
+                    // Saving the username into the session, potentially not the greatest solution, but works for now
+                    req.session.username = username;
+                    req.session.authenticated = true;
+                    req.session.theme = user.userTheme;
+                    console.log(req.session.theme);
+                    return res.redirect("/dashboard");
+                } else {
+                    throw Error(`userNameError ${username}`);
+            }});
+        })
+        .catch(err => {
+            if (err == null){
+                console.log("No user with Username: " + username + " found.");
                 errors.push({msg: "Wrong username or password!"});
+            } else if (err.message.includes('userNameError')){
+                let user = err.message.replace("userNameError ", "");
+                console.log(`Username ${user} does not exist`);
+                errors.push({msg: "Wrong username or password!"});
+            } else {
+                console.log("Catastrophic error!");
+                console.error(err);
+                errors.push({msg: "Error accessing database!"});
             }
-        } else {
-            console.log("No user with Username: " + username + " found.");
-            errors.push({msg: "Wrong username or password!"});
-        }
-        common.getNavBar().then(pages => {
-            navbar = pages.navbar;
-            res.render('user-layout', {
-                title, 
-                menu: [],
-                content,
-                logged: req.session.authenticated,
-                user: req.session.username,
-                theme: req.session.theme,
-                errors,
-                navbar
+            common.getNavBar().then(pages => {
+                navbar = pages.navbar;
+                res.render('user-layout', {
+                    title, 
+                    menu: [],
+                    content,
+                    logged: req.session.authenticated,
+                    user: req.session.username,
+                    theme: req.session.theme,
+                    errors,
+                    navbar
+                });
+            }).catch(err => {
+                console.log(err);
+                res.send("Error getting navbar from DB");
             });
-        }).catch(err => {
-            console.log(err);
-            res.send("Error getting navbar from DB");
         });
-        
-    }).catch(err=>console.log(err));
 });
 
 /**
@@ -205,16 +234,83 @@ router.post('/register', canUseRoute, (req, res)=> {
  * Logout Route
  * Can be accessed by the user if they know the route, but nothing will happen if they do not have an active session
 */
-router.get("/logout", (req, res)=>{
+router.get("/logout", isAuthenticated, (req, res)=>{
     // Check if authenticated session exists. 
-    if (req.session.authenticated){
-        req.session.destroy();
-        console.log("Successfully logged out. Redirecting");
-    } else {
-        console.log("Session not authenticated");
-    }
+    req.session.destroy();
+    console.log("Successfully logged out. Redirecting");
     res.redirect("/");
 });
 
+
+//Give access to the body parser for this route
+router.use(bodyParser.json())
+
+/** USER LEVEL REQUEST */
+router.post('/requestLevel', isAuthenticated, (req, res) => {
+    /**
+     * @description Searches the request table and rejects 
+     * @param {String} username 
+     * @returns {Promise}
+     */
+    function requestNotMade(username){
+        return new Promise((resolve, reject) => {
+            UserRequest.findOne({username: username}, (err, result)=>{
+                if (err){
+                    reject(err);
+                }
+                else if ( !result ) {
+                    resolve({canMake: true});
+                } else {
+                    reject({canMake: false});
+                }
+            });
+        });
+    }
+    /**
+     * @description Creates a request with a given user and message
+     * @param {User} user 
+     * @param {String} message 
+     * @returns {Promise}
+     */
+    function createRequest(user, message){
+        return new Promise((resolve, reject) => {
+            UserRequest.create({
+                username: user.username,
+                email: user.email,
+                message: message,
+                userType: user.userType
+            }, (err) => {
+                if (err) reject(err);
+                else resolve({status: 0, response: "Request was made!"});
+            })
+        });
+    }
+    // Making the request, trying to avoid callback hell
+    requestNotMade(req.body.user)
+        .then(() => {
+            console.log("username:", req.body.user);
+            // Returns the promise of a User
+            return getUser(req.body.user);
+        })
+        .then(user => {
+            console.log("Got user:", user);
+            // Returns the promise of creating a post
+            return createRequest(user, req.body.reason);
+        })
+        .then(result => {
+            // Returns the success message
+            res.json(result);
+        })
+        .catch(err=>{
+            console.error(err);
+            // Returns the rejection of the call
+            if (err.canMake != undefined){
+                res.json({status: 1, response: "Request has already been made!" });
+            } else {
+                res.json({status: 2, response: "Error in database! Try again later" });
+            }
+        })
+        
+});
 
 module.exports = router;
