@@ -19,7 +19,7 @@
 </head>
 
 <body class=<%=theme%>>
-    <%- include('partials/navbar', {logged, username : user.username}); %>
+    <%- include('partials/navbar', {logged, username : user.username, navbar}); %>
 
     <div id="content">
         <% if(user.userType>0) {  %> 
