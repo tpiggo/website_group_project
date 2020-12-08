@@ -56,7 +56,7 @@ router.get('/register', canUseRoute, (req, res)=>{
 });
 
 /**
- * 
+ * @description Finds a user in the user table. Since users are unique, uses find one.
  * @param {String} username 
  */
 function getUser(username){
@@ -72,7 +72,9 @@ function getUser(username){
     });
 }
 
-
+/**
+ * Login route.
+ */
 router.post('/login', canUseRoute, (req, res)=> {
 
     var username = req.body.username;
@@ -232,14 +234,10 @@ router.post('/register', canUseRoute, (req, res)=> {
  * Logout Route
  * Can be accessed by the user if they know the route, but nothing will happen if they do not have an active session
 */
-router.get("/logout", (req, res)=>{
+router.get("/logout", isAuthenticated, (req, res)=>{
     // Check if authenticated session exists. 
-    if (req.session.authenticated){
-        req.session.destroy();
-        console.log("Successfully logged out. Redirecting");
-    } else {
-        console.log("Session not authenticated");
-    }
+    req.session.destroy();
+    console.log("Successfully logged out. Redirecting");
     res.redirect("/");
 });
 
@@ -250,8 +248,9 @@ router.use(bodyParser.json())
 /** USER LEVEL REQUEST */
 router.post('/requestLevel', isAuthenticated, (req, res) => {
     /**
-     * 
+     * @description Searches the request table and rejects 
      * @param {String} username 
+     * @returns {Promise}
      */
     function requestNotMade(username){
         return new Promise((resolve, reject) => {
@@ -268,9 +267,10 @@ router.post('/requestLevel', isAuthenticated, (req, res) => {
         });
     }
     /**
-     * 
+     * @description Creates a request with a given user and message
      * @param {User} user 
      * @param {String} message 
+     * @returns {Promise}
      */
     function createRequest(user, message){
         return new Promise((resolve, reject) => {
@@ -289,17 +289,21 @@ router.post('/requestLevel', isAuthenticated, (req, res) => {
     requestNotMade(req.body.user)
         .then(() => {
             console.log("username:", req.body.user);
+            // Returns the promise of a User
             return getUser(req.body.user);
         })
         .then(user => {
             console.log("Got user:", user);
+            // Returns the promise of creating a post
             return createRequest(user, req.body.reason);
         })
         .then(result => {
+            // Returns the success message
             res.json(result);
         })
         .catch(err=>{
             console.error(err);
+            // Returns the rejection of the call
             if (err.canMake != undefined){
                 res.json({status: 1, response: "Request has already been made!" });
             } else {
