@@ -82,19 +82,23 @@ var nav = document.querySelector("nav");
 nav.classList.add("fixed-top");
 nav.setAttribute("style", "position:sticky !important");
 
-//Display forms
+//Display/Hide forms
 function toggleForm(name, method, hasFile) {
     var form = document.getElementById(name);
     // Hides the garbage that 
-    if (form.className.includes("hidden")){
+    form.classList.toggle("hidden");
+    if (!form.className.includes("hidden")){
         for (let child of form.children){
             let idString = name.toLowerCase();
             if ( child.id == `delete-${idString}`){
                 child.style="visibility: hidden;";
             }
         }
+
+        //Hard coding the position of the forms on the windonw
+        setFormPosition(form);
+
     }
-    form.classList.toggle("hidden");
     if (name.includes("Course")) {
         while (total > 0) {
             removeField(pointer);
@@ -123,6 +127,26 @@ function toggleForm(name, method, hasFile) {
         form.setAttribute('onsubmit', `handleRequest(event, $(this), '${method}', ${hasFile})`);
         form.reset();
     }
+
+}
+
+function setFormPosition(form) {
+
+    var wrapper = document.getElementById('form-wrap');
+        var navHeight = document.getElementsByTagName('nav')[0].offsetHeight;
+        var contentHeight = document.getElementById('content').offsetHeight;
+        var contentWidth = document.getElementById('content').offsetWidth;
+
+        var topOffset = navHeight + contentHeight/2 - form.offsetHeight/2;
+        var topPercentage = (topOffset/ window.innerHeight) * 100;
+        console.log(window.innerHeight + 'top percentage: ' + topPercentage);
+
+        var leftOffet = contentWidth/2 - form.offsetWidth/2;
+        var leftPercentage = (leftOffet/ window.innerWidth) * 100;
+        console.log('left percentage: ' + leftPercentage);
+
+        wrapper.style.setProperty('top', topPercentage+ '%');
+        wrapper.style.setProperty('left', leftPercentage + '%');
 
 }
 
