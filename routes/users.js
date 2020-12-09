@@ -140,8 +140,8 @@ router.post('/register', canUseRoute, (req, res)=> {
         };
     /**
      * Finds a unique user based on their username and email
-     * @param {*} username 
-     * @param {*} email 
+     * @param {String} username 
+     * @param {String} email 
      */
     function findUserUnique(username, email){
         return new Promise((resolve, reject) => {

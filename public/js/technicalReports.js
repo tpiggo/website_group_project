@@ -2,6 +2,7 @@ var pages;
 let reportContainer = document.getElementById("report-container");
 /**
  * @description Creates the pages which are listed in the page table
+ * @returns {void}
  */
 window.onload = () => {
     pages = collectionToArray(document.getElementsByClassName("page-item"));
@@ -11,6 +12,7 @@ window.onload = () => {
 /**
  * @description toggles the pages by getting the prev and toggles the active page
  *  enables next if it is disabled currently and diables prev if its the prev element
+ * @returns {void}
  */
 function getPrev(){
     var currentPage = document.getElementsByClassName("page-item active")[0];
@@ -30,7 +32,7 @@ function getPrev(){
 /**
  * @description toggles the pages by getting the next and toggles the active page
  *  enables prev if it is disabled currently and disables next if its the prev element
- * 
+ * @returns {void}
  */
 function getNext(){
     var currentPage = document.getElementsByClassName("page-item active")[0];
@@ -48,8 +50,9 @@ function getNext(){
 }
 
 /**
- * 
+ * @description Handles the event of a page being clicked and subsequently handles the rendering aspects of switching pages
  * @param {Event} event 
+ * @returns {void}
  */
 function pageClicked(event) {
     var currentPage = document.getElementsByClassName("page-item active")[0];
@@ -72,7 +75,8 @@ function pageClicked(event) {
 
 /**
  * @description sets the next btn to disabled if it is the next
- * @param {HTMLElement} currentPage 
+ * @param {HTMLElement} currentPage
+ * @returns {void}
  */
 function isNextBtn(currentPage){
     if (currentPage.nextElementSibling.id == "next-btn"){
@@ -82,7 +86,8 @@ function isNextBtn(currentPage){
 
 /**
  * @description sets the prev btn to disabled if it is the prev
- * @param {HTMLElement} currentPage 
+ * @param {HTMLElement} currentPage
+ * @returns {void}
  */
 function isPrevBtn(currentPage){
     if (currentPage.previousElementSibling.id == "prev-btn"){

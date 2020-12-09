@@ -41,6 +41,7 @@ initErrorBoxes();
 /**
  * @param {Object} pFormEntry 
  * @description Check if the username is the proper type. Outputs errors if not.
+ * @returns {void}
  */
 function checkUser(pFormEntry){
     if (pFormEntry.value == " "){
@@ -70,6 +71,7 @@ function matchPass(pass, confPass){
  * @param {Object} pFormEntry 
  * @description Comprehensive checking of the password/confirmation password, with proper 
  *              error output.
+ * @returns {void}
  */
 function checkPass(isPass, pFormEntry){
     // Checking password or confirmation password
@@ -120,9 +122,9 @@ function checkPass(isPass, pFormEntry){
 }
 
 /**
- * 
  * @param {Object} pFormEntry 
  * @description Checks the validity of the email entered with a simple pattern matcher
+ * @returns {void}
  */
 function checkEmail(pFormEntry){
     if (pFormEntry.value != ''){
@@ -139,6 +141,11 @@ function checkEmail(pFormEntry){
     }
 }
 
+/**
+ * @description changes the theme of the page in order to show off the users desired new theme
+ * @param {HTMLElement} element 
+ * @returns {void}
+ */
 function themeChange(element){
     let selected = element.value;
     if (document.body.className != selected){
@@ -146,7 +153,11 @@ function themeChange(element){
     }
 }
 
-
+/**
+ * @description gets the data from the pFormEntry and renders the approriate error message if it does not match
+ * @param {HTMLElement} pFormEntry
+ * @returns {void}
+ */
 function currentPass(pFormEntry){
     if (pFormEntry.value == ''){
         errorBox[4].getElement().innerHTML = errorBox[4].getErrorMsg();
@@ -158,6 +169,10 @@ function currentPass(pFormEntry){
     return errors[4];
 }
 
+/**
+ * @description Adds the errors to all the elements which have errors
+ * @returns {void}
+ */
 function addErrors(){
     for (var i = 0; i < errors.length; i++){
         if (errors[i]){
@@ -166,6 +181,10 @@ function addErrors(){
     }
 }
 
+/**
+ * @description checks for possible errors 
+ * @returns {void}
+ */
 function checkErrors(){
     for (var element in errors){
         if (errors[element]) return true;
@@ -173,6 +192,10 @@ function checkErrors(){
     return false;
 }
 
+/**
+ * @description Handles the onSubmit event on the settings page
+ * @param {Event} event 
+ */
 function onSubmit(event){
     if (currentPass(document.getElementById('current-password')) || checkErrors() ){
         console.log("Error on the page");

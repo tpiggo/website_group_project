@@ -10,7 +10,7 @@ function toggleMenu() {
     for (var j = 0; j < lis.length; j++) {
         lis[j].classList.toggle('appear');
     }
-    
+
     var img = navbar.getElementsByTagName('img')[0];
     img.classList.toggle('appear');
 
@@ -65,8 +65,11 @@ function dropDown(type, id) {
 
 }
 
-//navbar controller
-
+/**
+ * @description Navabr controller, hides or shows the sidebar controller element
+ * @param {String} id
+ * @returns {void} 
+ */
 function display(id) {
     let sb = document.getElementById(id)
     sb.style.display = sb.style.display == "none"?"block":"none";
