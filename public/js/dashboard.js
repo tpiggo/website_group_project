@@ -1,114 +1,8 @@
 //Fill in the dropdowns
 window.addEventListener('load', function (event) {
     refreshDropdowns();
-    getUserRequests();
     // console.log('dropdowns were updated');
 });
-/**
- * @description Gets and displays the current user requests
- */
-function getUserRequests() {
-
-    var opts = { type: "GET", url: '/api/user-requests' };
-    var GetData = callBackEnd(opts);
-
-    GetData.then(response => {
-
-        if (response.status == 0) {
-            refreshDropdownRequestUsers(response.requests);
-        } else if (response.status >= 1) {
-            console.log("Error on sending GET request");
-            createPopupMsg('error', response.response, 'center');
-        }
-
-    });
-
-}
-/**
- * @description Refreshes the dropdown containing the current user requests
- * @param {*} requests 
- */
-function refreshDropdownRequestUsers(requests) {
-
-    var menu = document.getElementById('requests-dropdown');
-    menu.innerHTML = '';
-    var defaultOpt = document.createElement('option');
-    defaultOpt.text = 'See User Requests';
-    menu.add(defaultOpt);
-
-    requests.forEach(request => {
-        var option = document.createElement('option');
-        option.value = request._id;
-        option.text = request.username + " of Level " + request.userType;
-        menu.add(option);
-    });
-}
-/**
- * @description Custom function for submitting the user request form
- */
-function getUserRequestForm() {
-    var menu = document.getElementById('requests-dropdown');
-    if (menu.value) {
-        var req = { id: menu.value };
-        console.log(req);
-        $.ajax({
-            url: '/parse/user-requests',
-            data: req,
-            type: 'GET',
-            dataType: 'json', // added data type
-            success: function (response) {
-                //response = JSON.parse(response);
-                if (response.status == 0) {
-                    fillUserForm(response.request);
-                    toggleForm('user-requests','PUT', false);
-                } else {
-                    console.log("Error when Getting the data");
-                    createPopupMsg('Error', response.response, 'pageHeader');
-                }
-            },
-            error: function(jqXHR, exception) {
-                createPopupMsg('error', "Internal Error", 'pageHeader');
-            }
-        });
-
-    }
-
-
-}
-/**
- * Fills out the user request form with the provided info
- * @param {*} userRequest 
- */
-function fillUserForm(userRequest) {
-    document.getElementById('user-username').innerText = userRequest.username;
-    document.getElementById('user-email').innerText = userRequest.email;
-    document.getElementById('user-message').innerText = userRequest.message;
-
-    var menu =  document.getElementById('type-radio-menu');
-    menu.innerHTML = '';
-    var userType = userRequest.userType;
-    for(var type = userType ; type < 4; type++) {
-        var input = document.createElement('input');
-        input.class = "form-check-input";
-        input.type= "radio";
-        input.name="userType";
-        input.id = "userType" + type;
-        input.value = type;
-
-        var label = document.createElement('label');
-        label.class = "form-check-label";
-        label.for= input.id;
-        label.innerText = "Level " + type;
-        menu.appendChild(input);
-        menu.appendChild(label);
-        menu.appendChild(document.createElement('br'));
-    }
-
-    document.getElementById('username-field').value= userRequest.username;
-    document.getElementById('ur_id').value = document.getElementById('requests-dropdown').value;
-    
-
-}
 
 //called by the onchange functions on the dropdowns : 
 function getPageSelected(mId) {
@@ -130,7 +24,7 @@ function getPageSelected(mId) {
                     createPopupMsg('Error', response.response, 'pageHeader');
                 }
             },
-            error: function(jqXHR, exception) {
+            error: function (jqXHR, exception) {
                 createPopupMsg('error', "Internal Error", 'pageHeader');
             }
         });
@@ -144,7 +38,7 @@ function getPageSelected(mId) {
  * @param {*} content The content for the form to be filled with
  */
 function fillForm(fId, content) {
-    const hasFile = fId=='Course'?true:false;
+    const hasFile = fId == 'Course' ? true : false;
     var form = document.getElementById(fId);
     for (var key in content) {
 
@@ -178,7 +72,7 @@ function fillForm(fId, content) {
         var element = form.querySelector("[name=" + key + "]");
         if (!element) continue;
         if (key == "date" || key == "start" || key == "end") {
-            if(element.type == 'date') element.value = content[key].substr(0, 10);
+            if (element.type == 'date') element.value = content[key].substr(0, 10);
             else element.value = content[key].substr(0, 22);
         }
         else element.value = content[key];
@@ -199,11 +93,11 @@ function toggleForm(name, method, hasFile) {
     var form = document.getElementById(name);
     // Hides the garbage that 
     form.classList.toggle("hidden");
-    if (!form.className.includes("hidden")){
-        for (let child of form.children){
+    if (!form.className.includes("hidden")) {
+        for (let child of form.children) {
             let idString = name.toLowerCase();
-            if ( child.id == `delete-${idString}`){
-                child.style="visibility: hidden;";
+            if (child.id == `delete-${idString}`) {
+                child.style = "visibility: hidden;";
             }
         }
 
@@ -227,12 +121,12 @@ function toggleForm(name, method, hasFile) {
     for (var j = 0; j < selects.length; j++) {
         selects[j].disabled = !selects[j].disabled;
     }
-    if (method == "PUT"){
+    if (method == "PUT") {
         form.setAttribute('onsubmit', `handleRequest(event, $(this), '${method}', ${hasFile})`);
-        for (let child of form.children){
+        for (let child of form.children) {
             let idString = name.toLowerCase();
-            if ( child.id == `delete-${idString}`){
-                child.style="visibility: visible;";
+            if (child.id == `delete-${idString}`) {
+                child.style = "visibility: visible;";
             }
         }
     } else {
@@ -248,20 +142,20 @@ function toggleForm(name, method, hasFile) {
 function setFormPosition(form) {
 
     var wrapper = document.getElementById('form-wrap');
-        var navHeight = document.getElementsByTagName('nav')[0].offsetHeight;
-        var contentHeight = document.getElementById('content').offsetHeight;
-        var contentWidth = document.getElementById('content').offsetWidth;
+    var navHeight = document.getElementsByTagName('nav')[0].offsetHeight;
+    var contentHeight = document.getElementById('content').offsetHeight;
+    var contentWidth = document.getElementById('content').offsetWidth;
 
-        var topOffset = navHeight + contentHeight/2 - form.offsetHeight/2;
-        var topPercentage = (topOffset/ window.innerHeight) * 100;
-        console.log(window.innerHeight + 'top percentage: ' + topPercentage);
+    var topOffset = navHeight + contentHeight / 2 - form.offsetHeight / 2;
+    var topPercentage = (topOffset / window.innerHeight) * 100;
+    console.log(window.innerHeight + 'top percentage: ' + topPercentage);
 
-        var leftOffet = contentWidth/2 - form.offsetWidth/2;
-        var leftPercentage = (leftOffet/ window.innerWidth) * 100;
-        console.log('left percentage: ' + leftPercentage);
+    var leftOffet = contentWidth / 2 - form.offsetWidth / 2;
+    var leftPercentage = (leftOffet / window.innerWidth) * 100;
+    console.log('left percentage: ' + leftPercentage);
 
-        wrapper.style.setProperty('top', topPercentage+ '%');
-        wrapper.style.setProperty('left', leftPercentage + '%');
+    wrapper.style.setProperty('top', topPercentage + '%');
+    wrapper.style.setProperty('left', leftPercentage + '%');
 
 }
 
@@ -281,7 +175,7 @@ function addField() {
     newField.getElementsByTagName('input')[0].id = 'instructor' + pointer;
     newField.getElementsByTagName('input')[0].name = 'instructor' + pointer;
     newField.getElementsByTagName('input')[0].value = '';
-    
+
     var minus;
     if (pointer == 1) {
         minus = document.createElement('img');
@@ -357,23 +251,80 @@ function refreshDropdownAward(awards) {
         menu.add(option);
     });
 }
+
+var coursesTerms = [];
 /**
  * @description Refreshes the dropdown with all the courses
  * @param {*} courses 
  */
 function refreshDropdownCourse(courses) {
     var menu = document.getElementById('modCourse');
+    var menuform = document.getElementById('courseTitle');
+
     menu.innerHTML = '';
+    menuform.innerHTML = '';
+
     var defaultOpt = document.createElement('option');
     defaultOpt.text = 'Modify Course';
     menu.add(defaultOpt);
+
+    var defaultOpt2 = document.createElement('option');
+    defaultOpt2.text = 'Select Course';
+    menuform.add(defaultOpt2);
 
     courses.forEach(course => {
         var option = document.createElement('option');
         option.value = course._id;
         option.text = course.title;
         menu.add(option);
+
+        var option2 = option.cloneNode();
+        option2.value = course.title;
+        option2.text = course.title;
+        menuform.add(option2);
+        coursesTerms.push({ title: course.title, terms:course.termsOffered});
+
     });
+    console.log(coursesTerms);
+}
+
+
+function displayTermsOffered() {
+    var menu = document.getElementById('courseTitle');
+    var menuForm = document.getElementById('semester');
+    menuForm.innerHTML = '';
+
+    console.log(coursesTerms);
+
+
+    var defaultOpt = document.createElement('option');
+    defaultOpt.text = '---';
+    menuForm.add(defaultOpt);
+    if (menu.value) {
+        if (coursesTerms) {
+            console.log("courses terms initialized");
+            console.log(menu.value);
+
+            var terms = []
+            coursesTerms.forEach(course => {
+                if (course.title == menu.value) {
+                    console.log(menu.value);
+                    terms = course.terms;
+                }
+            });
+
+            terms.forEach(term => {
+                var option = document.createElement('option');
+                option.value = term;
+                option.text = term;
+                console.log(option);
+                menuForm.add(option);
+            });
+
+        }
+
+    }
+
 }
 /**
  * @description Refreshes the postings dropdown
@@ -453,7 +404,7 @@ function refreshDropdownTech(techSupports) {
  */
 function refreshDropDownPages(pages) {
     var menu = document.getElementById('select_category');
-    if(!menu){
+    if (!menu) {
         return;
     }
     menu.innerHTML = '';
@@ -476,7 +427,7 @@ function refreshDropDownSubpages(subpages) {
         return a.path.localeCompare(b.path);
     });
     var menu = document.getElementById('select_page');
-    if(!menu){
+    if (!menu) {
         return;
     }
     menu.innerHTML = '';
@@ -486,7 +437,7 @@ function refreshDropDownSubpages(subpages) {
     var category;
     var group;
     subpages.forEach(page => {
-        if(page.subpages && page.subpages.length > 0){
+        if (page.subpages && page.subpages.length > 0) {
             return;
         }
         var new_category = page.path.replace(/\/.+/,'');
@@ -498,7 +449,7 @@ function refreshDropDownSubpages(subpages) {
         }
         var option = document.createElement('option');
         option.value = page._id;
-        option.text = page.path.replace(/.+\//,'');
+        option.text = page.path.replace(/.+\//, '');
         group.appendChild(option);
     });
 }
@@ -522,10 +473,10 @@ function makeJson(pObject) {
                 instructors.push(pObject[i].value);
             } else if (currId.includes("w2021c") || currId.includes("s2021c") || currId.includes("f2021c")) {
                 if (document.getElementById(currId).checked) terms.push(pObject[i].value);
-            } else if(pObject[i].type =="radio") {
-                if(document.getElementById(currId).checked) aJson[pObject[i].name] = pObject[i].value;
+            } else if (pObject[i].type == "radio") {
+                if (document.getElementById(currId).checked) aJson[pObject[i].name] = pObject[i].value;
                 else continue;
-            } 
+            }
 
             else aJson[pObject[i].name] = pObject[i].value;
         }
@@ -540,7 +491,7 @@ function makeJson(pObject) {
  * @description Takes an Array of objects and returns FormData object
  * @param {Array} pObject 
  */
-function createForm(pObject){
+function createForm(pObject) {
     var formData = new FormData
     var terms = [];
     var instructors = []
@@ -594,18 +545,18 @@ function handleRequest(event, element, method, hasFile) {
     console.log(element);
     // Building the request JSON
     var mForm, type;
-    if (hasFile){
+    if (hasFile) {
         mForm = createForm(element[0]);
         type = 'FormData';
     } else {
         mForm = makeJson(element[0]);
         type = 'JSON';
     }
-    
+
     if (!errorCheck(mForm)) {
         // clear each one!
         // Create the async promise
-        var opts = { type: method, url: '/parse/' + element[0].id, request: mForm , contentType: type};
+        var opts = { type: method, url: '/parse/' + element[0].id, request: mForm, contentType: type };
         var aPromise = callBackEnd(opts);
         // Handle
         aPromise
@@ -615,7 +566,7 @@ function handleRequest(event, element, method, hasFile) {
                 if (response.status == 0) {
                     if (method != 'PUT') document.getElementById(element[0].id).reset();
                     refreshDropdowns();
-                    if(aId=="user-requests") getUserRequests();
+                    if (aId == "user-requests") getUserRequests();
                     createPopupMsg('success', response.response, aId + "Header");
                 } else if (response.status >= 1) {
                     console.log("Error on submission");
@@ -644,30 +595,30 @@ collectionToArray(document.getElementsByTagName('input')).forEach(element => {
  * @param {HTMLElement} element
  * @returns {null}
  */
-function deleteButton(event, element){
+function deleteButton(event, element) {
     // preventing the default action since it SOMEHOW magically propogates to the other button....
     event.preventDefault();
     let id;
     let parentElement = element.parentElement;
-    for (let el of parentElement.children){
-        if (el.name == '_id'){
+    for (let el of parentElement.children) {
+        if (el.name == '_id') {
             id = el.value;
             break;
         }
     }
-    var opts = { type: "DELETE", url: '/parse/' + parentElement.id, request: {_id: id} , contentType: "JSON"};
+    var opts = { type: "DELETE", url: '/parse/' + parentElement.id, request: { _id: id }, contentType: "JSON" };
     const aPromise = callBackEnd(opts);
     aPromise
-        .then(result=>{
+        .then(result => {
             console.log(result);
-            if (result.status == 0){
+            if (result.status == 0) {
                 createPopupMsg('success', result.response, parentElement.id + "Header");
                 refreshDropdowns();
-                if( parentElement.id =='user-requests') getUserRequests();
+                if (parentElement.id == 'user-requests') getUserRequests();
                 parentElement.reset();
             } else {
                 createPopupMsg('error', result.response, parentElement.id + "Header");
             }
         })
-        .catch(err=>console.log(err));
+        .catch(err => console.log(err));
 }   
