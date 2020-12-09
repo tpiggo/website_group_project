@@ -6,5 +6,16 @@
             <%=news.creationDate.getHours();%>:<%=news.creationDate.getMinutes();%></small>
         <p class="card-text"><%=news.description%></p>
         <p class="card-text">Contact : <%=news.contact%></p>
-    </div>
+        <% if(type == 'all') { %>
+            <span class="badge badge-dark"><%=news.newsType%></span>
+            <% }%>
+    </p>
+    
+  </div>
+<% } %>
+<% if(content.data.length==0) { %>
+    <h3> There is no 
+        <% if(type == 'all') { %> news
+        <% }else { %><%=type%><% } %>
+             at the moment</h3>
     <% } %>

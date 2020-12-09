@@ -16,7 +16,7 @@ router.get('/all', (req, res) => {
         data = { title, menu, content, logged, username, theme: req.session.theme};
         return common.getNavBar();
     }).then(pages => {
-        res.render('subpage.ejs', {...data, navbar: pages.navbar});
+        res.render('subpage.ejs', {...data, type: 'all',navbar: pages.navbar});
     }).catch(err => {
         console.error(err);
         res.send(err);
@@ -36,7 +36,7 @@ router.get('/awards', (req, res) => {
         data = { title, menu, content, logged, username, theme: req.session.theme};
         return common.getNavBar();
     }).then(pages => {
-        res.render('subpage.ejs', {...data, navbar: pages.navbar});
+        res.render('subpage.ejs', {...data,type: 'awards', navbar: pages.navbar});
     }).catch(err => {
         console.error(err);
         res.send(err);
@@ -50,12 +50,12 @@ router.get('/announcements', (req, res) => {
     const logged = req.session.authenticated;
     const username = req.session.username;
 
-    common.getAllDataWith(News, {type:'announcements'}).then(news => {
+    common.getAllDataWith(News, {type:'announcement'}).then(news => {
         var content = { html: './list/news', data: news };
         data = { title, menu, content, logged, username, theme:req.session.theme };
         return common.getNavBar();
     }).then(pages => {
-        res.render('subpage.ejs', {...data, navbar: pages.navbar});
+        res.render('subpage.ejs', {...data,type:'announcements',navbar: pages.navbar});
     }).catch(err => {
         console.error(err);
         res.send(err);
