@@ -75,13 +75,10 @@ function callBackEnd(pOpts) {
         if (pOpts.contentType == 'JSON'){
             aXML.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
             aXML.send(JSON.stringify(pOpts.request));
-            console.log("sent json");
         } else if (pOpts.contentType == 'FormData'){
             aXML.send(pOpts.request);
-            console.log("sent formdata");
         } else {
             aXML.send();
-            console.log("sent get");
         }
     })
 }

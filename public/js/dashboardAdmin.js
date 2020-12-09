@@ -41,7 +41,6 @@ function getUserRequestForm() {
     var menu = document.getElementById('requests-dropdown');
     if (menu.value) {
         var req = { id: menu.value };
-        console.log(req);
         $.ajax({
             url: '/parse/user-requests',
             data: req,

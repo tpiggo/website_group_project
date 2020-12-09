@@ -38,7 +38,6 @@ function clickClose(event) {
     let form = event.target.parentElement.parentElement;
     form.reset();
     formOpened.push(form);
-    console.log(form);
     form.parentElement.removeChild(form);
     document.getElementById("request-button").disabled = false;
 }

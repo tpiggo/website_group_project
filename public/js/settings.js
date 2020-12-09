@@ -78,7 +78,6 @@ function checkPass(isPass, pFormEntry){
         confPass = document.getElementById("confirm-password");
         // Making sure the password is proper length and does not have spaces
         if (pass != ''){
-            console.log(pass);
             if (pass.length < 5 || pass.includes(' ')){
                 errorBox[1].getElement().innerHTML = errorBox[1].getErrorMsg();
                 errors[1] = true;
@@ -89,7 +88,6 @@ function checkPass(isPass, pFormEntry){
                 if (confPass.value != '' && !matchPass(pass, confPass.value)){
                     errorBox[2].getElement().innerHTML = errorBox[2].getErrorMsg();
                     errors[2] = true;
-                    console.log(pass + "    "+ confPass.value);
                 } else if (confPass != '' && matchPass(pass, confPass.value)){
                     errorBox[2].getElement().innerHTML = "";
                     errors[2] = false;
@@ -178,8 +176,6 @@ function onSubmit(event){
         console.log("Error on the page");
         addErrors()
         event.preventDefault();
-    } else {
-        console.log('Submitting!');
     }
 }
 

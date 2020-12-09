@@ -26,15 +26,6 @@ window.addEventListener('scroll', () => {
         headLogo.setAttribute("style", "transform: translate(-" + (window.pageYOffset > horzLimit ? horzLimit : window.pageYOffset) + "px);");
         header.style.setProperty('box-shadow', '0 5px 15px 1px rgba(0, 0, 0, 0.4)');
     }
-
-    // if(window.pageYOffset > 5) header.getElementsByTagName('span')[0].style.display = "none";
-    // else header.getElementsByTagName('span')[0].style.display = "inline";
-
-    // var offset = window.innerHeight - window.pageYOffset
-    // var vertLimit = convertRemToPixels(3);
-    // console.log('window.height : ' + window.innerHeight + ',window.pageYOffset : ' + window.pageYOffset);
-    // header.style.minHeight = (window.pageYOffset > 10 ? vertLimit: offset) + 'px';
-    //console.log('set height : ' + (offset < vertLimit ? vertLimit : offset) + 'px !important');
 });
 
 function convertRemToPixels(rem) {
@@ -50,10 +41,8 @@ function getItems() {
     aPromise
         .then((response) => {
             response.response.forEach((value, index) => {
-                console.log(value)
                 if (value.elements.length > 0)
                     createElementsOnLoad(value.name, value.elements);
-                console.log(value.elements[0].description);
             });
         })
         .catch(err => console.log(err));
@@ -64,7 +53,6 @@ function createElementsOnLoad(id, newElements) {
     //let searchId = id + '-btn';
     let searchId = id + '-cards';
     const cardDeck = document.getElementById(searchId);
-    console.log(cardDeck, searchId);
 
     newElements.forEach(value => {
         const newDiv = document.createElement("div");

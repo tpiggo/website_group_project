@@ -54,7 +54,6 @@ router.get('/index-info', (req, res) => {
 });
 
 router.get('/dashboard-info', middleware.isAuthenticated, (req, res) => {
-    console.log('request received for dropdowns');
     var getCourses = () => common.getAllDataFrom(Course);
     var getNews = () => common.getAllDataFrom(News);
     var getEvents = () => common.getAllDataFrom(Event);
@@ -65,7 +64,6 @@ router.get('/dashboard-info', middleware.isAuthenticated, (req, res) => {
     var getPages = () => common.getAllDataFrom(Page);
     Promise.all([getCourses(), getNews(), getEvents(), getAwards(), getTech(), getPosting(), getSubpages(), getPages()])
         .then(data => {
-            console.log('sending all the data to dashboard');
             res.json({ status: 0, data });
         }).catch(err => {
             console.error(err);
@@ -77,7 +75,6 @@ router.get('/dashboard-info', middleware.isAuthenticated, (req, res) => {
 router.get('/courses/syllabus/:courseName', (req, res) =>{
     // Fix the course name
     let pCourse =  req.params.courseName.replace('-', " ");
-    console.log(pCourse);
     Course.findOne({title: { '$regex': pCourse, '$options': 'i' }})
         .then(course => {
             if (!course){
@@ -87,7 +84,6 @@ router.get('/courses/syllabus/:courseName', (req, res) =>{
             if (course.syllabus == "noFile"){
                 return res.send('No file is here! Sorry <a href="/">Home</a>');
             }
-            console.log(course);
             let filePath = path.join(__dirname, '../files/', course.syllabus);
             let stats = fs.statSync(filePath);
             res.writeHead(200, {
@@ -108,7 +104,6 @@ router.get('/courses/syllabus/:courseName', (req, res) =>{
 router.get('/user-requests', (req, res) =>{ 
 
     common.getAllDataFrom(UserRequests).then(requests => {
-        //console.log(requests);
         res.send({ status: 0, requests});
     }).catch(err => {
         console.error(err);
@@ -199,10 +194,8 @@ router.get('/getCourse', (req, res) => {
 router.use(bodyParser.json());
 
 router.post('/render-markdown', (req, res) => {
-    console.log("Hello", req.body.markdown);
     Promise.resolve(markdown.render(req.body.markdown))
     .then(data => {
-        console.log('sending rendered html to editor');
         res.json({ status: 0, data });
     }).catch(err => {
         console.error(err);

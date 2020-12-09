@@ -68,7 +68,7 @@ common.getDataOfSubpage = (page, subpage) => {
             .populate('subpages')
             .exec((err, data) => {
                 if (err) {
-                    console.logo(err);
+                    console.log(err);
                     reject("Internal error");
                 }
                 else if (data == null) {
@@ -106,7 +106,7 @@ common.getPagesMenu = (page) => {
             .populate('subpages')
             .exec((err, data) => {
                 if (err) {
-                    console.logo(err);
+                    console.log(err);
                     reject("Internal error");
                 }
                 else if (data == null) {
@@ -132,7 +132,7 @@ common.getNavBar = () =>{
             .populate('subpages')
             .exec((err, data) => {
                 if (err) {
-                    console.logo(err);
+                    console.log(err);
                     reject("Internal error");
                 }
                 else if (data == null) {

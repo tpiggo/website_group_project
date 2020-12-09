@@ -5,7 +5,6 @@ const TechnicalReport = require('../models/TechnicalReport.js');
 
 
 router.get('/technical-reports', (req, res) => {
-    console.log("getting technical reports");
     TechnicalReport
         .find()
         .sort({reportDate: "descending"})
@@ -41,7 +40,6 @@ function addInformation(techReports){
         rep.num = i;
         rep.boxId = `report-${i}`
         rep.repDate = rep.reportDate.toDateString();
-        console.log(rep.repDate);
         i++;
     }
     return techReports;

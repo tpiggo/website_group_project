@@ -65,7 +65,6 @@ router.post('/TA', middleware.isAuthenticated, (req, res) => {
                     console.error(err);
                     reject({ status: 2, response: 'Error accessing Course database! Try again later!' });
                 } else {
-                    console.log("found a course");
                     resolve(match);
                 }
             });
@@ -85,7 +84,6 @@ router.post('/TA', middleware.isAuthenticated, (req, res) => {
                         console.error(err);
                         reject({ status: 2, response: 'Error accessing TAP database! Try again later!' });
                     } else {
-                        console.log("returning a coursepost", coursePost);
                         resolve(coursePost)
                     }
                 });
@@ -111,7 +109,6 @@ router.post('/TA', middleware.isAuthenticated, (req, res) => {
                         console.error(err);
                         reject({ status: 2, response: 'Error creating the course!' });
                     } else {
-                        console.log("returning a created post", createdPost);
                         resolve({
                             status: 0,
                             response: 'Creating a posting for TA!',
@@ -124,7 +121,6 @@ router.post('/TA', middleware.isAuthenticated, (req, res) => {
                     }
                 })
             } else {
-                console.log("found a course posting!")
                 reject({ status: 1, response: 'Course Posting exists already! Please update it' });
             }
         });
@@ -145,8 +141,6 @@ router.post('/TA', middleware.isAuthenticated, (req, res) => {
 //  ********************************* AWARD REQUESTS *********************************
 router.post('/Award', middleware.isAuthenticated, (req, res) => {
     // Auth the session
-    console.log(req.body);
-    console.log('received post request for award');
 
     /**
      * @description Finds an award or produces an error
@@ -216,7 +210,6 @@ router.get('/Award', middleware.isAuthenticated, (req, res) => {
             res.json({ status: 2, response: "Internal Error" });
         } else {
             if (content) {
-                console.log('content found !');
                 res.json({ status: 0, response: 'Award found', posting: content });
             } else {
                 console.log('content not found');
@@ -275,7 +268,6 @@ router.post('/News', middleware.isAuthenticated, (req, res) => {
      * Not enforcing unique names for the articles.
      * Return object Id for rendering of article
      */
-    console.log(req.body);
 
     News.create({
         ...req.body,
@@ -297,7 +289,6 @@ router.post('/News', middleware.isAuthenticated, (req, res) => {
             });
         }
     });
-    console.log("Sent response");
 });
 
 
@@ -310,7 +301,6 @@ router.get('/News', (req, res) => {
             res.json({ status: 2, response: "Internal Error" });
         } else {
             if (content) {
-                console.log('content found !');
                 console.log(content);
                 res.json({ status: 0, response: 'News found', posting: content });
             } else {
@@ -366,7 +356,6 @@ router.delete('/News', middleware.isAuthenticated, (req, res) => {
 
 //  ********************************* EVENT REQUESTS *********************************
 router.post('/Event', middleware.isAuthenticated, (req, res) => {
-    console.log(req.body);
     // Search for an event which already exists
     /**
      * @description Finds an event if there is one
@@ -435,7 +424,6 @@ router.get('/Event', (req, res) => {
             res.json({ status: 2, response: "Internal Error" });
         } else {
             if (content) {
-                console.log('content found !');
                 console.log(content);
                 res.json({ status: 0, response: 'Event found', posting: content });
             } else {
@@ -543,7 +531,6 @@ router.post('/Tech', middleware.isAuthenticated, (req, res) => {
         })
     }
 
-    console.log(req.body);
     const user = req.session.username;
     //BUG
     const { techTitle, techContact, techDescription } = req.body
@@ -564,7 +551,6 @@ router.get('/Tech', (req, res) => {
             res.json({ status: 2, response: "Internal Error" });
         } else {
             if (content) {
-                console.log('content found !');
                 console.log(content);
                 res.json({ status: 0, response: 'Technical Report found', posting: content });
             } else {
@@ -625,7 +611,6 @@ router.post('/Posting', middleware.isAuthenticated, (req, res) => {
     const {
         postingTitle
     } = req.body;
-    console.log(req.body);
     Posting.create({
         ...req.body,
         creator: req.session.username,
@@ -678,7 +663,6 @@ router.get('/Posting', middleware.isAuthenticated, (req, res) => {
             res.json({ status: 2, response: "Internal Error" });
         } else {
             if (content) {
-                console.log('content found !');
                 res.json({ status: 0, response: 'Posting found', posting: content });
             } else {
                 console.log('content not found');
@@ -707,7 +691,6 @@ router.delete('/Posting', middleware.isAuthenticated, (req, res) => {
 //  ********************************* COURSE REQUESTS *********************************
 router.post('/Course', upload.single("syllabus"), middleware.isAuthenticated, (req, res) => {
     // Fix syllabus, add its path rather than its name
-    console.log(req.body, req.file)
     if (req.file != undefined){
         req.body.syllabus = req.file.filename;
     }else {
@@ -726,7 +709,6 @@ router.post('/Course', upload.single("syllabus"), middleware.isAuthenticated, (r
             });
         }
         else {
-            console.log(content);
             res.json({
                 status: 0,
                 response: 'Course created!',
@@ -739,7 +721,6 @@ router.post('/Course', upload.single("syllabus"), middleware.isAuthenticated, (r
 router.put('/Course', upload.single("syllabus"), middleware.isAuthenticated, (req, res) => {
     var id = req.body._id;
     delete req.body._id;
-    console.log(req.body, req.file);
     if (req.file != undefined){
         req.body.syllabus = req.file.filename;
     } else {
@@ -748,7 +729,6 @@ router.put('/Course', upload.single("syllabus"), middleware.isAuthenticated, (re
     if (req.body.title.slice(4,5) != " "){
         req.body.title = req.body.title.slice(0, 4)+" "+req.body.title.slice(4);
     }
-    console.log(req.body, req.file);
     Course.findByIdAndUpdate(id, req.body, (err, update)=> {
         if(err){
             console.error(err);
@@ -784,7 +764,6 @@ router.get('/Course', (req, res) => {
             res.json({ status: 2, response: "Internal Error" });
         } else {
             if (content) {
-                console.log('content found !');
                 console.log(content);
                 res.json({ status: 0, response: 'Course found', posting: content });
             } else {
@@ -885,13 +864,11 @@ router.post('/Subpage', middleware.canCreateOrDestroy, (req,res) => {
 });
 
 router.post('/Subpage-Delete', middleware.canCreateOrDestroy, (req,res) => {
-    console.log(req.body);
     Subpage.findByIdAndDelete(req.body.page_id, (err,subpage) => {
         if(err){
             res.json({status: 1, response: "Error deleting subpage"});
         }else{
             var page_path = subpage.path.replace(/\/.+/,'').toLowerCase();
-            console.log("Page path: " + page_path);
             Page.findOne({path: page_path}, (err,page) => {
                 var page_index = page.subpages.indexOf(req.body.page_id);
                 page.subpages.splice(page_index,1);
@@ -908,7 +885,6 @@ router.post('/Subpage-Delete', middleware.canCreateOrDestroy, (req,res) => {
 
 router.post('/Category', middleware.canCreateOrDestroy, (req,res) => {
     var path = req.body.category_name.toLowerCase();
-    console.log(path);
     Page.exists({path}).then((name_taken) => {
         if(name_taken){
             return res.json({status: 1, response: "Error, a page with that name already exists"});
@@ -933,15 +909,12 @@ router.post('/Category', middleware.canCreateOrDestroy, (req,res) => {
 // ********************** USER REQUEST UPDATES ***************************
 
 router.get('/user-requests', (req, res) => {
-    console.log('user request received !');
-    console.log('id : ' +req.query.id );
     UserRequest.findById(req.query.id, (err, content) => {
         if (err) {
             console.error(err);
             res.json({ status: 2, response: "Internal Error" });
         } else {
             if (content) {
-                console.log('user request found !');
                 res.json({ status: 0, response: 'User Request Accepted Succesfully', request: content });
             } else {
                 console.log('content not found');
@@ -953,14 +926,11 @@ router.get('/user-requests', (req, res) => {
 });
 
 router.put('/user-requests', (req, res) => {
-    var id = req.body._id;
-    console.log('modifying user type !');
-    console.log(id + req.body);
+    var id = req.body._id
 
     UserRequest.deleteOne({_id:id})
         .then(result=>{
             if ( result.ok == 1 && result.deletedCount > 0 && result.n > 0){
-                console.log("Successfully deleted!");
             } else {
                 console.log("Error deleting! Try again later");
             }

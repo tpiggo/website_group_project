@@ -1,7 +1,6 @@
 //Fill in the dropdowns
 window.addEventListener('load', function (event) {
     refreshDropdowns();
-    // console.log('dropdowns were updated');
 });
 
 //called by the onchange functions on the dropdowns : 
@@ -9,7 +8,6 @@ function getPageSelected(mId) {
     var menu = document.getElementById(mId);
     if (menu.value) {
         var req = { id: menu.value };
-        console.log(req);
         $.ajax({
             url: '/parse/' + mId.substr(3),
             data: req,
@@ -148,11 +146,9 @@ function setFormPosition(form) {
 
     var topOffset = navHeight + contentHeight / 2 - form.offsetHeight / 2;
     var topPercentage = (topOffset / window.innerHeight) * 100;
-    console.log(window.innerHeight + 'top percentage: ' + topPercentage);
 
     var leftOffet = contentWidth / 2 - form.offsetWidth / 2;
     var leftPercentage = (leftOffet / window.innerWidth) * 100;
-    console.log('left percentage: ' + leftPercentage);
 
     wrapper.style.setProperty('top', topPercentage + '%');
     wrapper.style.setProperty('left', leftPercentage + '%');
@@ -294,7 +290,6 @@ function displayTermsOffered() {
     var menuForm = document.getElementById('semester');
     menuForm.innerHTML = '';
 
-    console.log(coursesTerms);
 
 
     var defaultOpt = document.createElement('option');
@@ -302,13 +297,10 @@ function displayTermsOffered() {
     menuForm.add(defaultOpt);
     if (menu.value) {
         if (coursesTerms) {
-            console.log("courses terms initialized");
-            console.log(menu.value);
 
             var terms = []
             coursesTerms.forEach(course => {
                 if (course.title == menu.value) {
-                    console.log(menu.value);
                     terms = course.terms;
                 }
             });
@@ -317,7 +309,6 @@ function displayTermsOffered() {
                 var option = document.createElement('option');
                 option.value = term;
                 option.text = term;
-                console.log(option);
                 menuForm.add(option);
             });
 
@@ -459,7 +450,6 @@ function refreshDropDownSubpages(subpages) {
  * @param {Array} pObject 
  */
 function makeJson(pObject) {
-    console.log(pObject);
     var aJson = {};
     var terms = [];
     var instructors = []
@@ -483,7 +473,6 @@ function makeJson(pObject) {
     }
     if (instructors.length > 0) aJson['instructor'] = instructors;
     if (terms.length > 0) aJson['termsOffered'] = terms;
-    console.log(aJson);
     return aJson;
 }
 
@@ -542,7 +531,6 @@ function errorCheck(pObject) {
 function handleRequest(event, element, method, hasFile) {
     // Do not allow default.
     event.preventDefault();
-    console.log(element);
     // Building the request JSON
     var mForm, type;
     if (hasFile) {
@@ -562,7 +550,6 @@ function handleRequest(event, element, method, hasFile) {
         aPromise
             .then(function (response) {
                 var aId = element[0].id;
-                console.log('id form ' + aId);
                 if (response.status == 0) {
                     if (method != 'PUT') document.getElementById(element[0].id).reset();
                     refreshDropdowns();
@@ -610,7 +597,6 @@ function deleteButton(event, element) {
     const aPromise = callBackEnd(opts);
     aPromise
         .then(result => {
-            console.log(result);
             if (result.status == 0) {
                 createPopupMsg('success', result.response, parentElement.id + "Header");
                 refreshDropdowns();

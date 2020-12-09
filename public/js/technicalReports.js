@@ -39,7 +39,6 @@ function getNext(){
     var currentSlide = document.getElementById( currentPage.firstElementChild.getAttribute("data-element") );
     currentSlide.style.display = "none";
     isPrevBtn(currentPage)
-    console.log(currentSlide);
     // toggles the current page (new page) to be viewable
     currentPage = currentPage.nextElementSibling;
     currentSlide = document.getElementById( currentPage.firstElementChild.getAttribute("data-element") );

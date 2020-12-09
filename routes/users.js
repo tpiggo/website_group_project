@@ -85,12 +85,10 @@ router.post('/login', canUseRoute, (req, res)=> {
         .then(user => {
             bcrypt.compare(password,user.password, (err, authenticated) => { //Hash the submitted password and compare it to the one from the database
                 if(authenticated){
-                    console.log("User "+ username + " succesfully logged in.");
                     // Saving the username into the session, potentially not the greatest solution, but works for now
                     req.session.username = username;
                     req.session.authenticated = true;
                     req.session.theme = user.userTheme;
-                    console.log(req.session.theme);
                     return res.redirect("/dashboard"); //Send to the dashboard if login succeeds 
                 } else {
                     throw Error(`userNameError ${username}`);
@@ -174,7 +172,6 @@ router.post('/register', canUseRoute, (req, res)=> {
                     if (item.username == username){
                         errors.push({msg: "Username already registered!"});
                     }
-                    console.log(item, email, username);
                 });
                 reject(errors)
             } else {
@@ -199,11 +196,10 @@ router.post('/register', canUseRoute, (req, res)=> {
             return createNewUser(users);
         })
         .then(user => {
-            console.log("Done creating! Redirecting back to register")
             return res.redirect('/users/register');
         })
         .catch(errors => {
-            console.log("Error occurred!")
+            console.log("Error occurred!");
 
             common.getNavBar().then(pages => {
                 navbar = pages.navbar;
@@ -230,7 +226,6 @@ router.post('/register', canUseRoute, (req, res)=> {
 router.get("/logout", isAuthenticated, (req, res)=>{
     // Check if authenticated session exists. 
     req.session.destroy();
-    console.log("Successfully logged out. Redirecting");
     res.redirect("/");
 });
 
@@ -281,12 +276,10 @@ router.post('/requestLevel', isAuthenticated, (req, res) => {
     // Making the request, trying to avoid callback hell
     requestNotMade(req.body.user)
         .then(() => {
-            console.log("username:", req.body.user);
             // Returns the promise of a User
             return getUser(req.body.user);
         })
         .then(user => {
-            console.log("Got user:", user);
             // Returns the promise of creating a post
             return createRequest(user, req.body.reason);
         })

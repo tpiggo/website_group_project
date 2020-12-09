@@ -72,7 +72,6 @@ function checkPass(isPass, form_entry){
             if (confPass.value != '' && !matchPass(pass, confPass.value)){
                 errorBox[2].getElement().innerHTML = errorBox[2].getErrorMsg();
                 errors[2] = true;
-                console.log(pass + "    "+ confPass.value);
             } else if (confPass != '' && matchPass(pass, confPass.value)){
                 errorBox[2].getElement().innerHTML = "";
                 errors[2] = false;

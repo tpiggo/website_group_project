@@ -13,7 +13,6 @@ app.use(express.urlencoded({ extended: true }));
 
 //Route for normal subpages
 router.get('/:pagename', (req, res) => {
-    console.log(req.originalUrl.substr(1));
     Subpage.findOne({ path: req.originalUrl.substr(1) }, (err, subpage) => {
         if (err) {
             console.log(err);
@@ -88,7 +87,6 @@ router.get('/:pagename/:subpage?/edit', canEdit, (req, res) => {
 
 //Route for loading sub-subpages
 router.get('/:pagename/:subpage', (req, res) => {
-    console.log("request received from submenu link!");
     Subpage.findOne({ path: req.originalUrl.substr(1) }, (err, subpage) => {
         if (err) {
             console.log(err);

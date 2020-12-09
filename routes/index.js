@@ -18,7 +18,6 @@ const Page = require('../models/Page');
 
 router.get('/', (req, res) => {
     common.getNavBar().then(pages =>{
-        console.log(pages.navbar);
         res.render('homepage', { logged: req.session.authenticated, username: req.session.username, theme: req.session.theme, navbar:pages.navbar});
     }).catch(err =>{
         console.log(err);
@@ -157,11 +156,8 @@ router.get('/settings', middleware.isAuthenticated,  (req, res)=>{
 
 
 router.post('/settings', middleware.isAuthenticated, (req, res)=>{
-    
-    console.log("Received update for a user!");
 
     // This shouldn't occur if the user is logged in, but protecting against errors
-    console.log(req.body);
     const mUser = req.session.username;
     const {username, password, confPassword, curPassword, email, userTheme} = req.body;
     /**
@@ -263,7 +259,6 @@ router.post('/settings', middleware.isAuthenticated, (req, res)=>{
             content = {"html": "./partials/settings",  "script": "<script src='/js/settings.js'></script>"}
             // Render a settings page with the error
             const user = result.user;
-            console.log(result);
             const errors = result.errors;
             
             common.getNavBar().then(pages => {
@@ -296,7 +291,6 @@ router.get('/search', (req, res) => {
     let theme = req.session.theme;
     // Need to create a regex in order to match a query with a modelname, using first 2 words
     const query = req.query.q;
-    console.log(searchQuery);
     if (query.length < 1 || query == undefined ){
         let result = [];
         content = {
@@ -403,7 +397,6 @@ router.get('/search', (req, res) => {
                         innerVal.description = desc;
                     } else if (value.modelName == 'postings') {
                         innerVal.href = `/employment/${innerVal.type}`;
-                        console.log("FOund a posting");
                         let desc = innerVal.title.concat([ innerVal.contact, innerVal.type, innerVal.description])
                         innerVal.description = desc;
                     } else if (value.modelName == 'technicalreports') {
@@ -424,7 +417,6 @@ router.get('/search', (req, res) => {
                 });
             });
             // Providing all the necessary elements to render to searched page
-            console.log(result);
             content = {
                 html: './list/search',
                 query: req.query.q,
