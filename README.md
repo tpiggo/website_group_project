@@ -13,7 +13,7 @@ The last line will ensure are dependencies are installed prior to running.
 # Startup
 To run the application on port 8016, use the following command:
 ```bash
-npm run
+npm run start
 ```
   
 In order to run in the development mode, the following command should be used:  
