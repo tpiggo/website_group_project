@@ -3,7 +3,7 @@ const router = express.Router();
 const common = require("../common.js");
 const TechnicalReport = require('../models/TechnicalReport.js');
 
-
+//Route for obtaining the list of technical reports
 router.get('/technical-reports', (req, res) => {
     TechnicalReport
         .find()
@@ -33,7 +33,10 @@ router.get('/technical-reports', (req, res) => {
         });
 });
 
-
+/**
+ * Adds information to an array of tech reports
+ * @param {array} techReports 
+ */
 function addInformation(techReports){
     var i = 1;
     for (let rep of techReports){
