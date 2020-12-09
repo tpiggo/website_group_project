@@ -32,7 +32,11 @@ function getPageSelected(mId) {
     }
 }
 
-//element declared multiple time
+/**
+ * @description Fill the form with the given id with the content provided
+ * @param {*} fId The idea of the form to be filled
+ * @param {*} content The content for the form to be filled with
+ */
 function fillForm(fId, content) {
     const hasFile = fId == 'Course' ? true : false;
     var form = document.getElementById(fId);
@@ -82,7 +86,9 @@ var nav = document.querySelector("nav");
 nav.classList.add("fixed-top");
 nav.setAttribute("style", "position:sticky !important");
 
-//Display/Hide forms
+/**
+ * @description Display/Hide forms
+ */
 function toggleForm(name, method, hasFile) {
     var form = document.getElementById(name);
     // Hides the garbage that 
@@ -129,7 +135,10 @@ function toggleForm(name, method, hasFile) {
     }
 
 }
-
+/**
+ * @description Sets the position of a form
+ * @param {*} form 
+ */
 function setFormPosition(form) {
 
     var wrapper = document.getElementById('form-wrap');
@@ -153,6 +162,9 @@ function setFormPosition(form) {
 //Add a new input field for instructor in Course Form
 var pointer = 0;
 var total = 0;
+/**
+ * @description Helper function for adding a field to the instructor form
+ */
 function addField() {
 
     var previousField = document.getElementById('divInstr' + pointer);
@@ -180,7 +192,10 @@ function addField() {
 
 }
 
-//remove input field
+/**
+ * @description Remove field at a given index from a form
+ * @param {*} index 
+ */
 function removeField(index) {
     var field = document.getElementById('divInstr' + index);
     var minus = document.getElementById('minus' + index);
@@ -190,7 +205,9 @@ function removeField(index) {
     total--;
     if (total == 0) pointer = 0;
 }
-
+/**
+ * @description Refreshes all the dropdown menus for all forms with the updated data from the database
+ */
 function refreshDropdowns() {
 
     var opts = { type: "GET", url: '/api/dashboard-info' };
@@ -215,7 +232,10 @@ function refreshDropdowns() {
     });
 
 }
-
+/**
+ * @description Refreshes specifically the awards dropdown
+ * @param {*} awards 
+ */
 function refreshDropdownAward(awards) {
 
     var menu = document.getElementById('modAward');
@@ -233,7 +253,10 @@ function refreshDropdownAward(awards) {
 }
 
 var coursesTerms = [];
-
+/**
+ * @description Refreshes the dropdown with all the courses
+ * @param {*} courses 
+ */
 function refreshDropdownCourse(courses) {
     var menu = document.getElementById('modCourse');
     var menuform = document.getElementById('courseTitle');
@@ -303,7 +326,10 @@ function displayTermsOffered() {
     }
 
 }
-
+/**
+ * @description Refreshes the postings dropdown
+ * @param {*} postings 
+ */
 function refreshDropdownPosting(postings) {
     var menu = document.getElementById('modPosting');
     menu.innerHTML = '';
@@ -318,7 +344,10 @@ function refreshDropdownPosting(postings) {
         menu.add(option);
     });
 }
-
+/**
+ * @description Refreshes the news dropdown
+ * @param {*} news 
+ */
 function refreshDropdownNews(news) {
     var menu = document.getElementById('modNews');
     menu.innerHTML = '';
@@ -333,7 +362,10 @@ function refreshDropdownNews(news) {
         menu.add(option);
     });
 }
-
+/**
+ * @description Refreshes the events dropdown
+ * @param {} events 
+ */
 function refreshDropdownEvent(events) {
     var menu = document.getElementById('modEvent');
     menu.innerHTML = '';
@@ -348,7 +380,10 @@ function refreshDropdownEvent(events) {
         menu.add(option);
     });
 }
-
+/**
+ * @description Refreshes the tech support dropdown
+ * @param {} techSupports 
+ */
 function refreshDropdownTech(techSupports) {
     var menu = document.getElementById('modTech');
     menu.innerHTML = '';
@@ -363,7 +398,10 @@ function refreshDropdownTech(techSupports) {
         menu.add(option);
     });
 }
-
+/**
+ * @description Refreshes the page categories dropdown
+ * @param {*} pages 
+ */
 function refreshDropDownPages(pages) {
     var menu = document.getElementById('select_category');
     if (!menu) {
@@ -380,8 +418,14 @@ function refreshDropDownPages(pages) {
         menu.add(option);
     })
 }
-
+/**
+ * @description Refresh the dropdown with all the subpages
+ * @param {*} subpages 
+ */
 function refreshDropDownSubpages(subpages) {
+    subpages.sort((a,b) => { //Sorts the subpages alphabetically by path so we can chunk them into categories easily
+        return a.path.localeCompare(b.path);
+    });
     var menu = document.getElementById('select_page');
     if (!menu) {
         return;
@@ -396,8 +440,8 @@ function refreshDropDownSubpages(subpages) {
         if (page.subpages && page.subpages.length > 0) {
             return;
         }
-        var new_category = page.path.replace(/\/.+/, '');
-        if (category != new_category) {
+        var new_category = page.path.replace(/\/.+/,'');
+        if(category != new_category){ //Creates optgroups based on the category each subpage is in
             category = new_category;
             group = document.createElement('optgroup');
             group.label = category;
@@ -454,15 +498,18 @@ function createForm(pObject) {
     for (var i = 0; i < pObject.length; i++) {
         if (pObject[i].id != '' && pObject[i].type != 'submit') {
             var currId = pObject[i].id;
-
+            
             if (currId.includes('_id') && pObject[i].value == '') continue;
-            if (pObject[i].type == 'file') formData.append(pObject[i].name, pObject[i].files[0]);
-            else if (currId.includes('instruct')) {
+            if (pObject[i].type == 'file'){ 
+                formData.append(pObject[i].name, pObject[i].files[0]);
+            } else if (currId.includes('instruct')) {
                 instructors.push(pObject[i].value);
             } else if (currId.includes("w2021c") || currId.includes("s2021c") || currId.includes("f2021c")) {
                 if (document.getElementById(currId).checked) terms.push(pObject[i].value);
             }
-            else formData.append(pObject[i].name, pObject[i].value)
+            else {
+                formData.append(pObject[i].name, pObject[i].value);
+            }
         }
     }
     if (instructors.length > 0) formData.append('instructor', instructors);
@@ -487,7 +534,7 @@ function errorCheck(pObject) {
 }
 
 /**
- * 
+ * @description Generic function for handling the submission of forms on the dashboard page
  * @param {Event} event 
  * @param {HTMLElement} element 
  * @param {String} method 
@@ -544,7 +591,7 @@ collectionToArray(document.getElementsByTagName('input')).forEach(element => {
 });
 
 /**
- * @description  
+ * @description  Function used for the delete button on the modify forms
  * @param {HTMLElement} element
  * @returns {null}
  */

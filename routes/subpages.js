@@ -11,10 +11,8 @@ const Subpage = require('../models/Subpage');
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-
+//Route for normal subpages
 router.get('/:pagename', (req, res) => {
-    
-    
     console.log(req.originalUrl.substr(1));
     Subpage.findOne({ path: req.originalUrl.substr(1) }, (err, subpage) => {
         if (err) {
@@ -46,18 +44,8 @@ router.get('/:pagename', (req, res) => {
     });
 });
 
-
+//Route for opening the editor for each subpage
 router.get('/:pagename/edit', canEdit, (req, res) => {
-
-    //Get navbar for rendering pages
-    var navbar;
-    common.getNavBar().then(pages => {
-        navbar = pages.navbar;
-    }).catch(err => {
-        console.log(err);
-        res.send("Error getting navbar from DB");
-    });
-
     console.log("Loading page " + req.params.pagename + " for editing.");
     const entry = req.baseUrl.substr(1);
     var pagename = req.params.pagename;
@@ -67,7 +55,7 @@ router.get('/:pagename/edit', canEdit, (req, res) => {
         if (err) {
             console.log(err);
         } else if (pagedata) {
-            common.getNavBar().then(pages => {
+            common.getNavBar().then(pages => { //Load the navbar for the page
                 var navbar = pages.navbar;
                 var title = pagedata.name;
                 var logged = req.session.authenticated;
@@ -96,10 +84,9 @@ router.get('/:pagename/edit', canEdit, (req, res) => {
 
 });
 
-//TODO fix the duplicate code
+//Route for loading sub-subpages
 router.get('/:pagename/:subpage', (req, res) => {
     console.log("request received from submenu link!");
-    
     Subpage.findOne({ path: req.originalUrl.substr(1) }, (err, subpage) => {
         if (err) {
             console.log(err);
@@ -107,14 +94,12 @@ router.get('/:pagename/:subpage', (req, res) => {
             res.redirect('/unknown');
         }
         else {
-            if(subpage.markdown) {
+            if(subpage.markdown) { //If there's markdown, render it as the HTML. Otherwise there is a fallback to use normal HTML contents
                 subpage.html = markdown.render(subpage.markdown);
             }
             const logged = req.session.authenticated;
             const username = req.session.username;
-
-            common.getNavBar().then(pages => {
-
+            common.getNavBar().then(pages => { //Get the navbar for the page
                 res.render('subpage.ejs', { 
                     title: subpage.name, 
                     content:subpage, logged, 
@@ -130,15 +115,12 @@ router.get('/:pagename/:subpage', (req, res) => {
     });
 
 });
-
+//Route for saving edits to subpages
 router.post('/:pagename/edit', canEdit, (req, res) => {
-
-    var navbar;
-
     var pagename = req.params.pagename;
     const entry = req.baseUrl.replace("/", '');
     var path = entry + "/" + pagename;
-    var page = Subpage.findOne({ path }, (err, pagedata) => {
+    var page = Subpage.findOne({ path }, (err, pagedata) => { //Locate the subpage in the DB based on its path
         if (err) {
             console.log(err);
         } else if (pagedata) {
@@ -148,14 +130,14 @@ router.post('/:pagename/edit', canEdit, (req, res) => {
                     console.log(err);
                 }
             });
-            common.getNavBar().then(pages => {
+            common.getNavBar().then(pages => { //Get the navbar for the page
                 navbar = pages.navbar;
                 var title = pagedata.name;
                 var logged = req.session.authenticated;
                 var username = req.session.username;
                 var content = pagedata.markdown;
                 var preview = markdown.render(content);
-                res.render('editor.ejs', {
+                res.render('editor.ejs', { //Reload the page once the changes are saved
                     title,
                     content,
                     logged,
