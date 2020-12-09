@@ -122,6 +122,10 @@ body {
 #request-form{
     position: relative;
 }
+#reason{
+    margin: 0.25em;
+}
+
 .close{
     position: absolute;
     margin: 0;
