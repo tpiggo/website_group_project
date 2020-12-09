@@ -52,7 +52,7 @@ router.get('/announcements', (req, res) => {
         data = { title, content, logged, username, theme:req.session.theme };
         return common.getNavBar();
     }).then(pages => {
-        res.render('subpage.ejs', {...data,type:'announcements',navbar: pages.navbar});
+        res.render('subpage.ejs', {...data,type:'announcement',navbar: pages.navbar});
     }).catch(err => {
         console.error(err);
         res.send(err);

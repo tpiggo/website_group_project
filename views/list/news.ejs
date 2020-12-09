@@ -1,21 +1,23 @@
 <% for(let news of content.data) { %>
+<div class="card">
+    <div class="card-header"><h5 class="card-title"> <%=news.title%></h5></div>
     <div class="card-body">
-        <h5 class="card-title"> <%=news.title%></h5>
         <small
             class="text-muted"><%=news.creationDate.getFullYear()%>-<%=news.creationDate.getMonth();%>-<%=news.creationDate.getDate();%>
             <%=news.creationDate.getHours();%>:<%=news.creationDate.getMinutes();%></small>
         <p class="card-text"><%=news.description%></p>
         <p class="card-text">Contact : <%=news.contact%></p>
         <% if(type == 'all') { %>
-            <span class="badge badge-dark"><%=news.newsType%></span>
-            <% }%>
-    </p>
-    
-  </div>
+        <span class="badge badge-dark"><%=news.newsType%></span>
+        <% }%>
+        </p>
+
+    </div>
+</div>
 <% } %>
 <% if(content.data.length==0) { %>
-    <h3> There is no 
-        <% if(type == 'all') { %> news
-        <% }else { %><%=type%><% } %>
-             at the moment</h3>
-    <% } %>
+<h3> There is no
+    <% if(type == 'all') { %> news
+    <% }else { %><%=type%><% } %>
+    at the moment</h3>
+<% } %>

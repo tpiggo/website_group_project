@@ -76,6 +76,27 @@ li p{
 #menu.hidden {
     transform: translateX(-100%);
 } */
+
 .card-body {
     text-align: left;
+}
+
+.card h5.card-title {
+    font-weight: 100;
+    color: white;
+    text-align: center;
+}
+
+.card .card-header {
+    border-radius: 0.9em 0.9em 0 0;
+    background-color: #9e091866;
+}
+.card { 
+    border-radius: 1em;
+    border-color: #9e091866;
+}
+
+.card-body {
+    border-radius: 0 0 1em 1em;
+    background-color: white;
 }
