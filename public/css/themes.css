@@ -6,6 +6,8 @@
     --nav-height:'';
     --text-color: black;
     --btn-color: #ac2431;
+    --link-color: var(--secondary);
+    --footer-link-color:#024c69;
 }
 
 body.blue{
@@ -14,6 +16,8 @@ body.blue{
     --tertiary: #918fa5;
     --text-color: white;
     --btn-color: #273fa7;
+    --link-color: var(--secondary);
+    --footer-link-color: white;
 }
 
 body.green{
@@ -22,6 +26,8 @@ body.green{
     --tertiary: #8fa590;
     --text-color: black;
     --btn-color: #2a8d26;
+    --link-color: blue;
+    --footer-link-color:#9E0918;
 }
 
 body.yellow{
@@ -30,6 +36,8 @@ body.yellow{
     --tertiary: #a2a58f;
     --text-color: black;
     --btn-color: #7c7a13;
+    --link-color: blue;
+    --footer-link-color:#024c69;
 }
 
 body.dark{
@@ -38,4 +46,6 @@ body.dark{
     --tertiary: #343738;
     --text-color: white;
     --btn-color: #2b0303bb;
+    --link-color: #024c69;
+    --footer-link-color: white;
 }

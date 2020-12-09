@@ -54,7 +54,12 @@ body {
     }
 
 }
-
+a {
+    color: var(--link-color);
+}
+footer a {
+    color: var(--footer-link-color);
+}
 #navbar img{
     position: fixed;
     top: 2rem;
