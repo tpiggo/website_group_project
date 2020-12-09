@@ -1,18 +1,7 @@
-// function displaySubMenu(id) {
-
-//     var toDisplay = document.getElementById(id).classList.contains('hidden');
-
-//     if (toDisplay) {
-//         var submenus = document.querySelectorAll('.nav-submenu:not(hidden)');
-//         for (var i = 0; i < submenus.length; i++) {
-//             if (!submenus[i].classList.contains('hidden') && submenus[i].id != id)
-//                 submenus[i].classList.add('hidden');
-//         }
-//     }
-//     document.getElementById(id).classList.toggle('hidden');
-
-// }
-
+/**
+ * @description Side (collpased) Navbar controller
+ * @returns {void}
+ */
 function toggleMenu() {
     var navbar = document.getElementById('navbar');
     navbar.classList.toggle('expanded');
@@ -21,7 +10,7 @@ function toggleMenu() {
     for (var j = 0; j < lis.length; j++) {
         lis[j].classList.toggle('appear');
     }
-
+    
     var img = navbar.getElementsByTagName('img')[0];
     img.classList.toggle('appear');
 
@@ -31,6 +20,12 @@ function toggleMenu() {
 
 }
 
+/**
+ * @description Creates the dropdown menu in the main navbar and creates the collapsable side nav menu 
+ * @param {String} type 
+ * @param {String} id 
+ * @returns {void}
+ */
 function dropDown(type, id) {
     var dropDown = document.getElementById(id);
     var toDisplay = dropDown.classList.contains('collapsed');

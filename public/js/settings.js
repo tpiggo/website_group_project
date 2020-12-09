@@ -19,7 +19,8 @@ class UserError{
 
 /**
  * @description Initializes the error boxes in order to be eaily referenced from other sections of the code
- *              The error boxes are objects 
+ *              The error boxes are objects
+ * @returns {void}
  */
 function initErrorBoxes(){
     // jQuery to create the boxes for easy use.
@@ -54,7 +55,8 @@ function checkUser(pFormEntry){
 /**
  * @param {String} pass 
  * @param {String} confPass 
- * @description Function which takes in password and confirmation and matches them 
+ * @description Function which takes in password and confirmation and matches them
+ * @returns {void}
  */
 function matchPass(pass, confPass){
     if (pass == confPass){
