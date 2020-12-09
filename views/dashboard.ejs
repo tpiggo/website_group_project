@@ -7,26 +7,6 @@
     <link rel="stylesheet" href="/css/general.css">
     <link rel="stylesheet" href="/css/dashboard.css">
     <link rel="stylesheet" href="/css/themes.css">
-    <style>
-        /* Resetting the searchbar form sizing*/
-        /* #searchbar{
-            all:initial;
-        }
-        #subpage{
-            width:initial;
-            box-shadow:none;
-        }
-        #subpage-Delete{
-            width:initial;
-            box-shadow:none;
-        }
-        #center{
-            width:initial;
-        }
-        #form-wrap form{
-            width:70vw;
-        } */
-    </style>
     <title>CS Dashboard</title>
 
     <!-- the user 'admin' with password 'admin123' has a userType 1 and can access the full Dashboard -->
@@ -40,23 +20,14 @@
         <div id="center">
             <!-- Dashboard content -->
 
-            <!-- Need to create a schema (and store it in the db) for the following elements : -->
-            <!-- TA Posting, Awards,  News, Events, Posting, Technical Support -->
-
             <h1>Computer Science Website Administration</h1>
-
-            <h2>Visitors</h2>
-
-            <!-- What is a visitor Form ?-->
-            <button class="general">Add a Visitor form</button>
-
             <hr>
             <h2 id="pageHeader">Data Modification</h2>
 
             <div class="row">
                 <div class="col">
                     <h3>TA</h3>
-                    <button class="general" onclick="toggleForm('TA', 'POST', false)" >Add Posting</button>
+                    <button class="general" onclick="toggleForm('TA', 'POST', false)">Add Posting</button>
                     <button class="general" onclick="toggleForm('Award', 'POST', false)">Add Award Recipient</button><br>
                     
                     <select id="modAward" class="form-control" onchange="getPageSelected('modAward')" >
@@ -152,6 +123,7 @@
                         </div>
                       </div>
                 </div>
+               
             <% }  %>   
             <% if(user.userType>3) {  %>
                 <hr>
@@ -159,7 +131,8 @@
                 <select id="requests-dropdown" class="form-control" onchange="getUserRequestForm()">
                     <option>See User Requests</option>
                 </select>            
-            <% }  else { %>  
+            <% }  else if(user.userType !=3) { %>  
+                <hr>
                 <div id="clearance-box">
                     <h2>Request for Higher clearance</h2>
                     <button type="button" id="request-button" user=<%= user.username %> onclick="requestLevel(event)">Request higher level!</button> 
@@ -180,6 +153,36 @@
     <!-- Make all the required fields required, e.prevent default the form -->
     <% if(user.userType>0) {  %> 
         <div id="form-wrap">
+            <!-- Add TA -->
+            <form id="TA" class="hidden" method="POST" onsubmit="handleRequest(event, $(this), 'POST', false)">
+                <span id="closeIcon" onclick="toggleForm('TA', 'POST')">&times;</span>
+                <h2 id="TAHeader">TA Posting</h2>
+
+                <label for="courseTitle">Course:</label>
+                <select id="courseTitle" name="courseTitle" onchange='displayTermsOffered()'>
+                    <option>Select Course</option>
+                </select>
+
+                <label for="semester">Semester:</label>
+                <select id="semester" name="semester">
+                    <option></option>
+                </select> &emsp;
+
+                <label for="spaces">Number of Vacancies:</label>
+                <input name="spaces" id="spaces" type="number" min="1" max="100">
+                <br>
+                <label for="contact" class="p-3">Contact:</label>
+                <input type="text" id="taContact" name="contact"
+                    placeholder="Person to contact for more information">
+                <br>
+                <label for="description">Description:</label> <br>
+                <textarea id="taDescription" name="description" cols="60"
+                    placeholder="Short description of the posting"></textarea>
+                <br>
+                <input id="ta_id" name="_id" style="display:none;">
+                <button class="general" type="submit">Submit</button>
+            </form>
+    
             
         <!-- Add Award -->
         <form id="Award" class="hidden" method="POST" onsubmit="handleRequest(event, $(this), 'POST', false)">
@@ -218,14 +221,12 @@
             <h2 id="NewsHeader">News</h2>
             <label for="type">News about:</label>
             <select id="newsType" name="type">
-                <option value='faculty'>Faculty</option>
-                <option value='lecturer'> Course Lecturer</option>
-                <option value='research'> Research</option>
-                <option value='student'> Student</option>
+                <option value='annoucement'>Annoucement</option>
+                <option value='other'> Other</option>
             </select>
 
             <label for="title">Title:</label>
-            <input type="text" id="newsTitle" name="title" placeholder="Posting Available"> <br>
+            <input type="text" id="newsTitle" name="title" placeholder="News Title"> <br>
 
             <label for="contact" class="p-3">Contact:</label>
             <input type="text" id="newsContact" name="contact"
@@ -260,7 +261,7 @@
             </select>
 
             <label for="title">Title:</label>
-            <input type="text" id="eventTitle" name="title" placeholder="Posting Available">
+            <input type="text" id="eventTitle" name="title" placeholder="Event Title">
             <br>
 
             <label for="startdate" class="pt-3">Start Date:</label>
@@ -477,4 +478,6 @@
     <script src='/js/dashboardLow.js'></script>
     <% if(user.userType >0) { %>
         <script src='/js/dashboard.js'></script>
-    <% } %>
+    <% } if(user.userType>3) {%>
+        <script src='/js/dashboardAdmin.js'></script>
+    <% }  %>

@@ -60,7 +60,7 @@ router.post('/TA', middleware.isAuthenticated, (req, res) => {
      */
     function findCourse(title, semester) {
         return new Promise((resolve, reject) => {
-            Course.find({ title: { '$regex': title, '$options': 'ix' }, termsOffered: semester }, (err, match) => {
+            Course.find({ title:title, termsOffered: { $all : [semester] } }, (err, match) => {
                 if (err) {
                     console.error(err);
                     reject({ status: 2, response: 'Error accessing Course database! Try again later!' });
@@ -80,7 +80,7 @@ router.post('/TA', middleware.isAuthenticated, (req, res) => {
     function findTAPosting(course) {
         return new Promise((resolve, reject) => {
             if (course.length > 0) {
-                TAPosting.findOne({ courseTitle: req.body.courseTitle.toUpperCase(), semester: req.body.semester }, (err, coursePost) => {
+                TAPosting.findOne({ courseTitle: req.body.courseTitle, semester: req.body.semester }, (err, coursePost) => {
                     if (err) {
                         console.error(err);
                         reject({ status: 2, response: 'Error accessing TAP database! Try again later!' });
