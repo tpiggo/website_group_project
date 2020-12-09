@@ -1,9 +1,8 @@
 /**
  * @description creates a dynamic collapsable element for the server response.
  * @param {*} type 
- * @param {*} msgText 
- * @todo:   Maybe this should check if a popup exists there already, if it does remove it.
- *          Or create popups which only live for 3 seconds?
+ * @param {*} msgText
+ * @returns {void}
  */
 function createPopupMsg(pType, pMsgText, pAfterElement) {
     const aDiv = document.createElement('div');
@@ -34,8 +33,9 @@ function createPopupMsg(pType, pMsgText, pAfterElement) {
 }
 
 /**
- * 
+ * @description fades a popup
  * @param {HTMLElement} div 
+ * @returns {void}
  */
 function fade(div) {
     setTimeout(function () {
@@ -85,6 +85,7 @@ function callBackEnd(pOpts) {
 /**
  * @description Takes a collection and returns an array of objects
  * @param {Collection} pCol
+ * @returns {void}
  */
 function collectionToArray(pCol) {
     var aCol = [];

@@ -3,6 +3,7 @@ const router = express.Router();
 const common = require("../common.js");
 const Event = require('../models/Events');
 
+//Route for obtaining all events
 router.get('/all', (req, res) => {
     var title = "Events";
     const logged = req.session.authenticated;
@@ -23,6 +24,7 @@ router.get('/all', (req, res) => {
 
 });
 
+//Route for obtaining events of a specific type
 router.get('/:pagename', (req, res) => {
     var title = "Events";
     const logged = req.session.authenticated;

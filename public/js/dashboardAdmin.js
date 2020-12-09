@@ -3,6 +3,10 @@ window.addEventListener('load', function (event) {
     getUserRequests();
 });
 
+/**
+ * @description Requests all user requests using the API
+ * @returns {void}
+ */
 function getUserRequests() {
 
     var opts = { type: "GET", url: '/api/user-requests' };
@@ -21,6 +25,11 @@ function getUserRequests() {
 
 }
 
+/**
+ * @description Refreshing dropdowns by getting the data and pushing it into the proper dropdown
+ * @param {JSON} requests
+ * @returns {void}
+ */
 function refreshDropdownRequestUsers(requests) {
 
     var menu = document.getElementById('requests-dropdown');
@@ -37,6 +46,11 @@ function refreshDropdownRequestUsers(requests) {
     });
 }
 
+/**
+ * @description Getting user information from the server and rendering on the frontend
+ * 
+ * @returns {void}
+ */
 function getUserRequestForm() {
     var menu = document.getElementById('requests-dropdown');
     if (menu.value) {
@@ -52,6 +66,7 @@ function getUserRequestForm() {
                     fillUserForm(response.request);
                     toggleForm('user-requests', 'PUT', false);
                 } else {
+                    // Error occurred Create popup
                     console.log("Error when Getting the data");
                     createPopupMsg('Error', response.response, 'pageHeader');
                 }
@@ -63,6 +78,11 @@ function getUserRequestForm() {
     }
 }
 
+/**
+ * @description Fill user form with the users information
+ * @param {JSON} userRequest 
+ * @returns {void}
+ */
 function fillUserForm(userRequest) {
     document.getElementById('user-username').innerText = userRequest.username;
     document.getElementById('user-email').innerText = userRequest.email;

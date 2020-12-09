@@ -717,7 +717,7 @@ router.post('/Course', upload.single("syllabus"), middleware.isAuthenticated, (r
         }
     });
 });
-
+//Route for uploading syllabi files
 router.put('/Course', upload.single("syllabus"), middleware.isAuthenticated, (req, res) => {
     var id = req.body._id;
     delete req.body._id;

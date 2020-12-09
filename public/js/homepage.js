@@ -28,12 +28,20 @@ window.addEventListener('scroll', () => {
     }
 });
 
+/**
+ * @description Given an rem size convert it to pixels
+ * @param {Number} rem 
+ * @returns {void}
+ */
 function convertRemToPixels(rem) {
     return rem * parseFloat(getComputedStyle(document.documentElement).fontSize);
 }
 
 getItems();
-
+/**
+ * @description Gets the items from the backend API and pushes them through the proper element 
+ * @returns {void}
+ */
 function getItems() {
     const method = "GET";
     var opts = { type: method, url: '/api/index-info' };
@@ -48,7 +56,12 @@ function getItems() {
         .catch(err => console.log(err));
 }
 
-
+/**
+ * @description Given an element adds it to the target of cardDeck within the document
+ * @param {String} id 
+ * @param {HTMLElement} newElements 
+ * @returns {void}
+ */
 function createElementsOnLoad(id, newElements) {
     //let searchId = id + '-btn';
     let searchId = id + '-cards';

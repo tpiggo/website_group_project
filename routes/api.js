@@ -19,6 +19,7 @@ const Page = require('../models/Page');
 const UserRequests = require('../models/UserRequest');
 const markdown = require('markdown-it')('commonmark');
 
+//root for getting the latest happenings for the frontpage to display
 router.get('/index-info', (req, res) => {
     // Get the events, latest , and postings. Get first 10, and then rest will be on the  
     var getNews = () => common.getAllDataFrom(News);
@@ -53,6 +54,7 @@ router.get('/index-info', (req, res) => {
         });
 });
 
+//Route that gets all the info needed to render the dashboard
 router.get('/dashboard-info', middleware.isAuthenticated, (req, res) => {
     var getCourses = () => common.getAllDataFrom(Course);
     var getNews = () => common.getAllDataFrom(News);
@@ -72,6 +74,7 @@ router.get('/dashboard-info', middleware.isAuthenticated, (req, res) => {
 
 });
 
+//Route for getting the syllabus of a given course
 router.get('/courses/syllabus/:courseName', (req, res) =>{
     // Fix the course name
     let pCourse =  req.params.courseName.replace('-', " ");
@@ -100,7 +103,7 @@ router.get('/courses/syllabus/:courseName', (req, res) =>{
             return res.send('Error loading course page');
         });
 });
-
+//Route for getting the list of user requests for upgraded permissions
 router.get('/user-requests', (req, res) =>{ 
 
     common.getAllDataFrom(UserRequests).then(requests => {
@@ -124,7 +127,7 @@ function getFirstN(pArray, maxSize){
         return pArray;
     }
 }
-
+//Route for getting information about a specific course
 router.get('/getCourse', (req, res) => {
     const classTitle = req.query.class;
     if (classTitle == "all"){
@@ -192,7 +195,7 @@ router.get('/getCourse', (req, res) => {
 
 // Giving access to bodyparser from this moment on
 router.use(bodyParser.json());
-
+//Route for rendering markdown and returning the HTML(used for editor preview)
 router.post('/render-markdown', (req, res) => {
     Promise.resolve(markdown.render(req.body.markdown))
     .then(data => {

@@ -3,7 +3,7 @@ const router = express.Router();
 const common = require("../common.js");
 const News = require('../models/News');
 const Award = require('../models/Award');
-
+//Route for retreiving all news entries
 router.get('/all', (req, res) => {
     var title = "News";
     const logged = req.session.authenticated;
@@ -22,7 +22,7 @@ router.get('/all', (req, res) => {
     });
 
 });
-
+//Route for retrieving all award news
 router.get('/awards', (req, res) => {
     var title = "News";
     const logged = req.session.authenticated;
@@ -41,7 +41,7 @@ router.get('/awards', (req, res) => {
     });
 
 });
-
+//Route for retreiving all announcements
 router.get('/announcements', (req, res) => {
     var title = "News";
     const logged = req.session.authenticated;

@@ -16,6 +16,7 @@ const { Model, connection } = require('mongoose');
 const bcrypt = require('bcrypt');
 const Page = require('../models/Page');
 
+//Homepage route
 router.get('/', (req, res) => {
     common.getNavBar().then(pages =>{
         res.render('homepage', { logged: req.session.authenticated, username: req.session.username, theme: req.session.theme, navbar:pages.navbar});
@@ -24,7 +25,7 @@ router.get('/', (req, res) => {
        res.send(err);
     });
 });
-
+//Route for 403 errors
 router.get('/denied', (req,res) => {
     var error_code = 403;
     var logged = req.session.authenticated;
@@ -38,7 +39,7 @@ router.get('/denied', (req,res) => {
        res.send(err);
     });
 });
-
+//Route for 404 errors
 router.get('/unknown', (req,res) => {
     var error_code = 404;
     var logged = req.session.authenticated;
@@ -58,7 +59,7 @@ router.get('/unknown', (req,res) => {
         res.send(err);
     });
 });
-
+//Route for loading the dashboard
 router.get('/dashboard', middleware.isAuthenticated, (req, res) => {
     // Set content
     User.findOne({ username: req.session.username }, (err, user) => {
@@ -80,7 +81,6 @@ router.get('/dashboard', middleware.isAuthenticated, (req, res) => {
 /**
  * Settings route
  */
-// Adding the settings route
 router.get('/settings', middleware.isAuthenticated,  (req, res)=>{
 
     User.findOne({username: req.session.username})
