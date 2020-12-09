@@ -15,12 +15,10 @@ app.use(express.urlencoded({extended: true}));
 router.get('/login', canUseRoute, (req, res)=>{
     const title = "Login";
     const content = {"html": 'partials/login.ejs', "script":""};
-    const menu = [];
     common.getNavBar().then(pages => { //Load the navbar for the page
         navbar = pages.navbar;
         res.render('user-layout', { //Render the login page
             title,
-            menu,
             content,
             logged: req.session.authenticated,
             user: req.session.username,

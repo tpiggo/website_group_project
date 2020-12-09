@@ -6,14 +6,13 @@ const Award = require('../models/Award');
 
 router.get('/all', (req, res) => {
     var title = "News";
-    var menu = [['news/all', 'All'], ['news/announcements', 'Announcements'], ['news/awards', 'Awards']];
     const logged = req.session.authenticated;
     const username = req.session.username;
 
     var data;
     common.getAllDataFrom(News).then(allNews => {
         var content = { html: './list/news', data: allNews };
-        data = { title, menu, content, logged, username, theme: req.session.theme};
+        data = { title, content, logged, username, theme: req.session.theme};
         return common.getNavBar();
     }).then(pages => {
         res.render('subpage.ejs', {...data, type: 'all',navbar: pages.navbar});
@@ -26,14 +25,13 @@ router.get('/all', (req, res) => {
 
 router.get('/awards', (req, res) => {
     var title = "News";
-    var menu = [['news/all', 'All'], ['news/announcements', 'Announcements'], ['news/awards', 'Awards']];
     const logged = req.session.authenticated;
     const username = req.session.username;
 
     var data;
     common.getAllDataFrom(Award).then(awards => {
         var content = { html: './list/awards', data: awards };
-        data = { title, menu, content, logged, username, theme: req.session.theme};
+        data = { title, content, logged, username, theme: req.session.theme};
         return common.getNavBar();
     }).then(pages => {
         res.render('subpage.ejs', {...data,type: 'awards', navbar: pages.navbar});
@@ -46,13 +44,12 @@ router.get('/awards', (req, res) => {
 
 router.get('/announcements', (req, res) => {
     var title = "News";
-    var menu = [['news/all', 'All'], ['news/announcements', 'Announcements'], ['news/awards', 'Awards']];
     const logged = req.session.authenticated;
     const username = req.session.username;
 
     common.getAllDataWith(News, {type:'announcement'}).then(news => {
         var content = { html: './list/news', data: news };
-        data = { title, menu, content, logged, username, theme:req.session.theme };
+        data = { title, content, logged, username, theme:req.session.theme };
         return common.getNavBar();
     }).then(pages => {
         res.render('subpage.ejs', {...data,type:'announcements',navbar: pages.navbar});

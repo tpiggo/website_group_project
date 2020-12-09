@@ -5,7 +5,6 @@ const Event = require('../models/Events');
 
 router.get('/all', (req, res) => {
     var title = "Events";
-    var menu = [['events/all', 'All'], ['events/colloquium', 'Colloquia'], ['events/seminar', 'Seminars']];
     const logged = req.session.authenticated;
     const username = req.session.username;
 
@@ -13,7 +12,7 @@ router.get('/all', (req, res) => {
     common.getAllDataFrom(Event).then(events => {
         //res.send("request received !");
         var content = { html: './list/events', data: events };
-        data = { type: req.params.pagename, title, menu, content, logged, username, theme: req.session.theme };
+        data = { type: req.params.pagename, title, content, logged, username, theme: req.session.theme };
         return common.getNavBar();
     }).then(pages => {
         res.render('subpage.ejs', {...data, navbar: pages.navbar});
@@ -26,13 +25,12 @@ router.get('/all', (req, res) => {
 
 router.get('/:pagename', (req, res) => {
     var title = "Events";
-    var menu = [['events/all', 'All'], ['events/colloquium', 'Colloquia'], ['events/seminar', 'Seminars']];
     const logged = req.session.authenticated;
     const username = req.session.username;
 
     common.getAllDataWith(Event, { eventType: req.params.pagename }).then(events => {
         var content = { html: './list/events', data: events };
-        data = { type: req.params.pagename, title, menu, content, logged, username, theme: req.session.theme };
+        data = { type: req.params.pagename, title, content, logged, username, theme: req.session.theme };
         return common.getNavBar();
     }).then(pages => {
         res.render('subpage.ejs', {...data, navbar: pages.navbar});

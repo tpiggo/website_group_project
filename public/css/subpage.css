@@ -4,13 +4,21 @@
     border: 2px black;
     height: 100%;
     text-align: center;
+    min-height: 40rem;
+}
+
+#content h1 {
+    font-weight: 300;
 }
 
 #content h2 {
     color : var(--secondary);
+    font-weight: 200;
 }
 #content h3{
     font-style:italic;
+    font-weight: 200;
+
 }
 ul, ol, dl{
    list-style-position: inside;

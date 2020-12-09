@@ -5,7 +5,6 @@ const Posting = require('../models/Posting');
 
 router.get('/:pagename', (req, res) => {
     var title = "Employement";
-    var menu = [['employment/faculty', 'Faculty'], ['employment/lecturer', 'Course Lecturer'], ['employment/research', 'Research'],['employment/student', 'Student']];
     const logged = req.session.authenticated;
     const username = req.session.username;
 
@@ -15,7 +14,6 @@ router.get('/:pagename', (req, res) => {
         data= {
             type:req.params.pagename,
             title,
-            menu,
             content,
             logged,
             username,

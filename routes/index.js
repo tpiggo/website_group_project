@@ -28,13 +28,12 @@ router.get('/', (req, res) => {
 
 router.get('/denied', (req,res) => {
     var error_code = 403;
-    var menu = [];
     var logged = req.session.authenticated;
     var username = req.session.username;
     var error_message = "You do not have permission to do that. If you believe this message to be in error please contact the website administrator.";
     
     common.getNavBar().then(pages =>{
-        res.render('user-error', {error_code, menu, error_message, logged, username, navbar:pages.navbar});
+        res.render('user-error', {error_code, error_message, logged, username, navbar:pages.navbar});
     }).catch(err =>{
         console.log(err);
        res.send(err);
@@ -43,7 +42,6 @@ router.get('/denied', (req,res) => {
 
 router.get('/unknown', (req,res) => {
     var error_code = 404;
-    var menu = [];
     var logged = req.session.authenticated;
     var username = req.session.username;
     var error_message = "The page you are looking for was not found";
@@ -51,7 +49,6 @@ router.get('/unknown', (req,res) => {
     common.getNavBar().then(pages => {
         res.render('user-error', {
             error_code,
-            menu,
             error_message,
             logged, username,
             theme:req.session.theme,
@@ -126,7 +123,6 @@ router.get('/settings', middleware.isAuthenticated,  (req, res)=>{
                     res.render('user-layout', {
                         title, 
                         content, 
-                        menu: [],
                         logged: req.session.authenticated,
                         user: req.session.username,
                         theme: req.session.theme,
@@ -147,7 +143,6 @@ router.get('/settings', middleware.isAuthenticated,  (req, res)=>{
                 res.render('user-layout', {
                     title, 
                     content, 
-                    menu: [],
                     logged: req.session.authenticated,
                     user: req.session.username,
                     theme: req.session.theme,
@@ -252,7 +247,6 @@ router.post('/settings', middleware.isAuthenticated, (req, res)=>{
                 return res.render('user-layout', {
                     title, 
                     content, 
-                    menu: [], 
                     logged: req.session.authenticated, 
                     theme: req.session.theme, 
                     user: req.session.username, 
@@ -276,7 +270,6 @@ router.post('/settings', middleware.isAuthenticated, (req, res)=>{
                 return res.render('user-layout', {
                     title,
                     content,
-                    menu: [],
                     logged: req.session.authenticated, 
                     theme: req.session.theme, 
                     user: req.session.username, 

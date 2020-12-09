@@ -152,15 +152,15 @@
                 </li>
                 <%}%>
             <li class="nav-item">
-                <a class="nav-link" onclick="dropDown('nav-submenu', 's3')">
+                <a class="nav-link" onclick="dropDown('nav-submenu', 's<%=navbar.length%>')">
                     News</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" onclick="dropDown('nav-submenu', 's4')">
+                <a class="nav-link" onclick="dropDown('nav-submenu', '<%=navbar.length+1%>')">
                     Events</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" onclick="dropDown('nav-submenu', 's5')">
+                <a class="nav-link" onclick="dropDown('nav-submenu', 's<%=navbar.length+2%>')">
                     Employment</a>
             </li>
 
@@ -198,21 +198,21 @@
                 </div>
             <%}%>
 
-            <div id="s3" class='nav-submenu collapsed'>
+            <div id="s<%=navbar.length%>" class='nav-submenu collapsed'>
                 <a href="/news/all">All</a>
                 <a href="/news/announcements">Announcements</a>
                 <a href="/news/awards">Awards</a>
             </div>
 
 
-            <div id="s4" class='nav-submenu collapsed'>
+            <div id="s<%=navbar.length+1%>" class='nav-submenu collapsed'>
                 <a href="/events/all">All</a>
                 <a href="/events/colloquium">Colloquia</a>
                 <a href="/events/seminar">Seminars</a>
 
             </div>
 
-            <div id="s5" class='nav-submenu collapsed'>
+            <div id="s<%=navbar.length+2%>" class='nav-submenu collapsed'>
                 <a href="/employment/faculty">Faculty</a>
                 <a href="/employment/lecturer">Announcement</a>
                 <a href="/employment/student">Student</a>
