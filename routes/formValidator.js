@@ -708,8 +708,12 @@ router.delete('/Posting', middleware.isAuthenticated, (req, res) => {
 router.post('/Course', upload.single("syllabus"), middleware.isAuthenticated, (req, res) => {
     // Fix syllabus, add its path rather than its name
     console.log(req.body, req.file)
-    req.body.syllabus = req.file.filename;
-    if (req.body.title.slice(4,5) != ""){
+    if (req.file != undefined){
+        req.body.syllabus = req.file.filename;
+    }else {
+        req.body.syllabus = "noFile";
+    }
+    if (req.body.title.slice(4,5) != " "){
         req.body.title = req.body.title.slice(0, 4)+" "+req.body.title.slice(4);
     }
     req.body.termsOffered = req.body.termsOffered.split(",");
@@ -735,10 +739,16 @@ router.post('/Course', upload.single("syllabus"), middleware.isAuthenticated, (r
 router.put('/Course', upload.single("syllabus"), middleware.isAuthenticated, (req, res) => {
     var id = req.body._id;
     delete req.body._id;
-    if (req.body.title.slice(4,5) != ""){
-        req.body.title = req.title.slice(0, 4)+" "+req.body.title(4);
+    console.log(req.body, req.file);
+    if (req.file != undefined){
+        req.body.syllabus = req.file.filename;
+    } else {
+        req.body.syllabus = "noFile";
     }
-    req.body.syllabus = req.file.filename;
+    if (req.body.title.slice(4,5) != " "){
+        req.body.title = req.body.title.slice(0, 4)+" "+req.body.title.slice(4);
+    }
+    console.log(req.body, req.file);
     Course.findByIdAndUpdate(id, req.body, (err, update)=> {
         if(err){
             console.error(err);

@@ -16,11 +16,6 @@ router.get('/technical-reports', (req, res) => {
             else {
                 result = addInformation(result);
                 content = {html: "./list/technicalreports", data: result};
-                console.log("CONTENT:::::")
-                for (let rep of content.data){
-                    console.log("boxid", rep.boxId);
-                    console.log("id", rep.num);
-                }
                 common.getNavBar().then(pages => {
                     navbar = pages.navbar;
                     res.render('subpage', {
@@ -45,6 +40,8 @@ function addInformation(techReports){
     for (let rep of techReports){
         rep.num = i;
         rep.boxId = `report-${i}`
+        rep.repDate = rep.reportDate.toDateString();
+        console.log(rep.repDate);
         i++;
     }
     return techReports;

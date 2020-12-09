@@ -84,6 +84,9 @@ router.get('/courses/syllabus/:courseName', (req, res) =>{
                 console.log("No course found! Error");
                 return res.send('Error loading course page: No course found!');
             }
+            if (course.syllabus == "noFile"){
+                return res.send('No file is here! Sorry <a href="/">Home</a>');
+            }
             console.log(course);
             let filePath = path.join(__dirname, '../files/', course.syllabus);
             let stats = fs.statSync(filePath);

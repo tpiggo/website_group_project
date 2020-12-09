@@ -9,7 +9,9 @@
                     <a class="page-link" data-element=<%= report.boxId %> href="javascript:void(0)" onclick="pageClicked(event)"><%= report.num %></a>
                 </li>  
             <% } %>
-            <li id="next-btn" class="page-item"><a class="page-link" href="javascript:void(0)" onclick="getNext()">Next</a></li>
+            <li id="next-btn" <% if (content.data.length > 1) {%> class="page-item" <% } else { %>  class="page-item disabled" <% } %> >
+                <a class="page-link" href="javascript:void(0)" onclick="getNext()">Next</a>
+            </li>
         </ul>
     </nav>
     
@@ -20,7 +22,7 @@
         <div id=<%= report.boxId %> <% if (report.num > 1) {%> style="display:none" <% } %> >
             <h3> <%= report.title %></h3>
             <p>Author: <%= report.creator %></p>
-            <p>Date: <%= report.reportDate %></p>
+            <p>Date: <%= report.repDate %></p>
             <p><%= report.description %></p>
         </div>
     <% } %>
