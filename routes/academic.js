@@ -3,7 +3,7 @@ const router = express.Router()
 const common = require('../common');
 const Courses = require("../models/Courses");
 const fileSystem = require('fs');
-
+//Route to get the list of courses
 router.get('/courses', (req, res) => {
     const logged = req.session.authenticated;
     const username = req.session.username;
@@ -42,7 +42,7 @@ router.get('/courses', (req, res) => {
 });
 
 /**
- * 
+ * @description Fixing the path to the syllabus for every course
  * @param {Array} courses 
  */
 function fixCourses(courses){
@@ -57,7 +57,11 @@ function fixCourses(courses){
     });
     return mArr;
 }
-
+/**
+ * @description Finds the course with a given title within a list of courses
+ * @param {String} courseTitle 
+ * @param {Array} courses 
+ */
 function findCourses(courseTitle, courses){
     const regex = new RegExp(courseTitle, "i");
     var found = [];

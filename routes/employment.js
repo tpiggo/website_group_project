@@ -3,8 +3,9 @@ const router = express.Router();
 const common = require("../common.js");
 const Posting = require('../models/Posting');
 
+//Route for obtaining employment postings of a given type
 router.get('/:pagename', (req, res) => {
-    var title = "Employement";
+    var title = "Employment";
     const logged = req.session.authenticated;
     const username = req.session.username;
 
