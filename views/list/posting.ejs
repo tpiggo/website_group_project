@@ -1,13 +1,17 @@
 <% for(let news of content.data) { %>
-    <div class="card-body">
+<div class="card">
+    <div class="card-header">
         <h5 class="card-title"> <%=news.title%></h5>
+    </div>
+    <div class="card-body">
         <small
             class="text-muted"><%=news.creationDate.getFullYear()%>-<%=news.creationDate.getMonth();%>-<%=news.creationDate.getDate();%>
             <%=news.creationDate.getHours();%>:<%=news.creationDate.getMinutes();%></small>
         <p class="card-text"><%=news.description%></p>
         <p class="card-text">Contact : <%=news.contact%></p>
     </div>
-    <% } %>
-    <% if(content.data.length==0) { %>
-        <h3> There is no open <%= type%> postings at the moment.</h3>
-        <% } %>
+</div>
+<% } %>
+<% if(content.data.length==0) { %>
+<h3> There is no open <%= type%> postings at the moment.</h3>
+<% } %>
