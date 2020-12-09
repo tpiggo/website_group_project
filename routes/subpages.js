@@ -45,12 +45,14 @@ router.get('/:pagename', (req, res) => {
 });
 
 //Route for opening the editor for each subpage
-router.get('/:pagename/edit', canEdit, (req, res) => {
+router.get('/:pagename/:subpage?/edit', canEdit, (req, res) => {
     console.log("Loading page " + req.params.pagename + " for editing.");
     const entry = req.baseUrl.substr(1);
     var pagename = req.params.pagename;
     var path = entry + "/" + pagename;
-
+    if(req.params.subpage){
+        path += "/" + req.params.subpage;
+    }
     var page = Subpage.findOne({ path }, (err, pagedata) => {
         if (err) {
             console.log(err);
@@ -116,10 +118,13 @@ router.get('/:pagename/:subpage', (req, res) => {
 
 });
 //Route for saving edits to subpages
-router.post('/:pagename/edit', canEdit, (req, res) => {
+router.post('/:pagename/:subpage?/edit', canEdit, (req, res) => {
     var pagename = req.params.pagename;
     const entry = req.baseUrl.replace("/", '');
     var path = entry + "/" + pagename;
+    if(req.params.subpage){
+        path += "/" + req.params.subpage;
+    }
     var page = Subpage.findOne({ path }, (err, pagedata) => { //Locate the subpage in the DB based on its path
         if (err) {
             console.log(err);
