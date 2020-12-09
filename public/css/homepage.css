@@ -137,7 +137,7 @@ hr {
     color : white;
     text-shadow: 0.1em 0.1em 0.1em #54040c;
 }
-.card-head button {
+.card-head a {
     color: var(--secondary);
     width: fit-content;
     padding: 1em;
