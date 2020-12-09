@@ -19,11 +19,11 @@
 
 <div id="report-container" aria-label="Technical Report Pages">
     <% for (let report of content.data ) { %> 
-        <div id=<%= report.boxId %> <% if (report.num > 1) {%> style="display:none" <% } %> >
-            <h3> <%= report.title %></h3>
-            <p>Author: <%= report.creator %></p>
-            <p>Date: <%= report.repDate %></p>
-            <p><%= report.description %></p>
+        <div class="card card-body" id=<%= report.boxId %> <% if (report.num > 1) {%> style="display:none" <% } %> >
+            <h3 class="card-text"> <%= report.title %></h3>
+            <p class="card-text">Author: <%= report.creator %></p>
+            <p class="card-text">Date: <%= report.repDate %></p>
+            <p class="ccard-text"><%= report.description %></p>
         </div>
     <% } %>
 </div>

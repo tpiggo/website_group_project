@@ -408,8 +408,9 @@ router.get('/search', (req, res) => {
                         innerVal.href = '/employment/student';
                         let desc = innerVal.title.concat([innerVal.contact, innerVal.creator, innerVal.description])
                         innerVal.description = desc;
-                    } else if (value.modelName == 'posting') {
-                        innerVal.href = '/employment/faculty';
+                    } else if (value.modelName == 'postings') {
+                        innerVal.href = `/employment/${innerVal.type}`;
+                        console.log("FOund a posting");
                         let desc = innerVal.title.concat([ innerVal.contact, innerVal.type, innerVal.description])
                         innerVal.description = desc;
                     } else if (value.modelName == 'technicalreports') {
@@ -523,6 +524,7 @@ function getMatchedDesc(descString, expr){
         let matched = descString.slice(indicies[i], indicies[i]+expr.length);
         let endString = eDots?descString.slice(indicies[i] + expr.length, end)+"...":descString.slice(indicies[i] + expr.length, end);
         matchedString += startString + "<b>" + matched + "</b>" + endString;
+        if (matchedString.length > 150) break;
     }
     return matchedString;
 }   
