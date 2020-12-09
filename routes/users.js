@@ -11,14 +11,14 @@ const bodyParser = require('body-parser');
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
+//Route for user login page
 router.get('/login', canUseRoute, (req, res)=>{
-
     const title = "Login";
     const content = {"html": 'partials/login.ejs', "script":""};
     const menu = [];
-    common.getNavBar().then(pages => {
+    common.getNavBar().then(pages => { //Load the navbar for the page
         navbar = pages.navbar;
-        res.render('user-layout', {
+        res.render('user-layout', { //Render the login page
             title,
             menu,
             content,
@@ -33,7 +33,7 @@ router.get('/login', canUseRoute, (req, res)=>{
     });
 
 });
-
+//Route for the registration page
 router.get('/register', canUseRoute, (req, res)=>{
 
     const title = "Register";
@@ -73,7 +73,7 @@ function getUser(username){
 }
 
 /**
- * Login route.
+ * Login route for submitting a login attempt
  */
 router.post('/login', canUseRoute, (req, res)=> {
 
@@ -85,7 +85,7 @@ router.post('/login', canUseRoute, (req, res)=> {
 
     getUser(username)
         .then(user => {
-            bcrypt.compare(password,user.password, (err, authenticated) => {
+            bcrypt.compare(password,user.password, (err, authenticated) => { //Hash the submitted password and compare it to the one from the database
                 if(authenticated){
                     console.log("User "+ username + " succesfully logged in.");
                     // Saving the username into the session, potentially not the greatest solution, but works for now
@@ -93,7 +93,7 @@ router.post('/login', canUseRoute, (req, res)=> {
                     req.session.authenticated = true;
                     req.session.theme = user.userTheme;
                     console.log(req.session.theme);
-                    return res.redirect("/dashboard");
+                    return res.redirect("/dashboard"); //Send to the dashboard if login succeeds 
                 } else {
                     throw Error(`userNameError ${username}`);
             }});
@@ -113,7 +113,7 @@ router.post('/login', canUseRoute, (req, res)=> {
             }
             common.getNavBar().then(pages => {
                 navbar = pages.navbar;
-                res.render('user-layout', {
+                res.render('user-layout', { //Reload the page if the attempt fails
                     title, 
                     menu: [],
                     content,
@@ -131,11 +131,9 @@ router.post('/login', canUseRoute, (req, res)=> {
 });
 
 /**
- * Registration Route
+ * Registration Route for submitting a registration attempt
  */
 router.post('/register', canUseRoute, (req, res)=> {
-
-    // Is there  a reason for doing it this way?
     var password = bcrypt.hashSync(req.body.password,10);
     const username = req.body.username;
     const email = req.body.email;
@@ -145,7 +143,7 @@ router.post('/register', canUseRoute, (req, res)=> {
             "script": "<script src='/js/register.js'></script>"
         };
     /**
-     * 
+     * Finds a unique user based on their username and email
      * @param {*} username 
      * @param {*} email 
      */
@@ -164,7 +162,7 @@ router.post('/register', canUseRoute, (req, res)=> {
     }
 
     /**
-     * 
+     * Creates a user with the given username
      * @param {*} user 
      */
     function createNewUser(user){
@@ -182,7 +180,7 @@ router.post('/register', canUseRoute, (req, res)=> {
                 });
                 reject(errors)
             } else {
-                User.create({
+                User.create({ //Provided no errors occured, create the user
                     username: username,
                     email: req.body.email,
                     password: password,
@@ -204,9 +202,6 @@ router.post('/register', canUseRoute, (req, res)=> {
         })
         .then(user => {
             console.log("Done creating! Redirecting back to register")
-            /**
-             * @todo: Should get a success message that user was created 
-             */
             return res.redirect('/users/register');
         })
         .catch(errors => {
@@ -214,7 +209,7 @@ router.post('/register', canUseRoute, (req, res)=> {
 
             common.getNavBar().then(pages => {
                 navbar = pages.navbar;
-                res.render('user-layout', {
+                res.render('user-layout', { //If an error occured, reload the registration page
                     title, 
                     content,
                     logged: req.session.authenticated,

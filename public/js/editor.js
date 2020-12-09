@@ -1,3 +1,6 @@
+/**
+ * @description Renders a preview of the subpage for the subpage editor
+ */
 function loadPreview() {
     let markdown = document.getElementById("markdown").value;
     const method = "POST";

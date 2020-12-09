@@ -12,7 +12,7 @@ function requestLevel(event){
         requestForm = document.createElement('form')
         requestForm.id = "request-form"
         let user = event.target.getAttribute("user");
-        requestForm.setAttribute("onsubmit", "handleRequest(event, '"+user+"')");
+        requestForm.setAttribute("onsubmit", "handleUserRequest(event, '"+user+"')");
         requestForm.innerHTML = `<h3 id="requestLevelHeader">Request Higher Level</h3><div class="form-group">
             <textarea class="form-control" id="reason" aria-describedby="reasonText" placeholder="Why are you requesting higher level?"></textarea>
         </div>
@@ -47,7 +47,7 @@ function clickClose(event) {
  * @description 
  * @param {Event} event 
  */
-function handleRequest(event, user) {
+function handleUserRequest(event, user) {
     event.preventDefault();
     if (document.getElementById("reason").value == ""){
         createPopupMsg('error', "Please fill in the reason!", "requestLevelHeader");
