@@ -5,12 +5,15 @@ const TechnicalReport = require('../models/TechnicalReport.js');
 
 //Route for obtaining the list of technical reports
 router.get('/technical-reports', (req, res) => {
+    // Find all the technical reports and render them
     TechnicalReport
         .find()
         .sort({reportDate: "descending"})
         .exec((err,result) => {
             if (err) {
+                // Throw error
                 console.error(err);
+                res.send("Error: Please return to main");
             }
             else {
                 result = addInformation(result);
@@ -22,10 +25,11 @@ router.get('/technical-reports', (req, res) => {
                         content,
                         logged: req.session.authenticated,
                         username: req.session.username,
-                        theme: req.session.them,
+                        theme: req.session.theme,
                         navbar
                     });
                 }).catch(err => {
+                    // Cause an error on nav bar
                     console.log(err);
                     res.send("Error getting navbar from DB");
                 });

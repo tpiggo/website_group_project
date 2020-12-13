@@ -1,4 +1,5 @@
 const {connection} = require('mongoose');
+const User = require("./models/User");
 var common = {};
 
 /**
@@ -16,6 +17,23 @@ common.getAllDataFrom = (Model) => {
                 resolve(content);
             }
         });
+    });
+}
+
+/**
+ * @description Finds a user in the user table. Since users are unique, uses find one.
+ * @param {String} username 
+ */
+common.getUser = function (username){
+    return new Promise((resolve, reject) => {
+        User.findOne({username: username}, (err, result) => {
+            if (err) reject(err)
+            else if ( result ) {
+                resolve(result);
+            } else {
+                reject(result);
+            }
+        })
     });
 }
 

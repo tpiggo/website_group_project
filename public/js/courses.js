@@ -216,7 +216,10 @@ function seeAllCourses(){
         removeAllCourses();
         sortAndRender();
     } else {
-        if (heldCourses.length > 1){
+        if (courseBox.children.length > 0){
+            removeAllCourses();
+        }
+        if (heldCourses.length > 0){
             heldCourses = [];
         }
         const pOpts = {type: "GET", url: '/api/getCourse?class=all', contentType: "None"}

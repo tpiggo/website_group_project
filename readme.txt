@@ -1,5 +1,5 @@
 # Group16 Project
-
+IMPORTANT: This project is running on the SOCS Server at http://fall2020-comp307.cs.mcgill.ca:8016.
 
 # Members
 Timothy Piggott (260855765), Louise Oyarzabal (260777303), Ian Grenville (260907833)

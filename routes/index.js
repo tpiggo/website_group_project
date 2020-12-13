@@ -33,7 +33,7 @@ router.get('/denied', (req,res) => {
     var error_message = "You do not have permission to do that. If you believe this message to be in error please contact the website administrator.";
     
     common.getNavBar().then(pages =>{
-        res.render('user-error', {error_code, error_message, logged, username, navbar:pages.navbar});
+        res.render('user-error', {error_code, error_message, logged, username, navbar:pages.navbar, theme: req.session.theme});
     }).catch(err =>{
         console.log(err);
        res.send(err);

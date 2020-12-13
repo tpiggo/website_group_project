@@ -5,6 +5,7 @@ const expressLayouts = require('express-ejs-layouts');
 const app = express();
 const session = require('express-session');
 const MongoStore = require('connect-mongo')(session);
+var http = require('http');
 // DB config
 const db = require('./config/keys.js').MongoURI;
 
@@ -43,14 +44,7 @@ app.use(express.static('public'));
 app.use(expressLayouts);
 app.set('view engine', 'ejs');
 
-//This code doesn't do anything
-// // Global variables 
-// app.use((req, res, next)=>{
-//     res.locals.success_msg;
-//     res.locals.error_msg;
-//     next();
-// });
-
+app.emit
 
 app.use('/', require("./routes/index"));
 app.use('/api', require('./routes/api'));
@@ -70,4 +64,10 @@ app.get('*', (req, res) => {
 });
 
 const PORT = process.env.PORT || 8016;
-app.listen(PORT, console.log(`Server started on port ${PORT}`));
+// app.listen(PORT, console.log(`Server started on port ${PORT}`));
+
+//Creates a real NodeJS server
+var server = http.createServer(app);
+server.listen(PORT, function(){
+    console.log(`Server started on port ${PORT}`)
+});

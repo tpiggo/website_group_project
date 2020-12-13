@@ -47,7 +47,7 @@ function handleError(err, type) {
  */
 
 //  ********************************* TA REQUESTS *********************************
-router.post('/TA', middleware.isAuthenticated, (req, res) => {
+router.post('/TA', middleware.isAuthDashboard(), (req, res) => {
     // Last logical is up for changing depending on how we maintain summer semester (since there are 2)
     // Query to find a course which contains the same name during the same semester
 
@@ -139,7 +139,7 @@ router.post('/TA', middleware.isAuthenticated, (req, res) => {
 });
 
 //  ********************************* AWARD REQUESTS *********************************
-router.post('/Award', middleware.isAuthenticated, (req, res) => {
+router.post('/Award', middleware.isAuthDashboard(), (req, res) => {
     // Auth the session
 
     /**
@@ -203,7 +203,7 @@ router.post('/Award', middleware.isAuthenticated, (req, res) => {
 });
 
 // Award Information
-router.get('/Award', middleware.isAuthenticated, (req, res) => {
+router.get('/Award', middleware.isAuthDashboard(), (req, res) => {
     Award.findById(req.query.id, (err, content) => {
         if (err) {
             console.error(err);
@@ -222,7 +222,7 @@ router.get('/Award', middleware.isAuthenticated, (req, res) => {
 });
 
 // update route for awards
-router.put('/Award', middleware.isAuthenticated, (req, res) => {
+router.put('/Award', middleware.isAuthDashboard(), (req, res) => {
     var id = req.body._id;
     delete req.body._id;
 
@@ -247,7 +247,7 @@ router.put('/Award', middleware.isAuthenticated, (req, res) => {
 
 });
 
-router.delete('/Award', middleware.isAuthenticated, (req, res) => {
+router.delete('/Award', middleware.isAuthDashboard(), (req, res) => {
     Award.deleteOne(req.body)
         .then(result=>{
             if ( result.ok == 1 && result.deletedCount > 0 && result.n > 0){
@@ -263,7 +263,7 @@ router.delete('/Award', middleware.isAuthenticated, (req, res) => {
 });
 
 //  ********************************* NEWS REQUESTS *********************************
-router.post('/News', middleware.isAuthenticated, (req, res) => {
+router.post('/News', middleware.isAuthDashboard(), (req, res) => {
     /**
      * Not enforcing unique names for the articles.
      * Return object Id for rendering of article
@@ -294,7 +294,7 @@ router.post('/News', middleware.isAuthenticated, (req, res) => {
 
 
 // Information acquisition route for news
-router.get('/News', (req, res) => {
+router.get('/News', middleware.isAuthDashboard() ,(req, res) => {
     News.findById(req.query.id, (err, content) => {
         if (err) {
             console.error(err);
@@ -314,7 +314,7 @@ router.get('/News', (req, res) => {
 });
 
 // Update route for News
-router.put('/News', middleware.isAuthenticated, (req, res) => {
+router.put('/News', middleware.isAuthDashboard(), (req, res) => {
     var id = req.body._id;
     delete req.body._id;
 
@@ -339,7 +339,7 @@ router.put('/News', middleware.isAuthenticated, (req, res) => {
 
 });
 
-router.delete('/News', middleware.isAuthenticated, (req, res) => {
+router.delete('/News', middleware.isAuthDashboard(), (req, res) => {
     News.deleteOne(req.body)
         .then(result=>{
             if ( result.ok == 1 && result.deletedCount > 0 && result.n > 0){
@@ -355,7 +355,7 @@ router.delete('/News', middleware.isAuthenticated, (req, res) => {
 });
 
 //  ********************************* EVENT REQUESTS *********************************
-router.post('/Event', middleware.isAuthenticated, (req, res) => {
+router.post('/Event', middleware.isAuthDashboard(), (req, res) => {
     // Search for an event which already exists
     /**
      * @description Finds an event if there is one
@@ -417,7 +417,7 @@ router.post('/Event', middleware.isAuthenticated, (req, res) => {
 });
 
 // Information acquisition route for events
-router.get('/Event', (req, res) => {
+router.get('/Event', middleware.isAuthDashboard(),(req, res) => {
     Event.findById(req.query.id, (err, content) => {
         if (err) {
             console.error(err);
@@ -437,7 +437,7 @@ router.get('/Event', (req, res) => {
 });
 
 // Update route for Events
-router.put('/Event', middleware.isAuthenticated, (req, res) => {
+router.put('/Event', middleware.isAuthDashboard(), (req, res) => {
     var id = req.body._id;
     delete req.body._id;
 
@@ -462,7 +462,7 @@ router.put('/Event', middleware.isAuthenticated, (req, res) => {
 
 });
 
-router.delete('/Event', middleware.isAuthenticated, (req, res) => {
+router.delete('/Event', middleware.isAuthDashboard(), (req, res) => {
     Event.deleteOne(req.body)
         .then(result=>{
             if ( result.ok == 1 && result.deletedCount > 0 && result.n > 0){
@@ -478,7 +478,7 @@ router.delete('/Event', middleware.isAuthenticated, (req, res) => {
 });
 
 //  ********************************* TECH REQUESTS *********************************
-router.post('/Tech', middleware.isAuthenticated, (req, res) => {
+router.post('/Tech', middleware.isAuthDashboard(), (req, res) => {
     /**
      * @description Finds a technical report if one exists
      * @param {String} title
@@ -532,7 +532,6 @@ router.post('/Tech', middleware.isAuthenticated, (req, res) => {
     }
 
     const user = req.session.username;
-    //BUG
     const { techTitle, techContact, techDescription } = req.body
     findTechnicalReport(techTitle, user)
         .then(report => {
@@ -563,7 +562,7 @@ router.get('/Tech', (req, res) => {
 
 });
 
-router.put('/Tech', middleware.isAuthenticated, (req, res) => {
+router.put('/Tech', middleware.isAuthDashboard, (req, res) => {
     var id = req.body._id;
     delete req.body._id;
 
@@ -588,7 +587,7 @@ router.put('/Tech', middleware.isAuthenticated, (req, res) => {
 
 });
 
-router.delete('/Tech', middleware.isAuthenticated, (req, res) => {
+router.delete('/Tech', middleware.isAuthDashboard, (req, res) => {
     TechnicalReport.deleteOne(req.body)
         .then(result=>{
             if ( result.ok == 1 && result.deletedCount > 0 && result.n > 0){
@@ -605,7 +604,7 @@ router.delete('/Tech', middleware.isAuthenticated, (req, res) => {
 
 
 //  ********************************* POSTING REQUESTS *********************************
-router.post('/Posting', middleware.isAuthenticated, (req, res) => {
+router.post('/Posting', middleware.isAuthDashboard, (req, res) => {
     // Auth the session
     // setting params
     const {
@@ -628,7 +627,7 @@ router.post('/Posting', middleware.isAuthenticated, (req, res) => {
 });
 
 // Update route for Postings
-router.put('/Posting', middleware.isAuthenticated, (req, res) => {
+router.put('/Posting', middleware.isAuthDashboard, (req, res) => {
     var id = req.body._id;
     delete req.body._id;
 
@@ -656,7 +655,7 @@ router.put('/Posting', middleware.isAuthenticated, (req, res) => {
 
 
 // Information acquisition route for postings
-router.get('/Posting', middleware.isAuthenticated, (req, res) => {
+router.get('/Posting', middleware.isAuthDashboard, (req, res) => {
     Posting.findById(req.query.id, (err, content) => {
         if (err) {
             console.error(err);
@@ -673,7 +672,7 @@ router.get('/Posting', middleware.isAuthenticated, (req, res) => {
     });
 });
 
-router.delete('/Posting', middleware.isAuthenticated, (req, res) => {
+router.delete('/Posting', middleware.isAuthDashboard, (req, res) => {
     Posting.deleteOne(req.body)
         .then(result=>{
             if ( result.ok == 1 && result.deletedCount > 0 && result.n > 0){
@@ -689,7 +688,7 @@ router.delete('/Posting', middleware.isAuthenticated, (req, res) => {
 });
 
 //  ********************************* COURSE REQUESTS *********************************
-router.post('/Course', upload.single("syllabus"), middleware.isAuthenticated, (req, res) => {
+router.post('/Course', upload.single("syllabus"), middleware.isAuthDashboard, (req, res) => {
     // Fix syllabus, add its path rather than its name
     if (req.file != undefined){
         req.body.syllabus = req.file.filename;
@@ -718,7 +717,7 @@ router.post('/Course', upload.single("syllabus"), middleware.isAuthenticated, (r
     });
 });
 //Route for uploading syllabi files
-router.put('/Course', upload.single("syllabus"), middleware.isAuthenticated, (req, res) => {
+router.put('/Course', upload.single("syllabus"), middleware.isAuthDashboard, (req, res) => {
     var id = req.body._id;
     delete req.body._id;
     if (req.file != undefined){
@@ -757,7 +756,7 @@ router.put('/Course', upload.single("syllabus"), middleware.isAuthenticated, (re
 });
 
 // Information acquisition route for courses
-router.get('/Course', (req, res) => {
+router.get('/Course', middleware.isAuthDashboard, (req, res) => {
     Course.findById(req.query.id, (err, content) => {
         if (err) {
             console.error(err);
@@ -775,7 +774,7 @@ router.get('/Course', (req, res) => {
     });
 });
 
-router.delete('/Course', middleware.isAuthenticated, (req, res) => {
+router.delete('/Course', middleware.isAuthDashboard, (req, res) => {
     Course.deleteOne(req.body)
         .then(result=>{
             if ( result.ok == 1 && result.deletedCount > 0 && result.n > 0){
@@ -908,7 +907,7 @@ router.post('/Category', middleware.canCreateOrDestroy, (req,res) => {
 
 // ********************** USER REQUEST UPDATES ***************************
 
-router.get('/user-requests', (req, res) => {
+router.get('/user-requests',middleware.isAuthDashboard(2),  (req, res) => {
     UserRequest.findById(req.query.id, (err, content) => {
         if (err) {
             console.error(err);
@@ -925,7 +924,7 @@ router.get('/user-requests', (req, res) => {
 
 });
 
-router.put('/user-requests', (req, res) => {
+router.put('/user-requests', middleware.isAuthDashboard(2), (req, res) => {
     var id = req.body._id
 
     UserRequest.deleteOne({_id:id})
@@ -960,7 +959,7 @@ router.put('/user-requests', (req, res) => {
 
 });
 
-router.delete('/user-requests', (req,res) => {
+router.delete('/user-requests', middleware.isAuthDashboard(2), (req,res) => {
     UserRequest.deleteOne(req.body)
         .then(result=>{
             if ( result.ok == 1 && result.deletedCount > 0 && result.n > 0){
